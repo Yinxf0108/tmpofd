@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016" DocType="OFD" Version="1.0">
+    <ofd:DocBody>
+        <ofd:DocInfo>
+            <ofd:DocID>7F3E2A0A-B3F5-4A37-9275-81E482E7B3A2</ofd:DocID>
+            <Dirty><DirtyChild>some dirty string in here</DirtyChild></Dirty>
+            <ofd:Keywords/>
+            <ofd:CustomDatas/>
+        </ofd:DocInfo>
+        <ofd:DocRoot>Doc_2/Document.xml</ofd:DocRoot>
+    </ofd:DocBody>
+</ofd:OFD>

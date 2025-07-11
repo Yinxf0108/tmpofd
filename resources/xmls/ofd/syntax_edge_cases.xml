@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016" DocType="OFD" Version="1.0">
+    <ofd:DocBody>
+        <!-- XML注释 -->
+        <ofd:DocInfo   >
+            <ofd:DocID >AABBCCDD-EEFF-0011-2233-445566778899</ofd:DocID>
+            <?pi-for-testing some-data="value"?> <!-- XML处理指令 -->
+            <ofd:Creator
+            >Creator with newlines</ofd:Creator>
+        </ofd:DocInfo>
+        <ofd:DocRoot>	Doc_5/Document.xml	</ofd:DocRoot>
+        <ofd:Versions>
+            <ofd:Version
+                    BaseLoc = "Doc_5/Versions/Version_0/DocVersion.xml"
+                    Current	=	"true"
+                    Index   =   "0"
+                    ID		= "8" />
+        </ofd:Versions>
+        <ofd:Signatures />
+    </ofd:DocBody>
+</ofd:OFD>

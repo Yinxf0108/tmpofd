@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ofd:OFD [
+        <!ENTITY company "My Company">
+        ]>
+<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016" DocType="OFD" Version="1.0">
+    <ofd:DocBody>
+        <ofd:DocInfo>
+            <ofd:DocID>ENTITY-TEST-DOC-ID</ofd:DocID>
+            <ofd:Creator>Creator from &company;</ofd:Creator>
+        </ofd:DocInfo>
+        <ofd:DocRoot>Doc_6/Document.xml</ofd:DocRoot>
+    </ofd:DocBody>
+</ofd:OFD>

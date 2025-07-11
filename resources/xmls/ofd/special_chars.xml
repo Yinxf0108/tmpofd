@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016" DocType="OFD" Version="1.0">
+    <ofd:DocBody>
+        <ofd:DocInfo>
+            <ofd:DocID>9C2B2A3D-F2A1-4D9A-8E6F-3C4D1B8E5A2D</ofd:DocID>
+            <ofd:Title>  Title with leading/trailing spaces and &amp; &lt; &gt; " ' special chars  </ofd:Title>
+            <ofd:Author>作者 with 中文 &amp; emojis 👍</ofd:Author>
+            <ofd:Subject></ofd:Subject>
+            <ofd:Abstract>
+                <![CDATA[
+          This abstract contains a CDATA section with <markup> and other & characters.
+        ]]>
+            </ofd:Abstract>
+            <ofd:Keywords>
+                <ofd:Keyword> whitespace </ofd:Keyword>
+                <ofd:Keyword>Another "Keyword" with quotes</ofd:Keyword>
+            </ofd:Keywords>
+            <ofd:CustomDatas>
+                <ofd:CustomData Name="  whitespace  ">  value with whitespace  </ofd:CustomData>
+                <ofd:CustomData Name="CDATA_Value"><![CDATA[<p>HTML-like content</p>]]></ofd:CustomData>
+            </ofd:CustomDatas>
+        </ofd:DocInfo>
+        <ofd:DocRoot>   Doc_3/Document.xml   </ofd:DocRoot>
+    </ofd:DocBody>
+</ofd:OFD>

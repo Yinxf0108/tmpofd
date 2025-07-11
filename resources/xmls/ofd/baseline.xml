@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016" DocType="OFD" Version="1.0">
+    <ofd:DocBody>
+        <ofd:DocInfo>
+            <ofd:DocID>E9B52616-9506-0C9B-5C89-3458A9DD7181</ofd:DocID>
+            <ofd:Title>OFD Template 1</ofd:Title>
+            <ofd:Author>Yinxf 1</ofd:Author>
+            <ofd:Subject>template 1</ofd:Subject>
+            <ofd:Abstract>its a OFD entry template 1</ofd:Abstract>
+            <ofd:CreationDate>2024-04-16</ofd:CreationDate>
+            <ofd:ModDate>2024-04-17</ofd:ModDate>
+            <ofd:DocUsage>Normal</ofd:DocUsage>
+            <ofd:Cover>Doc_0/res/cover.png</ofd:Cover>
+            <ofd:Keywords>
+                <ofd:Keyword>OFD entry 1</ofd:Keyword>
+                <ofd:Keyword>template 1</ofd:Keyword>
+            </ofd:Keywords>
+            <ofd:Creator>tmpofd 1</ofd:Creator>
+            <ofd:CreatorVersion>0.1.0</ofd:CreatorVersion>
+            <ofd:CustomDatas>
+                <ofd:CustomData Name="Custom1">custom1 value 1</ofd:CustomData>
+                <ofd:CustomData Name="Custom2">custom2 value 2</ofd:CustomData>
+            </ofd:CustomDatas>
+        </ofd:DocInfo>
+        <ofd:DocRoot>Doc_0/Document.xml</ofd:DocRoot>
+        <ofd:Versions>
+            <ofd:Version ID="1" Index="0" Current="false" BaseLoc="Doc_0/Versions/Version_0/DocVersion.xml" />
+            <ofd:Version ID="2" Index="1" Current="true" BaseLoc="Doc_0/Versions/Version_1/DocVersion.xml" />
+        </ofd:Versions>
+        <ofd:Signatures>Doc_0/Signs/Signatures.xml</ofd:Signatures>
+    </ofd:DocBody>
+</ofd:OFD>
