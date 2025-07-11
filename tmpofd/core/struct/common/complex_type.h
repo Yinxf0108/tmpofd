@@ -24,39 +24,51 @@
 
 #pragma once
 
-#include "tmpofd/core/struct/ofd/doc_info.h"
-#include "tmpofd/core/struct/ofd/version.h"
+#include "tmpofd/core/struct/common/simple_type.h"
+#include "tmpofd/core/reflection/reflection.h"
 
 namespace tmpofd {
-struct versions_t {
-  st_vector<version_t> version_;
+struct dest_t {
+  st_string type_;
+  st_ref_id page_id_;
+  st_double left_;
+  st_double top_;
+  st_double right_;
+  st_double bottom_;
+  st_double zoom_;
 };
 
 REFLECT_STRUCT(
-  ofd_namespace"Versions",
-  versions_t,
-  REFLECT_ATTR()
-  REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"Version", &versions_t::version_)
+  ofd_namespace"Dest",
+  dest_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Type", &dest_t::type_),
+    REFLECT_MEMBER("PageID", &dest_t::page_id_),
+    REFLECT_MEMBER("Left", &dest_t::left_),
+    REFLECT_MEMBER("Top", &dest_t::top_),
+    REFLECT_MEMBER("Right", &dest_t::right_),
+    REFLECT_MEMBER("Bottom", &dest_t::bottom_),
+    REFLECT_MEMBER("Zoom", &dest_t::zoom_)
   )
+  REFLECT_NODE()
 )
 
-struct doc_body_t {
-  doc_info_t doc_info_;
-  st_loc doc_root_;
-  versions_t versions_;
-  st_loc signatures_;
+struct page_area_t {
+  st_box<st_double> physical_box_;
+  st_box<st_double> application_box_;
+  st_box<st_double> content_box_;
+  st_box<st_double> bleed_box_;
 };
 
 REFLECT_STRUCT(
-  ofd_namespace"DocBody",
-  doc_body_t,
+  ofd_namespace"PageArea",
+  page_area_t,
   REFLECT_ATTR()
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"DocInfo", &doc_body_t::doc_info_),
-    REFLECT_MEMBER(ofd_namespace"DocRoot", &doc_body_t::doc_root_),
-    REFLECT_MEMBER(ofd_namespace"Versions", &doc_body_t::versions_),
-    REFLECT_MEMBER(ofd_namespace"Signatures", &doc_body_t::signatures_)
+    REFLECT_MEMBER(ofd_namespace"PhysicalBox", &page_area_t::physical_box_),
+    REFLECT_MEMBER(ofd_namespace"ApplicationBox", &page_area_t::application_box_),
+    REFLECT_MEMBER(ofd_namespace"ContentBox", &page_area_t::content_box_),
+    REFLECT_MEMBER(ofd_namespace"BleedBox", &page_area_t::bleed_box_)
   )
 )
 } // tmpofd
