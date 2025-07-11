@@ -121,10 +121,10 @@ int main() {
     assert(signatures_ == "Doc_0/Signs/Signatures.xml");
   }
 
-  test_case<ofd_t>("ofd/doctype_entity.xml");
-  test_case<ofd_t>("ofd/minimal_robustness.xml");
-  test_case<ofd_t>("ofd/special_chars.xml");
-  test_case<ofd_t>("ofd/syntax_edge_cases.xml");
+  auto ofd = test_case<ofd_t>("ofd/doctype_entity.xml");
+  ofd = test_case<ofd_t>("ofd/minimal_robustness.xml");
+  ofd = test_case<ofd_t>("ofd/special_chars.xml");
+  ofd = test_case<ofd_t>("ofd/syntax_edge_cases.xml");
 
   return 0;
 }

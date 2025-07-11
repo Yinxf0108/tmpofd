@@ -32,25 +32,24 @@
 namespace tmpofd {
 template<is_st_bool T, is_string_view V>
 constexpr void parse_xml_value(T &ins, const V value) {
-  if (4 == value.size()
-    && ('t' == value[0] || 'T' == value[0])
-    && ('r' == value[1] || 'R' == value[1])
-    && ('u' == value[2] || 'U' == value[2])
-    && ('e' == value[3] || 'E' == value[3])
+  if ((4 == value.size()
+      && ('t' == value[0] || 'T' == value[0])
+      && ('r' == value[1] || 'R' == value[1])
+      && ('u' == value[2] || 'U' == value[2])
+      && ('e' == value[3] || 'E' == value[3])
+    )
+    || "1" == value
   ) {
     ins = true;
   } else if (
-    5 == value.size()
-    && ('f' == value[0] || 'F' == value[0])
-    && ('a' == value[1] || 'A' == value[1])
-    && ('l' == value[2] || 'L' == value[2])
-    && ('s' == value[3] || 'S' == value[3])
-    && ('e' == value[4] || 'E' == value[4])
+    (5 == value.size()
+      && ('f' == value[0] || 'F' == value[0])
+      && ('a' == value[1] || 'A' == value[1])
+      && ('l' == value[2] || 'L' == value[2])
+      && ('s' == value[3] || 'S' == value[3])
+      && ('e' == value[4] || 'E' == value[4])
+    ) || "0" == value
   ) {
-    ins = false;
-  } else if ("1" == value) {
-    ins = true;
-  } else if ("0" == value) {
     ins = false;
   } else {
     throw std::runtime_error("Expected bool value (true, false, 1, 0), but got '" + std::string{value} + "'");
@@ -157,6 +156,7 @@ constexpr void parse_xml_attr(T &ins, Pos &&pos, Pos &&end) {
       key,
       [&](auto &&attr) {
         if (key == attr.name_) {
+          /// TODO: value = try_to_get_cdata
           auto value = std::string_view{&*value_begin, static_cast<size_t>(std::distance(value_begin, pos))};
           parse_xml_value(attr.invoke(ins), value);
         }
@@ -184,7 +184,9 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
 
   skip_to<'<'>(pos, end);
 
-  parse_xml_value(ins, std::string_view{&*value_begin, static_cast<size_t>(std::distance(value_begin, pos))});
+  /// TODO: value = try_to_get_cdata
+  auto value = std::string_view{&*value_begin, static_cast<size_t>(std::distance(value_begin, pos))};
+  parse_xml_value(ins, value);
 
   matched_close(name, pos, end);
 }
