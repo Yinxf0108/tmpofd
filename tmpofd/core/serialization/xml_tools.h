@@ -30,7 +30,7 @@
 #include <array>
 
 namespace tmpofd {
-template<is_st_bool T, is_string_view V>
+template<is_st_bool T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   if ((4 == value.size()
       && ('t' == value[0] || 'T' == value[0])
@@ -56,7 +56,7 @@ constexpr void parse_xml_value(T &ins, const V value) {
   }
 }
 
-template<is_st_number T, is_string_view V>
+template<is_st_number T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   if (auto result = std::from_chars(value.data(), value.data() + value.size(), ins);
     result.ec != std::errc()
@@ -65,12 +65,12 @@ constexpr void parse_xml_value(T &ins, const V value) {
   }
 }
 
-template<can_passed_via_string_view T, is_string_view V>
+template<can_passed_via_string_view T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   ins = value;
 }
 
-template<is_time T, is_string_view V>
+template<is_time T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   if constexpr (std::is_same_v<T, st_date>) {
     if (10 == value.length() && '-' == value[4] && '-' == value[7]) {
@@ -115,7 +115,7 @@ constexpr void parse_xml_value(T &ins, const V value) {
   throw std::runtime_error("Expected date/time value, but got '" + std::string{value} + "'");
 }
 
-template<is_id T, is_string_view V>
+template<is_id T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   std::uint64_t id = 0;
   if (auto result = std::from_chars(value.data(), value.data() + value.size(), id);
@@ -127,7 +127,7 @@ constexpr void parse_xml_value(T &ins, const V value) {
   ins = id;
 }
 
-template<has_from_string T, is_string_view V>
+template<has_from_string T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   ins.from_string(value);
 }
@@ -155,11 +155,8 @@ constexpr void parse_xml_attr(T &ins, Pos &&pos, Pos &&end) {
     reflected.attr(
       key,
       [&](auto &&attr) {
-        if (key == attr.name_) {
-          /// TODO: value = try_to_get_cdata
-          auto value = std::string_view{&*value_begin, static_cast<size_t>(std::distance(value_begin, pos))};
-          parse_xml_value(attr.invoke(ins), value);
-        }
+        if (key == attr.name_)
+          parse_xml_value(attr.invoke(ins), get_value(value_begin, value_end));
       }
     );
 
@@ -181,12 +178,18 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   }
 
   auto value_begin = ++pos;
-
   skip_to<'<'>(pos, end);
+  while (pos < end && '!' == *(pos + 1)) {
+    ++pos;
 
-  /// TODO: value = try_to_get_cdata
-  auto value = std::string_view{&*value_begin, static_cast<size_t>(std::distance(value_begin, pos))};
-  parse_xml_value(ins, value);
+    skip_comment(pos, end);
+    skip_cdata(pos, end);
+
+    skip_to<'<'>(pos, end);
+  }
+  auto value_end = pos;
+
+  parse_xml_value(ins, get_value(value_begin, value_end));
 
   matched_close(name, pos, end);
 }
