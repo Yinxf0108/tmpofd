@@ -42,13 +42,13 @@ template<char... characters, typename T>
 constexpr void matched_skip(T &&pos, T &&end) {
   if (static_cast<size_t>(std::distance(pos, end)) < sizeof...(characters))
     throw std::runtime_error(
-      std::string("Unexpected end of buffer. Expected: ").append(std::to_string(sizeof...(characters)))
+      std::string("Unexpected end of buffer. Expected matched skip : ").append(std::to_string(sizeof...(characters)))
     );
 
   constexpr char expected[] = {characters...};
   for (size_t i = 0; i < sizeof...(characters); ++i) {
     if (*pos++ != expected[i])
-      throw std::runtime_error(std::string("Expected : ") + std::string(expected, sizeof...(characters)));
+      throw std::runtime_error(std::string("Expected matched skip : ") + std::string(expected, sizeof...(characters)));
   }
 }
 
@@ -95,7 +95,7 @@ constexpr void skip_to(T &&pos, T &&end) {
   }
 
   constexpr char expected[] = {characters...};
-  throw std::runtime_error(std::string("Expected : ") + std::string(expected, sizeof...(characters)));
+  throw std::runtime_error(std::string("Expected skip to : ") + std::string(expected, sizeof...(characters)));
 }
 
 template<typename T>
