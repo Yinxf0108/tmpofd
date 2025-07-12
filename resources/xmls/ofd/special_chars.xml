@@ -3,12 +3,12 @@
     <ofd:DocBody>
         <ofd:DocInfo>
             <ofd:DocID>9C2B2A3D-F2A1-4D9A-8E6F-3C4D1B8E5A2D</ofd:DocID>
-            <ofd:Title>  Title with leading/trailing spaces and &amp; &lt; &gt; " ' special chars  </ofd:Title>
+            <ofd:Title>  <!-- XML注释 --> Title with leading/trailing<!-- XML注释 --> spaces and &amp; &lt; &gt; " ' special chars  </ofd:Title>
             <ofd:Author>作者 with 中文 &amp; emojis 👍</ofd:Author>
             <ofd:Subject></ofd:Subject>
             <ofd:Abstract>
-                <![CDATA[
-          This abstract contains a CDATA section with <markup> and other & characters.
+                <!-- XML注释 --> <![CDATA[
+          This abstract contains a CDATA <!-- XML注释 --> section with <markup> and other & characters.
         ]]>
             </ofd:Abstract>
             <ofd:Keywords>

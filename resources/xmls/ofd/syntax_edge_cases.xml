@@ -3,7 +3,9 @@
     <ofd:DocBody>
         <!-- XML注释 -->
         <ofd:DocInfo   >
-            <ofd:DocID >AABBCCDD-EEFF-0011-2233-445566778899</ofd:DocID>
+            <ofd:DocID >
+                              <!-- XML注释 -->            AABBCCDD-EEFF-0011-2233-445566778899
+            </ofd:DocID>
             <?pi-for-testing some-data="value"?> <!-- XML处理指令 -->
             <ofd:Creator
             >Creator with newlines</ofd:Creator>
