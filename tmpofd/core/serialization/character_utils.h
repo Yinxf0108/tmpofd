@@ -266,6 +266,58 @@ constexpr void skip_to_first_key(T &&pos, T &&end) {
   }
 }
 
+template<char... characters, typename T>
+constexpr auto get_key(T &&pos, T &&end) {
+  auto begin = pos;
+  skip_to<characters...>(pos, end);
+
+  while (pos > begin && static_cast<std::uint8_t>(*(pos - 1)) < 33) {
+    --pos;
+  }
+
+  return std::string_view{&*begin, static_cast<size_t>(std::distance(begin, pos))};
+}
+
+template<typename T>
+constexpr auto get_value(T &&value_begin, T &&value_end) {
+  auto value = std::string{&*value_begin, static_cast<size_t>(std::distance(value_begin, value_end))};
+
+  constexpr auto cdata_prefix = std::string_view{"<![CDATA["};
+  if (const auto pos = value.find(cdata_prefix); std::string_view::npos != pos) {
+    const auto start = pos + cdata_prefix.length();
+    if (const auto end = value.find("]]>", start); std::string_view::npos != end)
+      return value.substr(start, end - start);
+
+    throw std::runtime_error("Unterminated CDATA");
+  }
+
+  if (std::string_view::npos == value.find("<!--"))
+    return value;
+
+  std::string result;
+  result.reserve(value.length());
+
+  size_t pos = 0;
+  while (pos < value.length()) {
+    const auto start = value.find("<!--", pos);
+
+    if (std::string_view::npos == start) {
+      result.append(value.substr(pos));
+      break;
+    }
+
+    result.append(value.substr(pos, start - pos));
+
+    const auto end = value.find("-->", start + 4);
+    if (std::string_view::npos == end)
+      throw std::runtime_error("Unterminated comment");
+
+    pos = end + 3;
+  }
+
+  return result;
+}
+
 template<is_string_view N, typename T>
 constexpr auto matched_close(const N name, T &&pos, T &&end) {
   while (pos < end) {
@@ -337,57 +389,5 @@ constexpr void skip_node(const N name, T &&pos, T &&end) {
   }
 
   throw std::runtime_error("Unclosed tag: " + std::string(name));
-}
-
-template<char... characters, typename T>
-constexpr auto get_key(T &&pos, T &&end) {
-  auto begin = pos;
-  skip_to<characters...>(pos, end);
-
-  while (pos > begin && static_cast<std::uint8_t>(*(pos - 1)) < 33) {
-    --pos;
-  }
-
-  return std::string_view{&*begin, static_cast<size_t>(std::distance(begin, pos))};
-}
-
-template<typename T>
-constexpr auto get_value(T &&value_begin, T &&value_end) {
-  auto value = std::string{&*value_begin, static_cast<size_t>(std::distance(value_begin, value_end))};
-
-  constexpr auto cdata_prefix = std::string_view{"<![CDATA["};
-  if (const auto pos = value.find(cdata_prefix); std::string_view::npos != pos) {
-    const auto start = pos + cdata_prefix.length();
-    if (const auto end = value.find("]]>", start); std::string_view::npos != end)
-      return value.substr(start, end - start);
-
-    throw std::runtime_error("Unterminated CDATA");
-  }
-
-  if (std::string_view::npos == value.find("<!--"))
-    return value;
-
-  std::string result;
-  result.reserve(value.length());
-
-  size_t pos = 0;
-  while (pos < value.length()) {
-    const auto start = value.find("<!--", pos);
-
-    if (std::string_view::npos == start) {
-      result.append(value.substr(pos));
-      break;
-    }
-
-    result.append(value.substr(pos, start - pos));
-
-    const auto end = value.find("-->", start + 4);
-    if (std::string_view::npos == end)
-      throw std::runtime_error("Unterminated comment");
-
-    pos = end + 3;
-  }
-
-  return result;
 }
 } // tmpofd
