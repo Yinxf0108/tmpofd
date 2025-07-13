@@ -38,6 +38,7 @@ struct enum_converter<doc_type_t> {
 };
 
 struct ofd_t {
+  std::optional<st_string> namespace_;
   st_string version_;
   enum_string_t<doc_type_t> doc_type_;
 
@@ -48,6 +49,7 @@ REFLECT_STRUCT(
   ofd_namespace"OFD",
   ofd_t,
   REFLECT_ATTR(
+    REFLECT_MEMBER("xmlns:ofd", &ofd_t::namespace_),
     REFLECT_MEMBER("Version", &ofd_t::version_),
     REFLECT_MEMBER("DocType", &ofd_t::doc_type_)
   )

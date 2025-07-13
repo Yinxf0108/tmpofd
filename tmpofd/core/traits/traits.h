@@ -31,6 +31,15 @@
 #include <optional>
 
 namespace tmpofd {
+template<typename>
+struct is_optional_trait : std::false_type {};
+
+template<typename T>
+struct is_optional_trait<std::optional<T> > : std::true_type {};
+
+template<typename T>
+concept is_optional = is_optional_trait<std::remove_cvref_t<T> >::value;
+
 template<typename T>
 struct remove_opt {
   using type = T;

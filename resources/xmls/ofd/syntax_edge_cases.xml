@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016" DocType="OFD" Version="1.0">
+<ofd:OFD xmlns:ofd="http://www.ofdspec.org/2016" Version="1.0" DocType="OFD">
     <ofd:DocBody>
         <!-- XML注释 -->
         <ofd:DocInfo   >

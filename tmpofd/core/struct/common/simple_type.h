@@ -30,7 +30,7 @@ namespace tmpofd {
 /**
 * 数组，以空格来分割元素。元素可以是除st_loc、st_array外的数据类型，不可嵌套
 */
-template<typename T> requires (!std::same_as<st_loc, remove_opt_t<std::remove_cvref_t<T>> > && !is_vector<T>)
+template<typename T> requires (!std::same_as<st_loc, remove_opt_t<std::remove_cvref_t<T> > > && !is_vector<T>)
 struct st_array {
   private:
     std::vector<T> data_;
@@ -105,10 +105,15 @@ struct st_id {
   constexpr st_id() : value_(0) {}
   constexpr explicit st_id(const std::uint64_t value) : value_(value) {}
 
-  constexpr st_id& operator=(const std::uint64_t value) {
+  constexpr st_id &operator=(const std::uint64_t value) {
     value_ = value;
     return *this;
   }
+
+  explicit operator const std::uint64_t &() const { return value_; }
+  explicit operator std::uint64_t &() { return value_; }
+
+  const std::uint64_t &value() const { return value_; }
 
   auto operator<=>(const st_id &) const = default;
 };
@@ -130,10 +135,15 @@ struct st_ref_id {
   constexpr explicit st_ref_id(const std::uint64_t v) : value_(v) {}
   constexpr explicit st_ref_id(const st_id &id) : value_(id.value_) {}
 
-  constexpr st_ref_id& operator=(const std::uint64_t value) {
+  constexpr st_ref_id &operator=(const std::uint64_t value) {
     value_ = value;
     return *this;
   }
+
+  explicit operator const std::uint64_t &() const { return value_; }
+  explicit operator std::uint64_t &() { return value_; }
+
+  const std::uint64_t &value() const { return value_; }
 
   auto operator<=>(const st_ref_id &) const = default;
 };

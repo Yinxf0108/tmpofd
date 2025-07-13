@@ -28,6 +28,7 @@
 #include "tmpofd/core/struct/ofd/ofd.h"
 
 #include <array>
+#include <iostream>
 
 namespace tmpofd {
 template<is_st_bool T, is_string V>
@@ -271,5 +272,148 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
 
     key = get_key<'>', ' '>(pos, end);
   }
+}
+
+template<is_st_bool T, is_string XML>
+constexpr void generate_xml_value(T &ins, XML &xml) {
+  xml += ins ? "true" : "false";
+}
+
+template<is_st_number T, is_string XML>
+constexpr void generate_xml_value(T &ins, XML &xml) {
+  xml += std::to_string(ins);
+}
+
+template<can_passed_via_string_view T, is_string XML>
+constexpr void generate_xml_value(T &ins, XML &xml) {
+  xml += static_cast<st_string>(ins);
+}
+
+template<is_time T, is_string XML>
+constexpr void generate_xml_value(T &ins, XML &xml) {
+  xml += to_string(ins);
+}
+
+template<is_id T, is_string XML>
+constexpr void generate_xml_value(T &ins, XML &xml) {
+  xml += std::to_string(ins.value());
+}
+
+template<has_from_string T, is_string XML>
+constexpr void generate_xml_value(T &ins, XML &xml) {
+  xml += ins.to_string();
+}
+
+template<is_reflectable T, is_string XML>
+constexpr void generate_xml_attr(T &ins, XML &xml) {
+  auto reflected = get_reflected(ins);
+
+  reflected.each_attr(
+    [&](auto &&attr) {
+      xml += ' ';
+      xml.append(attr.name_);
+      xml += R"(=")";
+
+      auto &member = attr.invoke(ins);
+      if constexpr (is_optional<std::remove_cvref_t<decltype(member)> >) {
+        if (member)
+          generate_xml_value(*member, xml);
+      } else {
+        generate_xml_value(member, xml);
+      }
+
+      xml += R"(")";
+    }
+  );
+}
+
+template<is_string_view N, is_st_vector T, is_string XML>
+constexpr void generate_xml_node(N name, T &ins, int depth, XML &xml);
+template<is_string_view N, is_reflectable T, is_string XML>
+constexpr void generate_xml_node(N name, T &ins, int depth, XML &xml);
+
+template<is_string_view N, is_base_type T, is_string XML>
+constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
+#ifdef PRETTY_SERIALIZE
+  xml += new_line;
+
+  for (auto i = 0; i < depth; ++i)
+    xml += tab;
+#endif
+
+  xml += '<';
+  xml.append(name);
+  xml += '>';
+
+  if constexpr (is_optional<T>) {
+    generate_xml_value(*ins, xml);
+  } else {
+    generate_xml_value(ins, xml);
+  }
+
+  xml += "</";
+  xml.append(name);
+  xml += ">";
+}
+
+template<is_string_view N, is_st_vector T, is_string XML>
+constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
+  for (const auto &item : ins) {
+    generate_xml_node(name, item, depth, xml);
+  }
+}
+
+template<is_string_view N, is_reflectable T, is_string XML>
+constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
+#ifdef PRETTY_SERIALIZE
+  xml += new_line;
+
+  if (0 != depth)
+    for (auto i = 0; i < depth; ++i)
+      xml += tab;
+#endif
+
+  auto reflected = get_reflected(ins);
+
+  xml += '<';
+  xml.append(name);
+
+  if constexpr (0 != reflected.attr_size()) {
+    generate_xml_attr(ins, xml);
+  }
+
+  if constexpr (0 == reflected.node_size()) {
+    xml += "/>";
+
+    return;
+  }
+
+  xml += '>';
+
+  if constexpr (is_leaf_node<std::decay_t<T> >) {
+    if constexpr (is_optional<T>) {
+      generate_xml_value(*ins.leaf_value, xml);
+    } else {
+      generate_xml_value(ins.leaf_value, xml);
+    }
+  } else {
+    reflected.each_node(
+      [&](auto &&node) {
+        generate_xml_node(node.name_, node.invoke(ins), depth + 1, xml);
+      }
+    );
+
+#ifdef PRETTY_SERIALIZE
+    xml += new_line;
+
+    if (0 != depth)
+      for (auto i = 0; i < depth; ++i)
+        xml += tab;
+#endif
+  }
+
+  xml += "</";
+  xml.append(name);
+  xml += ">";
 }
 } // tmpofd

@@ -39,4 +39,18 @@ constexpr void from_xml(T &ins, const XML &xml) {
 
   parse_xml_node(key, ins, pos, end);
 }
+
+template<is_reflectable T>
+std::string to_xml(const T &ins) {
+  auto reflected = get_reflected(ins);
+
+  std::string xml;
+  xml.reserve(4096);
+  xml += R"(<?xml version="1.0" encoding="UTF-8"?>)";
+
+  constexpr auto depth = 0;
+  generate_xml_node(reflected.name(), ins, depth, xml);
+
+  return xml;
+}
 } // tmpofd

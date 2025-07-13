@@ -491,6 +491,7 @@ struct enum_string_t {
 
     explicit operator const st_string &() const { return value_; }
     explicit operator st_string &() { return value_; }
+
     const st_string &str() const { return value_; }
 
     std::optional<E> to_enum() const {

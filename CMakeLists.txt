@@ -1,6 +1,9 @@
 # PROJECT_IS_TOP_LEVEL need 3.21 or later
 cmake_minimum_required(VERSION 3.21)
 
+option(PRETTY_SERIALIZE "pretty xml output" ON)
+option(TEST_TMPOFD "enable test" OFF)
+
 # project version
 set(TMPOFD_VERSION_MAJOR 0)
 set(TMPOFD_VERSION_MINOR 1)
@@ -46,7 +49,10 @@ endif ()
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-option(TEST_TMPOFD "build ${PROJECT_NAME} test" OFF)
+if (PRETTY_SERIALIZE)
+    add_definitions(-DPRETTY_SERIALIZE)
+endif ()
+
 if (PROJECT_IS_TOP_LEVEL)
     set(TEST_TMPOFD ON CACHE BOOL "build ${PROJECT_NAME} test" FORCE)
 endif ()

@@ -34,8 +34,8 @@
 using namespace tmpofd;
 
 template<typename T>
-T test_case(const std::string_view &name) {
-  std::cout << "test case : " << name << std::endl;
+T deserialize(const std::string_view &name) {
+  std::cout << "deserialize : " << name << std::endl;
 
   T entry{};
 
@@ -49,15 +49,39 @@ T test_case(const std::string_view &name) {
       }
     }
   } catch (const std::exception &e) {
-    std::cerr << "serialization error : " << e.what() << std::endl;
+    std::cerr << "deserialize error : " << e.what() << std::endl;
   }
 
   return entry;
 }
 
-int main() {
-  const auto &[version_, doc_type_, doc_bodies_] = test_case<ofd_t>("ofd/baseline.xml");
+template<typename T>
+void serialize(const T &entry, const std::string_view &name) {
+  std::cout << "serialize : " << name << std::endl;
 
+  try {
+    if (const auto file_path = std::filesystem::current_path() / name; std::filesystem::exists(file_path)) {
+      if (auto file = std::ifstream(file_path, std::ios::in | std::ios::binary)) {
+        std::string content;
+        content.assign(std::istreambuf_iterator(file), std::istreambuf_iterator<char>());
+
+        const auto xml = to_xml(entry);
+        std::cout << xml << std::endl;
+
+        assert(xml == content);
+      }
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "serialize error : " << e.what() << std::endl;
+  }
+}
+
+int main() {
+  auto ofd = deserialize<ofd_t>("ofd/baseline.xml");
+
+  const auto &[namespace_, version_, doc_type_, doc_bodies_] = ofd;
+
+  assert(namespace_ == "http://www.ofdspec.org/2016");
   assert(version_ == "1.0");
   assert(doc_type_ == "OFD");
   assert(doc_type_ == doc_type_t::OFD);
@@ -85,8 +109,6 @@ int main() {
     assert(title_ == "OFD Template 1");
     assert(author_ == "Yinxf 1");
     assert(subject_ == "template 1");
-
-    auto l = abstract_->length();
     assert(abstract_ == "its a OFD entry template 1");
     assert(to_string(creation_date_) == "2024-04-16");
     assert(to_string(mod_date_) == "2024-04-17");
@@ -122,10 +144,12 @@ int main() {
     assert(signatures_ == "Doc_0/Signs/Signatures.xml");
   }
 
-  auto ofd = test_case<ofd_t>("ofd/doctype_entity.xml");
-  ofd = test_case<ofd_t>("ofd/minimal_robustness.xml");
-  ofd = test_case<ofd_t>("ofd/special_chars.xml");
-  ofd = test_case<ofd_t>("ofd/syntax_edge_cases.xml");
+  serialize(ofd, "ofd/baseline.xml");
+
+  ofd = deserialize<ofd_t>("ofd/doctype_entity.xml");
+  ofd = deserialize<ofd_t>("ofd/minimal_robustness.xml");
+  ofd = deserialize<ofd_t>("ofd/special_chars.xml");
+  ofd = deserialize<ofd_t>("ofd/syntax_edge_cases.xml");
 
   return 0;
 }

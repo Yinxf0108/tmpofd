@@ -1,0 +1,1269 @@
+<?xml version="1.0"encoding="UTF-8"?>
+<xs:schema xmlns="http://www.ofdspec.org/2016" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.ofdspec.org/2016" elementFormDefault="qualified">
+    <!--主入口定义。-->
+    <xs:element name="OFD">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="DocBody" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="DocInfo" type="CT_DocInfo"/>
+                            <xs:element name="DocRoot" type="ST_Loc"/>
+                            <xs:element name="Versions" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Version" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attribute name="ID" type="xs:ID" use="required"/>
+                                                <xs:attribute name="Index" type="xs:int" use="required"/>
+                                                <xs:attribute name="Current" type="xs:boolean" default="false"/>
+                                                <xs:attribute name="BaseLoc" type="ST_Loc" use="required"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Signatures" type="ST_Loc" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Version" type="xs:string" use="required" fixed="1.0"/>
+            <xs:attribute name="DocType" use="required" fixed="OFD">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="OFD"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!--文档元数据定义-->
+    <xs:complexType name="CT_DocInfo">
+        <xs:sequence>
+            <xs:element name="DocID" type="xs:string"/>
+            <xs:element name="Title" type="xs:string" minOccurs="0"/>
+            <xs:element name="Author" type="xs:string" minOccurs="0"/>
+            <xs:element name="Subject" type="xs:string" minOccurs="0"/>
+            <xs:element name="Abstract" type="xs:string" minOccurs="0"/>
+            <xs:element name="CreationDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="ModDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="DocUsage" type="xs:string" minOccurs="0"/>
+            <xs:element name="Cover" type="ST_Loc" minOccurs="0"/>
+            <xs:element name="Keywords" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Keyword" type="xs:string" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Creator" type="xs:string" minOccurs="0"/>
+            <xs:element name="CreatorVersion" type="xs:string" minOccurs="0"/>
+            <xs:element name="CustomDatas" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="CustomData" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="Name" type="xs:string" use="required"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!--文档结构定义。-->
+    <xs:element name="Document">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="CommonData">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="MaxUnitID" type="ST_ID"/>
+                            <xs:element name="PageArea" type="CT_PageArea"/>
+                            <xs:element name="PublicRes" type="ST_Loc" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="DocumentRes" type="ST_Loc" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="TemplatePage" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                    <xs:attribute name="Name" type="xs:string"/>
+                                    <xs:attribute name="ZOrder">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="Background"/>
+                                                <xs:enumeration value="Foreground"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="BaseLoc" type="ST_Loc" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="DefaultCS" type="ST_RefID" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Pages">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Page" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                    <xs:attribute name="BaseLoc" type="ST_Loc" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Outlines" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="OutlineElem" type="CT_OutlineElem" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Permissions" type="CT_Permission" minOccurs="0"/>
+                <xs:element name="Actions" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Action" type="CT_Action" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="VPreferences" type="CT_VPreferences" minOccurs="0"/>
+                <xs:element name="Bookmarks" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Bookmark" type="CT_Bookmark" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Annotations" type="ST_Loc" minOccurs="0"/>
+                <xs:element name="CustomTags" type="ST_Loc" minOccurs="0"/>
+                <xs:element name="Attachments" type="ST_Loc" minOccurs="0"/>
+                <xs:element name="Extensions" type="ST_Loc" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--文档全局设置-->
+    <xs:complexType name="CT_Permission">
+        <xs:sequence>
+            <xs:element name="Edit" type="xs:boolean" default="true" minOccurs="0"/>
+            <xs:element name="Annot" type="xs:boolean" default="true" minOccurs="0"/>
+            <xs:element name="Export" type="xs:boolean" default="true" minOccurs="0"/>
+            <xs:element name="Signature" type="xs:boolean" default="true" minOccurs="0"/>
+            <xs:element name="Watermark" type="xs:boolean" default="true" minOccurs="0"/>
+            <xs:element name="PrintScreen" type="xs:boolean" default="true" minOccurs="0"/>
+            <xs:element name="Print" minOccurs="0">
+                <xs:complexType>
+                    <xs:attribute name="Printable" type="xs:boolean" use="required"/>
+                    <xs:attribute name="Copies" type="xs:int" default="-1"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ValidPeriod" minOccurs="0">
+                <xs:complexType>
+                    <xs:attribute name="StartDate" type="xs:dateTime"/>
+                    <xs:attribute name="EndDate" type="xs:dateTime"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CT_VPreferences">
+        <xs:sequence>
+            <xs:element name="PageMode" default="None" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="None"/>
+                        <xs:enumeration value="FullScreen"/>
+                        <xs:enumeration value="UseOutlines"/>
+                        <xs:enumeration value="UseThumbs"/>
+                        <xs:enumeration value="UseCustomTags"/>
+                        <xs:enumeration value="UseLayers"/>
+                        <xs:enumeration value="UseAttatchs"/>
+                        <xs:enumeration value="UseBookmarks"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="PageLayout" default="OneColumn" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="OnePage"/>
+                        <xs:enumeration value="OneColumn"/>
+                        <xs:enumeration value="TwoPageL"/>
+                        <xs:enumeration value="TwoColumnL"/>
+                        <xs:enumeration value="TwoPageR"/>
+                        <xs:enumeration value="TwoColumnR"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="TabDisplay" default="DocTitle" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="DocTitle"/>
+                        <xs:enumeration value="FileName"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="HideToolbar" type="xs:boolean" default="false" minOccurs="0"/>
+            <xs:element name="HideMenubar" type="xs:boolean" default="false" minOccurs="0"/>
+            <xs:element name="HideWindowUI" type="xs:boolean" default="false" minOccurs="0"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="ZoomMode">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="Default"/>
+                            <xs:enumeration value="FitHeight"/>
+                            <xs:enumeration value="FitWidth"/>
+                            <xs:enumeration value="FitRect"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="Zoom" type="xs:double"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <!--大纲相关结构类型-->
+    <xs:complexType name="CT_OutlineElem">
+        <xs:sequence>
+            <xs:element name="Actions" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Action" type="CT_Action" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="OutlineElem" type="CT_OutlineElem" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Title" type="xs:string" use="required"/>
+        <xs:attribute name="Count" type="xs:int"/>
+        <xs:attribute name="Expanded" type="xs:boolean" default="true"/>
+    </xs:complexType>
+    <xs:complexType name="CT_Bookmark">
+        <xs:sequence>
+            <xs:element name="Dest" type="CT_Dest"/>
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required"/>
+    </xs:complexType>
+    <!--注释索引文件,按页组织指向注释内容文件。注释内容与版式内容是分开描述的-->
+    <xs:element name="Annotations">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Page" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="FileLoc" type="ST_Loc"/>
+                        </xs:sequence>
+                        <xs:attribute name="PageID" type="ST_RefID" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--注释文件单独存放,与被注释对象相分离。-->
+    <xs:element name="PageAnnot">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Annot" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Remark" type="xs:string" minOccurs="0"/>
+                            <xs:element name="Parameters" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Parameter" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute name="Name" type="xs:string" use="required"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Appearance">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="CT_PageBlock">
+                                            <xs:attribute name="Boundary" type="ST_Box"/>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="ID" type="ST_ID" use="required"/>
+                        <xs:attribute name="Type" use="required">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Link"/>
+                                    <xs:enumeration value="Path"/>
+                                    <xs:enumeration value="Highlight"/>
+                                    <xs:enumeration value="Stamp"/>
+                                    <xs:enumeration value="Watermark"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="Creator" type="xs:string" use="required"/>
+                        <xs:attribute name="LastModDate" type="xs:date" use="required"/>
+                        <xs:attribute name="Visible" type="xs:boolean" default="true"/>
+                        <xs:attribute name="Subtype" type="xs:string"/>
+                        <xs:attribute name="Print" type="xs:boolean" default="true"/>
+                        <xs:attribute name="NoZoom" type="xs:boolean" default="false"/>
+                        <xs:attribute name="NoRotate" type="xs:boolean" default="false"/>
+                        <xs:attribute name="ReadOnly" type="xs:boolean" default="true"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--资源文件定义。文档中使用的资源性文件比如图形、图像、多媒体、绘制参数(样式)等应在资源文件中统一管理。-->
+    <xs:element name="Res">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="ColorSpaces">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ColorSpace" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="CT_ColorSpace">
+                                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DrawParams">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="DrawParam" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="CT_DrawParam">
+                                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Fonts">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Font" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="CT_Font">
+                                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="MultiMedias">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="MultiMedia" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="CT_MultiMedia">
+                                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="CompositeGraphicUnits">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="CompositeGraphicUnit" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="CT_VectorG">
+                                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute name="BaseLoc" type="ST_Loc" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <!--颜色空间的定义-->
+    <xs:complexType name="CT_ColorSpace">
+        <xs:sequence>
+            <xs:element name="Palette" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="CV" type="ST_Array" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="GRAY"/>
+                    <xs:enumeration value="RGB"/>
+                    <xs:enumeration value="CMYK"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="BitsPerComponent" type="xs:int" default="8"/>
+        <xs:attribute name="Profile" type="ST_Loc"/>
+    </xs:complexType>
+    <!--绘制参数定义-->
+    <xs:complexType name="CT_DrawParam">
+        <xs:sequence>
+            <xs:element name="FillColor" type="CT_Color" minOccurs="0"/>
+            <xs:element name="StrokeColor" type="CT_Color" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="Relative" type="ST_RefID"/>
+        <xs:attribute name="LineWidth" type="xs:double" default="0.353"/>
+        <xs:attribute name="Join" type="xs:string" default="Miter"/>
+        <xs:attribute name="Cap" type="xs:string" default="Butt"/>
+        <xs:attribute name="DashOffset" type="xs:double" default="0"/>
+        <xs:attribute name="DashPattern" type="ST_Array"/>
+        <xs:attribute name="MiterLimit" type="xs:double" default="4.234"/>
+    </xs:complexType>
+    <!--字型资源定义-->
+    <xs:complexType name="CT_Font">
+        <xs:sequence>
+            <xs:element name="FontFile" type="ST_Loc" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="FontName" type="xs:string" use="required"/>
+        <xs:attribute name="FamilyName" type="xs:string"/>
+        <xs:attribute name="Charset" default="unicode">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="symbol"/>
+                    <xs:enumeration value="prc"/>
+                    <xs:enumeration value="big5"/>
+                    <xs:enumeration value="shift-jis"/>
+                    <xs:enumeration value="wansung"/>
+                    <xs:enumeration value="johab"/>
+                    <xs:enumeration value="unicode"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="Italic" type="xs:boolean" default="false"/>
+        <xs:attribute name="Bold" type="xs:boolean" default="false"/>
+        <xs:attribute name="Serif" type="xs:boolean" default="false"/>
+        <xs:attribute name="FixedWidth" type="xs:boolean" default="false"/>
+    </xs:complexType>
+    <!--多媒体(含位图图像)资源定义-->
+    <xs:complexType name="CT_MultiMedia">
+        <xs:sequence>
+            <xs:element name="MediaFile" type="ST_Loc"/>
+        </xs:sequence>
+        <xs:attribute name="Type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Image"/>
+                    <xs:enumeration value="Audio"/>
+                    <xs:enumeration value="Video"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="Format" type="xs:string"/>
+    </xs:complexType>
+    <!--矢量图像定义-->
+    <xs:complexType name="CT_VectorG">
+        <xs:sequence>
+            <xs:element name="Thumbnail" type="ST_RefID" minOccurs="0"/>
+            <xs:element name="Substitution" type="ST_RefID" minOccurs="0"/>
+            <xs:element name="Content" type="CT_PageBlock"/>
+        </xs:sequence>
+        <xs:attribute name="Width" type="xs:double" use="required"/>
+        <xs:attribute name="Height" type="xs:double" use="required"/>
+    </xs:complexType>
+    <!--公用的简单类型定义。-->
+    <xs:simpleType name="ST_ID">
+        <xs:restriction base="xs:unsignedInt"/>
+    </xs:simpleType>
+    <xs:simpleType name="ST_RefID">
+        <xs:restriction base="xs:unsignedInt"/>
+    </xs:simpleType>
+    <xs:simpleType name="ST_Loc">
+        <xs:restriction base="xs:anyURI"/>
+    </xs:simpleType>
+    <xs:simpleType name="ST_Array">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="ST_Pos">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="ST_Box">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <!--公用的复杂类型定义。-->
+    <xs:complexType name="CT_Dest">
+        <xs:attribute name="Type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="XYZ"/>
+                    <xs:enumeration value="Fit"/>
+                    <xs:enumeration value="FitH"/>
+                    <xs:enumeration value="FitV"/>
+                    <xs:enumeration value="FitR"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="PageID" type="ST_RefID" use="required"/>
+        <xs:attribute name="Left" type="xs:double"/>
+        <xs:attribute name="Top" type="xs:double"/>
+        <xs:attribute name="Right" type="xs:double"/>
+        <xs:attribute name="Bottom" type="xs:double"/>
+        <xs:attribute name="Zoom" type="xs:double"/>
+    </xs:complexType>
+    <xs:complexType name="CT_PageArea">
+        <xs:sequence>
+            <xs:element name="PhysicalBox" type="ST_Box"/>
+            <xs:element name="ApplicationBox" type="ST_Box" minOccurs="0"/>
+            <xs:element name="ContentBox" type="ST_Box" minOccurs="0"/>
+            <xs:element name="BleedBox" type="ST_Box" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--动作及动作集定义。-->
+    <xs:complexType name="CT_Action">
+        <xs:sequence>
+            <xs:element name="Region" type="CT_Region" minOccurs="0"/>
+            <xs:choice>
+                <xs:element name="Goto">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="Dest" type="CT_Dest"/>
+                            <xs:element name="Bookmark">
+                                <xs:complexType>
+                                    <xs:attribute name="Name" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="URI">
+                    <xs:complexType>
+                        <xs:attribute name="URI" type="xs:string" use="required"/>
+                        <xs:attribute name="Base" type="xs:string"/>
+                        <xs:attribute name="Target" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="GotoA">
+                    <xs:complexType>
+                        <xs:attribute name="AttachID" type="xs:IDREF" use="required"/>
+                        <xs:attribute name="NewWindow" type="xs:boolean" default="true"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Sound">
+                    <xs:complexType>
+                        <xs:attribute name="ResourceID" type="ST_RefID" use="required"/>
+                        <xs:attribute name="Volume" type="xs:int"/>
+                        <xs:attribute name="Repeat" type="xs:boolean"/>
+                        <xs:attribute name="Synchronous" type="xs:boolean"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Movie">
+                    <xs:complexType>
+                        <xs:attribute name="ResourceID" type="ST_RefID" use="required"/>
+                        <xs:attribute name="Operator" default="Play">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Play"/>
+                                    <xs:enumeration value="Stop"/>
+                                    <xs:enumeration value="Pause"/>
+                                    <xs:enumeration value="Resume"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Event" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="DO"/>
+                    <xs:enumeration value="PO"/>
+                    <xs:enumeration value="CLICK"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="CT_Region">
+        <xs:sequence>
+            <xs:element name="Area" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="Move">
+                            <xs:complexType>
+                                <xs:attribute name="Point1" type="ST_Pos" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Line">
+                            <xs:complexType>
+                                <xs:attribute name="Point1" type="ST_Pos" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="QuadraticBezier">
+                            <xs:complexType>
+                                <xs:attribute name="Point1" type="ST_Pos" use="required"/>
+                                <xs:attribute name="Point2" type="ST_Pos" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="CubicBezier">
+                            <xs:complexType>
+                                <xs:attribute name="Point1" type="ST_Pos"/>
+                                <xs:attribute name="Point2" type="ST_Pos"/>
+                                <xs:attribute name="Point3" type="ST_Pos" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Arc">
+                            <xs:complexType>
+                                <xs:attribute name="SweepDirection" type="xs:boolean" use="required"/>
+                                <xs:attribute name="LargeArc" type="xs:boolean" use="required"/>
+                                <xs:attribute name="RotationAngle" type="xs:double" use="required"/>
+                                <xs:attribute name="EllipseSize" type="ST_Array" use="required"/>
+                                <xs:attribute name="EndPoint" type="ST_Pos" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Close" type="ST_Pos"/>
+                    </xs:choice>
+                    <xs:attribute name="Start" type="ST_Pos" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!--数字签名的索引文件-->
+    <xs:element name="Signatures">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="MaxSignId" type="xs:ID" minOccurs="0"/>
+                <xs:element name="Signature" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="ID" type="xs:ID" use="required"/>
+                        <xs:attribute name="Type" default="Seal">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Seal"/>
+                                    <xs:enumeration value="Sign"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="BaseLoc" type="ST_Loc" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--数字签名或电子签章描述文件-->
+    <xs:element name="Signature">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SignedInfo">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Provider">
+                                <xs:complexType>
+                                    <xs:attribute name="ProviderName" type="xs:string" use="required"/>
+                                    <xs:attribute name="Version" type="xs:string"/>
+                                    <xs:attribute name="Company" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="SignatureMethod" type="xs:string" minOccurs="0"/>
+                            <xs:element name="SignatureDateTime" type="xs:string" minOccurs="0"/>
+                            <xs:element name="References">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Reference"
+                                                    maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="CheckValue" type="xs:base64Binary"/>
+                                                </xs:sequence>
+                                                <xs:attribute name="FileRef" type="ST_Loc" use="required"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="CheckMethod" default="MD5">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="MD5"/>
+                                                <xs:enumeration value="SHA1"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:sequence>
+                                <xs:element name="StampAnnot" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:attribute name="ID" type="xs:ID" use="required"/>
+                                        <xs:attribute name="PageRef" type="ST_RefID" use="required"/>
+                                        <xs:attribute name="Boundary" type="ST_Box" use="required"/>
+                                        <xs:attribute name="Clip" type="ST_Box"/>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Seal" minOccurs="0">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="BaseLoc" type="ST_Loc"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="SignedValue" type="ST_Loc"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--标引索引文件,标引文件中通过 ID引用与被标引对象发生“非接触式(分离式)”关联。标引内容可任意扩展,但建议给出扩展内容的规范约束文件(schema)或命名空间。-->
+    <xs:element name="CustomTags">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="CustomTag" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SchemaLoc" type="ST_Loc" minOccurs="0"/>
+                            <xs:element name="FileLoc" type="ST_Loc"/>
+                        </xs:sequence>
+                        <xs:attribute name="NameSpace" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--注释文件单独存放,通过ID引用与被扩展对象发生“非接触式”关联。-->
+    <xs:element name="Extensions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Extension" type="CT_Extension" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="CT_Extension">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="Property">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="Name" type="xs:string" use="required"/>
+                            <xs:attribute name="Type" type="xs:string"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Data" type="xs:anyType"/>
+            <xs:element name="ExtendData" type="ST_Loc"/>
+        </xs:choice>
+        <xs:attribute name="AppName" type="xs:string" use="required"/>
+        <xs:attribute name="Company" type="xs:string"/>
+        <xs:attribute name="AppVersion" type="xs:string"/>
+        <xs:attribute name="Date" type="xs:dateTime"/>
+        <xs:attribute name="RefId" type="ST_RefID" use="required"/>
+    </xs:complexType>
+    <xs:element name="Attachments">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Attachment" type="CT_Attachment" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="CT_Attachment">
+        <xs:sequence>
+            <xs:element name="FileLoc" type="ST_Loc"/>
+        </xs:sequence>
+        <xs:attribute name="ID" type="xs:ID" use="required"/>
+        <xs:attribute name="Name" type="xs:string" use="required"/>
+        <xs:attribute name="Format" type="xs:string"/>
+        <xs:attribute name="CreationDate" type="xs:dateTime"/>
+        <xs:attribute name="ModDate" type="xs:dateTime"/>
+        <xs:attribute name="Size" type="xs:double"/>
+        <xs:attribute name="Visible" type="xs:boolean" default="true"/>
+        <xs:attribute name="Usage" type="xs:string" default="none"/>
+    </xs:complexType>
+    <!--版本控制信息定义。-->
+    <xs:element name="DocVersion">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="FileList">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="File" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="ST_Loc">
+                                            <xs:attribute name="ID" type="xs:ID" use="required"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DocRoot" type="ST_Loc"/>
+            </xs:sequence>
+            <xs:attribute name="ID" type="xs:ID" use="required"/>
+            <xs:attribute name="Version" type="xs:string"/>
+            <xs:attribute name="Name" type="xs:string"/>
+            <xs:attribute name="CreationDate" type="xs:date"/>
+        </xs:complexType>
+    </xs:element>
+    <!--页面描述定义,分为页面-图层(块)-图元三个层次。-->
+    <xs:element name="Page">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Template" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="TemplateID" type="ST_RefID" use="required"/>
+                        <xs:attribute name="ZOrder" default="Background">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Background"/>
+                                    <xs:enumeration value="Foreground"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="PageRes" type="ST_Loc" minOccurs="0"
+                            maxOccurs="unbounded"/>
+                <xs:element name="Area" type="CT_PageArea" minOccurs="0"/>
+                <xs:element name="Content" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Layer" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="CT_Layer">
+                                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Actions" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Action" type="CT_Action" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--页对象定义-->
+    <xs:complexType name="CT_Clip">
+        <xs:sequence>
+            <xs:element name="Area" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="Path" type="CT_Path"/>
+                        <xs:element name="Text" type="CT_Text"/>
+                    </xs:choice>
+                    <xs:attribute name="DrawParam" type="ST_RefID"/>
+                    <xs:attribute name="CTM" type="ST_Array"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CT_PageBlock">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="TextObject">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="CT_Text">
+                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="PathObject">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="CT_Path">
+                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ImageObject">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="CT_Image">
+                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CompositeObject">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="CT_Composite">
+                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="PageBlock">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="CT_PageBlock">
+                            <xs:attribute name="ID" type="ST_ID" use="required"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="CT_Layer">
+        <xs:complexContent>
+            <xs:extension base="CT_PageBlock">
+                <xs:attribute name="Type" default="Body">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="Body"/>
+                            <xs:enumeration value="Background"/>
+                            <xs:enumeration value="Foreground"/>
+                            <xs:enumeration value="Custom"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="DrawParam" type="ST_RefID"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!--图元的基础定义-->
+    <xs:complexType name="CT_GraphicUnit" abstract="true">
+        <xs:sequence>
+            <xs:element name="Actions" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Action" type="CT_Action" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Clips" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Clip" type="CT_Clip" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Boundary" type="ST_Box" use="required"/>
+        <xs:attribute name="Name" type="xs:string"/>
+        <xs:attribute name="Visible" type="xs:boolean" default="true"/>
+        <xs:attribute name="CTM" type="ST_Array"/>
+        <xs:attribute name="DrawParam" type="ST_RefID"/>
+        <xs:attribute name="LineWidth" type="xs:double" default="0.353"/>
+        <xs:attribute name="Cap" default="Butt">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Butt"/>
+                    <xs:enumeration value="Round"/>
+                    <xs:enumeration value="Square"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="Join" default="Miter">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Miter"/>
+                    <xs:enumeration value="Round"/>
+                    <xs:enumeration value="Bevel"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="MiterLimit" type="xs:double" default="4.234"/>
+        <xs:attribute name="DashOffset" type="xs:double" default="0"/>
+        <xs:attribute name="DashPattern" type="ST_Array"/>
+        <xs:attribute name="Alpha" type="xs:int" default="255"/>
+    </xs:complexType>
+    <!--文本对象及其定义-->
+    <xs:complexType name="CT_Text">
+        <xs:complexContent>
+            <xs:extension base="CT_GraphicUnit">
+                <xs:sequence>
+                    <xs:element name="FillColor" type="CT_Color" minOccurs="0"/>
+                    <xs:element name="StrokeColor" type="CT_Color" minOccurs="0"/>
+                    <xs:sequence maxOccurs="unbounded">
+                        <xs:element name="CGTransform" type="CT_CGTransform" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="TextCode">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="X" type="xs:double"/>
+                                        <xs:attribute name="Y" type="xs:double"/>
+                                        <xs:attribute name="DeltaX" type="ST_Array"/>
+                                        <xs:attribute name="DeltaY" type="ST_Array"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:sequence>
+                <xs:attribute name="Font" type="ST_RefID" use="required"/>
+                <xs:attribute name="Size" type="xs:double" use="required"/>
+                <xs:attribute name="Stroke" type="xs:boolean" default="false"/>
+                <xs:attribute name="Fill" type="xs:boolean" default="true"/>
+                <xs:attribute name="HScale" type="xs:double" default="1.0"/>
+                <xs:attribute name="ReadDirection" type="xs:int" default="0"/>
+                <xs:attribute name="CharDirection" type="xs:int" default="0"/>
+                <xs:attribute name="Weight" default="400">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                            <xs:enumeration value="0"/>
+                            <xs:enumeration value="100"/>
+                            <xs:enumeration value="200"/>
+                            <xs:enumeration value="300"/>
+                            <xs:enumeration value="400"/>
+                            <xs:enumeration value="500"/>
+                            <xs:enumeration value="600"/>
+                            <xs:enumeration value="700"/>
+                            <xs:enumeration value="800"/>
+                            <xs:enumeration value="900"/>
+                            <xs:enumeration value="1000"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="Italic" type="xs:boolean" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CT_CGTransform">
+        <xs:sequence>
+            <xs:element name="Glyphs" type="ST_Array" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="CodePosition" type="xs:int" use="required"/>
+        <xs:attribute name="CodeCount" type="xs:int" default="1"/>
+        <xs:attribute name="GlyphCount" type="xs:int" default="1"/>
+    </xs:complexType>
+    <!--位图图像对象定义-->
+    <xs:complexType name="CT_Image">
+        <xs:complexContent>
+            <xs:extension base="CT_GraphicUnit">
+                <xs:sequence>
+                    <xs:element name="Border" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="BorderColor" type="CT_Color" minOccurs="0"/>
+                            </xs:sequence>
+                            <xs:attribute name="LineWidth" type="xs:double" default="0.353"/>
+                            <xs:attribute name="HorizonalCornerRadius" type="xs:double" default="0"/>
+                            <xs:attribute name="VerticalCornerRadius" type="xs:double" default="0"/>
+                            <xs:attribute name="DashOffset" type="xs:double" default="0"/>
+                            <xs:attribute name="DashPattern" type="ST_Array"/>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="ResourceID" type="ST_RefID" use="required"/>
+                <xs:attribute name="Substitution" type="ST_RefID"/>
+                <xs:attribute name="ImageMask" type="ST_RefID"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!--矢量图像对象定义-->
+    <xs:complexType name="CT_Composite">
+        <xs:complexContent>
+            <xs:extension base="CT_GraphicUnit">
+                <xs:attribute name="ResourceID" type="ST_RefID" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!--图形对象及其定义-->
+    <xs:complexType name="CT_Path">
+        <xs:complexContent>
+            <xs:extension base="CT_GraphicUnit">
+                <xs:sequence>
+                    <xs:element name="StrokeColor" type="CT_Color" minOccurs="0"/>
+                    <xs:element name="FillColor" type="CT_Color" minOccurs="0"/>
+                    <xs:element name="AbbreviatedData" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="Stroke" type="xs:boolean" default="true"/>
+                <xs:attribute name="Fill" type="xs:boolean" default="false"/>
+                <xs:attribute name="Rule" default="NonZero">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="NonZero"/>
+                            <xs:enumeration value="Even-Odd"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!--底纹定义-->
+    <xs:complexType name="CT_Pattern">
+        <xs:sequence>
+            <xs:element name="CellContent">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="CT_PageBlock">
+                            <xs:attribute name="Thumbnail" type="ST_RefID"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Width" type="xs:double" use="required"/>
+        <xs:attribute name="Height" type="xs:double" use="required"/>
+        <xs:attribute name="XStep" type="xs:double"/>
+        <xs:attribute name="YStep" type="xs:double"/>
+        <xs:attribute name="ReflectMethod" default="Normal">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Normal"/>
+                    <xs:enumeration value="Row"/>
+                    <xs:enumeration value="Column"/>
+                    <xs:enumeration value="RowAndColumn"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="RelativeTo" default="Object">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Page"/>
+                    <xs:enumeration value="Object"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="CTM" type="ST_Array"/>
+    </xs:complexType>
+    <!--渐变定义-->
+    <xs:complexType name="CT_AxialShd">
+        <xs:sequence>
+            <xs:element name="Segment" minOccurs="2" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Color" type="CT_Color"/>
+                    </xs:sequence>
+                    <xs:attribute name="Position" type="xs:double"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="MapType" default="Direct">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Direct"/>
+                    <xs:enumeration value="Repeat"/>
+                    <xs:enumeration value="Reflect"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="MapUnit" type="xs:double"/>
+        <xs:attribute name="Extend" default="0">
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:enumeration value="0"/>
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="2"/>
+                    <xs:enumeration value="3"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="StartPoint" type="ST_Pos" use="required"/>
+        <xs:attribute name="EndPoint" type="ST_Pos" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="CT_RadialShd">
+        <xs:sequence>
+            <xs:element name="Segment" minOccurs="2" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Color" type="CT_Color"/>
+                    </xs:sequence>
+                    <xs:attribute name="Position" type="xs:double"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="MapType" default="Direct">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Direct"/>
+                    <xs:enumeration value="Repeat"/>
+                    <xs:enumeration value="Reflect"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="MapUnit" type="xs:double"/>
+        <xs:attribute name="Eccentricity" type="xs:double" default="0"/>
+        <xs:attribute name="Angle" type="xs:double" default="0"/>
+        <xs:attribute name="StartPoint" type="ST_Pos" use="required"/>
+        <xs:attribute name="StartRadius" type="xs:double" default="0"/>
+        <xs:attribute name="EndPoint" type="ST_Pos" use="required"/>
+        <xs:attribute name="EndRadius" type="xs:double" use="required"/>
+        <xs:attribute name="Extend" type="xs:int" default="0"/>
+    </xs:complexType>
+    <xs:complexType name="CT_GouraudShd">
+        <xs:sequence>
+            <xs:element name="Point" minOccurs="3" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Color" type="CT_Color"/>
+                    </xs:sequence>
+                    <xs:attribute name="X" type="xs:double" use="required"/>
+                    <xs:attribute name="Y" type="xs:double" use="required"/>
+                    <xs:attribute name="EdgeFlag">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:int">
+                                <xs:enumeration value="0"/>
+                                <xs:enumeration value="1"/>
+                                <xs:enumeration value="2"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="BackColor" type="CT_Color" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="Extend" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="CT_LaGouraudShd">
+        <xs:sequence>
+            <xs:element name="Point" minOccurs="4" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Color" type="CT_Color"/>
+                    </xs:sequence>
+                    <xs:attribute name="X" type="xs:double"/>
+                    <xs:attribute name="Y" type="xs:double"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="BackColor" type="CT_Color" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="VerticesPerRow" type="xs:int" use="required"/>
+        <xs:attribute name="Extend" type="xs:int"/>
+    </xs:complexType>
+    <!--颜色定义,渐变和填充被看作颜色的一种。-->
+    <xs:complexType name="CT_Color">
+        <xs:choice minOccurs="0">
+            <xs:element name="Pattern" type="CT_Pattern"/>
+            <xs:element name="AxialShd" type="CT_AxialShd"/>
+            <xs:element name="RadialShd" type="CT_RadialShd"/>
+            <xs:element name="GouraudShd" type="CT_GouraudShd"/>
+            <xs:element name="LaGourandShd" type="CT_LaGouraudShd"/>
+        </xs:choice>
+        <xs:attribute name="Value" type="ST_Array"/>
+        <xs:attribute name="Index" type="xs:int"/>
+        <xs:attribute name="ColorSpace" type="ST_RefID"/>
+        <xs:attribute name="Alpha" type="xs:int" default="255"/>
+    </xs:complexType>
+</xs:schema>

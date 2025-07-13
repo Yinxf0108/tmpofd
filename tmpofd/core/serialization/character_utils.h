@@ -26,6 +26,9 @@
 
 #include <cstring>
 
+#define new_line "\n"
+#define tab "    "
+
 namespace tmpofd {
 inline std::string to_string(const st_date &date) {
   std::stringstream ss;
