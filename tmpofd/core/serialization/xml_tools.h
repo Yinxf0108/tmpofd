@@ -28,7 +28,6 @@
 #include "tmpofd/core/struct/ofd/ofd.h"
 
 #include <array>
-#include <iostream>
 
 namespace tmpofd {
 template<is_st_bool T, is_string V>
@@ -286,7 +285,15 @@ constexpr void generate_xml_value(T &ins, XML &xml) {
 
 template<can_passed_via_string_view T, is_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
-  xml += static_cast<st_string>(ins);
+  if constexpr (is_st_string<T>) {
+    xml += ins;
+  } else if constexpr (is_st_loc<T>) {
+    xml += ins.string();
+  } else if constexpr (is_enum_string<T>) {
+    xml += ins.str();
+  } else {
+    static_assert(always_false_v<T>, "Unknown time type");
+  }
 }
 
 template<is_time T, is_string XML>
