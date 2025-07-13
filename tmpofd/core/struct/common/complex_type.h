@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include "tmpofd/core/struct/common/simple_type.h"
 #include "tmpofd/core/reflection/reflection.h"
 
 namespace tmpofd {

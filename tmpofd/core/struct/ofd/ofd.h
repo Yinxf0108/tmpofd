@@ -27,9 +27,19 @@
 #include "tmpofd/core/struct/ofd/doc_body.h"
 
 namespace tmpofd {
+enum class doc_type_t { OFD };
+template<>
+struct enum_converter<doc_type_t> {
+  static std::string to_string(doc_type_t) { return "OFD"; }
+  static std::optional<doc_type_t> from_string(const std::string_view s) {
+    if (s == "OFD") return doc_type_t::OFD;
+    return std::nullopt;
+  }
+};
+
 struct ofd_t {
   st_string version_;
-  st_string doc_type_;
+  enum_string_t<doc_type_t> doc_type_;
 
   st_vector<doc_body_t> doc_bodies_;
 };

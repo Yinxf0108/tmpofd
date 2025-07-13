@@ -60,6 +60,7 @@ int main() {
 
   assert(version_ == "1.0");
   assert(doc_type_ == "OFD");
+  assert(doc_type_ == doc_type_t::OFD);
 
   assert(doc_bodies_.size() == 1);
   if (!doc_bodies_.empty()) {

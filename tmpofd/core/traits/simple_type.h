@@ -25,6 +25,7 @@
 #pragma once
 
 #include "tmpofd/core/struct/common/simple_type_fwd.h"
+#include "tmpofd/core/struct/common/enum_string_type.h"
 
 namespace tmpofd {
 template<typename T>
@@ -100,8 +101,17 @@ template<typename T>
 concept is_base_type = is_st_bool<T> || is_st_number<T> || is_st_string<T> || is_st_date<T> || is_st_date_time<T>
     || is_st_loc<T> || is_st_array<T> || is_st_id<T> || is_st_ref_id<T> || is_st_pos<T> || is_st_box<T>;
 
+template<typename>
+struct is_enum_string_trait : std::false_type {};
+
 template<typename T>
-concept can_passed_via_string_view = is_st_string<T> || is_string_view<T> || is_st_loc<T>;
+struct is_enum_string_trait<enum_string_t<T> > : std::true_type {};
+
+template<typename T>
+concept is_enum_string = is_enum_string_trait<remove_opt_t<std::remove_cvref_t<T> > >::value;
+
+template<typename T>
+concept can_passed_via_string_view = is_st_string<T> || is_string_view<T> || is_st_loc<T> || is_enum_string<T>;
 
 template<typename T>
 concept is_time = is_st_date<T> || is_st_date_time<T>;
