@@ -35,7 +35,7 @@ template<typename>
 struct is_reflectable_trait : std::false_type {};
 
 template<typename T>
-concept is_reflectable = is_reflectable_trait<std::remove_cvref_t<T> >::value;
+concept is_reflectable = is_reflectable_trait<remove_opt_t<std::remove_cvref_t<T> > >::value;
 
 template<typename T>
 struct member_t {
@@ -63,19 +63,19 @@ struct reflected_t {
   private:
     template<const auto &tuple, typename C>
     constexpr void get(const std::string_view name, C &&cb) const {
-      if constexpr (0 < std::tuple_size_v<std::decay_t<decltype(tuple)>>) {
+      if constexpr (0 < std::tuple_size_v<std::decay_t<decltype(tuple)> >) {
         [&]<std::size_t... i>(std::index_sequence<i...>) {
           ((std::get<i>(tuple).matched(name) ? (cb(std::get<i>(tuple)), true) : false) || ...);
-        }(std::make_index_sequence<std::tuple_size_v<std::decay_t<decltype(tuple)>> >());
+        }(std::make_index_sequence<std::tuple_size_v<std::decay_t<decltype(tuple)> > >());
       }
     }
 
     template<const auto &tuple, typename C>
     constexpr void for_each(C &&cb) const {
-      if constexpr (0 < std::tuple_size_v<std::decay_t<decltype(tuple)>>) {
+      if constexpr (0 < std::tuple_size_v<std::decay_t<decltype(tuple)> >) {
         [&]<std::size_t... i>(std::index_sequence<i...>) {
           (cb(std::get<i>(tuple)), ...);
-        }(std::make_index_sequence<std::tuple_size_v<std::decay_t<decltype(tuple)>> >());
+        }(std::make_index_sequence<std::tuple_size_v<std::decay_t<decltype(tuple)> > >());
       }
     }
 
@@ -112,17 +112,21 @@ struct reflected_t {
 #define REFLECT_ATTR(...) inline static constexpr auto attrs_ = std::make_tuple(__VA_ARGS__);
 #define REFLECT_NODE(...) inline static constexpr auto nodes_ = std::make_tuple(__VA_ARGS__);
 
-#define REFLECT_STRUCT(name, member, ...)                    \
-template<>                                                   \
-struct is_reflectable_trait<member> : std::true_type {};     \
-                                                             \
-template<>                                                   \
-struct struct_t<member> {                                    \
-  static constexpr std::string_view name_ = name;            \
-  __VA_ARGS__                                                \
-};                                                           \
-                                                             \
-constexpr auto get_reflected(const member &mb) {             \
-  return reflected_t<std::remove_cvref_t<decltype(mb)> >{};  \
+#define REFLECT_STRUCT(name, member, ...)                                   \
+template<>                                                                  \
+struct is_reflectable_trait<member> : std::true_type {};                    \
+                                                                            \
+template<>                                                                  \
+struct struct_t<member> {                                                   \
+  static constexpr std::string_view name_ = name;                           \
+  __VA_ARGS__                                                               \
+};                                                                          \
+                                                                            \
+constexpr auto get_reflected(const member &mb) {                            \
+  return reflected_t<std::remove_cvref_t<decltype(mb)> >{};                 \
+}                                                                           \
+                                                                            \
+constexpr auto get_reflected(const std::optional<member> &mb) {             \
+  return reflected_t<remove_opt_t<std::remove_cvref_t<decltype(mb)> > >{};  \
 }
 } // tmpofd

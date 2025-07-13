@@ -84,18 +84,20 @@ int main() {
     assert(title_ == "OFD Template 1");
     assert(author_ == "Yinxf 1");
     assert(subject_ == "template 1");
+
+    auto l = abstract_->length();
     assert(abstract_ == "its a OFD entry template 1");
     assert(to_string(creation_date_) == "2024-04-16");
     assert(to_string(mod_date_) == "2024-04-17");
     assert(doc_usage_ == "Normal");
     assert(cover_ == "Doc_0/res/cover.png");
-    const auto &[keyword_] = keywords_;
+    const auto &[keyword_] = *keywords_;
     assert(keyword_.size() == 2);
     assert(keyword_[0] == "OFD entry 1");
     assert(keyword_[1] == "template 1");
     assert(creator_ == "tmpofd 1");
     assert(creator_version_ == "0.1.0");
-    const auto &[custom_data_] = custom_datas_;
+    const auto &[custom_data_] = *custom_datas_;
     assert(custom_data_[0].name_ == "Custom1");
     assert(custom_data_[0].leaf_value_ == "custom1 value 1");
     assert(custom_data_[1].name_ == "Custom2");
@@ -103,15 +105,13 @@ int main() {
 
     assert(doc_root_ == "Doc_0/Document.xml");
 
-    const auto &[version_] = versions_;
+    const auto &[version_] = *versions_;
     assert(version_.size() == 2);
-
     const auto &[id1, index1, current1, base_loc1] = version_[0];
     assert(id1 == static_cast<st_id>(1));
     assert(index1 == 0);
     assert(current1 == false);
     assert(base_loc1 == "Doc_0/Versions/Version_0/DocVersion.xml");
-
     const auto &[id2, index2, current2, base_loc2] = version_[1];
     assert(id2 == static_cast<st_id>(2));
     assert(index2 == 1);

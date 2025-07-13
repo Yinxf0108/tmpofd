@@ -34,8 +34,16 @@ inline std::string to_string(const st_date &date) {
   return ss.str();
 }
 
+inline std::string to_string(const std::optional<st_date> &date) {
+  return to_string(*date);
+}
+
 inline std::string to_string(const st_date_time &dt) {
   return std::format("{:%Y-%m-%dT%H:%M:%S}", dt);
+}
+
+inline std::string to_string(const std::optional<st_date_time> &dt) {
+  return to_string(*dt);
 }
 
 template<char... characters, typename T>

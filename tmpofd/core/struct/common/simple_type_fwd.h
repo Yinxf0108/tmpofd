@@ -55,7 +55,7 @@ using st_loc = std::filesystem::path;
 /**
 * 数组，以空格来分割元素。元素可以是除st_loc、st_array外的数据类型，不可嵌套
 */
-template<typename T> requires (!std::same_as<st_loc, std::remove_cvref_t<T> > && !is_vector<T>)
+template<typename T> requires (!std::same_as<st_loc, remove_opt_t<std::remove_cvref_t<T>> > && !is_vector<T>)
 struct st_array;
 
 /**

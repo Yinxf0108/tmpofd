@@ -72,7 +72,7 @@ constexpr void parse_xml_value(T &ins, const V value) {
 
 template<is_time T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
-  if constexpr (std::is_same_v<T, st_date>) {
+  if constexpr (std::is_same_v<remove_opt_t<std::remove_cvref_t<T> >, st_date>) {
     if (10 == value.length() && '-' == value[4] && '-' == value[7]) {
       int y{}, m{}, d{};
 
@@ -91,7 +91,7 @@ constexpr void parse_xml_value(T &ins, const V value) {
         return;
       }
     }
-  } else if constexpr (std::is_same_v<T, st_date_time>) {
+  } else if constexpr (std::is_same_v<remove_opt_t<std::remove_cvref_t<T> >, st_date_time>) {
     constexpr std::array<std::string_view, 2> formats = {
       "%Y-%m-%dT%H:%M:%S",
       "%Y-%m-%d %H:%M:%S",

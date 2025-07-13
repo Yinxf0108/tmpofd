@@ -28,22 +28,22 @@
 
 namespace tmpofd {
 template<typename T>
-concept is_st_bool = std::same_as<st_bool, std::remove_cvref_t<T> >;
+concept is_st_bool = std::same_as<st_bool, remove_opt_t<std::remove_cvref_t<T> > >;
 
 template<typename T>
-concept is_st_int = std::same_as<st_int, std::remove_cvref_t<T> >;
+concept is_st_int = std::same_as<st_int, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename T>
-concept is_st_float = std::same_as<st_float, std::remove_cvref_t<T> >;
+concept is_st_float = std::same_as<st_float, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename T>
-concept is_st_double = std::same_as<st_double, std::remove_cvref_t<T> >;
+concept is_st_double = std::same_as<st_double, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename T>
 concept is_st_number = is_st_int<T> || is_st_float<T> || is_st_double<T>;
 
 template<typename T>
-concept is_st_string = std::same_as<st_string, std::remove_cvref_t<T> >;
+concept is_st_string = std::same_as<st_string, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename>
 struct is_st_vector_trait : std::false_type {};
@@ -52,16 +52,16 @@ template<typename T, typename Allocator>
 struct is_st_vector_trait<st_vector<T, Allocator> > : std::true_type {};
 
 template<typename T>
-concept is_st_vector = is_st_vector_trait<std::remove_cvref_t<T> >::value;
+concept is_st_vector = is_st_vector_trait<remove_opt_t<std::remove_cvref_t<T>> >::value;
 
 template<typename T>
-concept is_st_date = std::same_as<st_date, std::remove_cvref_t<T> >;
+concept is_st_date = std::same_as<st_date, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename T>
-concept is_st_date_time = std::same_as<st_date_time, std::remove_cvref_t<T> >;
+concept is_st_date_time = std::same_as<st_date_time, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename T>
-concept is_st_loc = std::same_as<st_loc, std::remove_cvref_t<T> >;
+concept is_st_loc = std::same_as<st_loc, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename>
 struct is_st_array_trait : std::false_type {};
@@ -70,13 +70,13 @@ template<typename T>
 struct is_st_array_trait<st_array<T> > : std::true_type {};
 
 template<typename T>
-concept is_st_array = is_st_array_trait<std::remove_cvref_t<T> >::value;
+concept is_st_array = is_st_array_trait<remove_opt_t<std::remove_cvref_t<T>> >::value;
 
 template<typename T>
-concept is_st_id = std::same_as<st_id, std::remove_cvref_t<T> >;
+concept is_st_id = std::same_as<st_id, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename T>
-concept is_st_ref_id = std::same_as<st_ref_id, std::remove_cvref_t<T> >;
+concept is_st_ref_id = std::same_as<st_ref_id, remove_opt_t<std::remove_cvref_t<T>> >;
 
 template<typename>
 struct is_st_pos_trait : std::false_type {};
@@ -85,7 +85,7 @@ template<is_number T>
 struct is_st_pos_trait<st_pos<T> > : std::true_type {};
 
 template<typename T>
-concept is_st_pos = is_st_pos_trait<std::remove_cvref_t<T> >::value;
+concept is_st_pos = is_st_pos_trait<remove_opt_t<std::remove_cvref_t<T>> >::value;
 
 template<typename>
 struct is_st_box_trait : std::false_type {};
@@ -94,7 +94,7 @@ template<is_number T>
 struct is_st_box_trait<st_box<T> > : std::true_type {};
 
 template<typename T>
-concept is_st_box = is_st_box_trait<std::remove_cvref_t<T> >::value;
+concept is_st_box = is_st_box_trait<remove_opt_t<std::remove_cvref_t<T>> >::value;
 
 template<typename T>
 concept is_base_type = is_st_bool<T> || is_st_number<T> || is_st_string<T> || is_st_date<T> || is_st_date_time<T>
@@ -119,5 +119,5 @@ template<typename T>
 struct is_leaf_node_trait<T, std::void_t<decltype(std::declval<T>().leaf_value)> > : std::true_type {};
 
 template<typename T>
-concept is_leaf_node = is_leaf_node_trait<std::remove_cvref_t<T> >::value;
+concept is_leaf_node = is_leaf_node_trait<remove_opt_t<std::remove_cvref_t<T>> >::value;
 } // tmpofd

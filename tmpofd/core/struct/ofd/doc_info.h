@@ -71,18 +71,18 @@ REFLECT_STRUCT(
 
 struct doc_info_t {
   st_string doc_id_;
-  st_string title_;
-  st_string author_;
-  st_string subject_;
-  st_string abstract_;
-  st_date creation_date_;
-  st_date mod_date_;
-  st_string doc_usage_;
-  st_loc cover_;
-  keywords_t keywords_;
-  st_string creator_;
-  st_string creator_version_;
-  custom_datas_t custom_datas_;
+  std::optional<st_string> title_;
+  std::optional<st_string> author_;
+  std::optional<st_string> subject_;
+  std::optional<st_string> abstract_;
+  std::optional<st_date> creation_date_;
+  std::optional<st_date> mod_date_;
+  std::optional<st_string> doc_usage_;
+  std::optional<st_loc> cover_;
+  std::optional<keywords_t> keywords_;
+  std::optional<st_string> creator_;
+  std::optional<st_string> creator_version_;
+  std::optional<custom_datas_t> custom_datas_;
 };
 
 REFLECT_STRUCT(

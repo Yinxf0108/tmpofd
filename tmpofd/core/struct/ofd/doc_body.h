@@ -44,8 +44,8 @@ REFLECT_STRUCT(
 struct doc_body_t {
   doc_info_t doc_info_;
   st_loc doc_root_;
-  versions_t versions_;
-  st_loc signatures_;
+  std::optional<versions_t> versions_;
+  std::optional<st_loc> signatures_;
 };
 
 REFLECT_STRUCT(

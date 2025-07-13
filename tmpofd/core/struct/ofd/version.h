@@ -30,7 +30,7 @@ namespace tmpofd {
 struct version_t {
   st_id id_;
   st_int index_;
-  st_bool current_;
+  std::optional<st_bool> current_;
   st_loc base_loc_;
 };
 
