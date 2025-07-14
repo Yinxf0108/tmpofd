@@ -1,4 +1,4 @@
-<?xml version="1.0"encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://www.ofdspec.org/2016" xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://www.ofdspec.org/2016" elementFormDefault="qualified">
     <!--公用的简单类型定义。-->
