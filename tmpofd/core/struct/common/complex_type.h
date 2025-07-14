@@ -125,25 +125,28 @@ REFLECT_STRUCT(
   REFLECT_NODE()
 )
 
-struct close_t {};
+struct close_t {
+  st_pos<st_double> leaf_value;
+};
 
 REFLECT_STRUCT(
   ofd_namespace"Close",
   close_t,
   REFLECT_ATTR()
-  REFLECT_NODE()
-)
-DEFINE_VARIANT(
-  area_op_t,
-  DEFINE_VARIANT_TYPE(area_op_t, move_t, line_t, quadratic_bezier_t, cubic_bezier_t, arc_t, close_t),
-  DEFINE_VARIANT_OPS("Move", move_t{})
-  DEFINE_VARIANT_OPS("Line", line_t{})
-  DEFINE_VARIANT_OPS("QuadraticBezier", quadratic_bezier_t{})
-  DEFINE_VARIANT_OPS("CubicBezier", cubic_bezier_t{})
-  DEFINE_VARIANT_OPS("Arc", arc_t{})
-  DEFINE_VARIANT_OPS("Close", close_t{})
+  REFLECT_NODE(
+    REFLECT_MEMBER("", &close_t::leaf_value)
+  )
 )
 
+DEFINE_VARIANT(
+  DEFINE_VARIANT_ALIAS(area_op_t, move_t, line_t, quadratic_bezier_t, cubic_bezier_t, arc_t, close_t),
+  DEFINE_VARIANT_TYPE(move_t, ofd_namespace"Move")
+  DEFINE_VARIANT_TYPE(line_t, ofd_namespace"Line")
+  DEFINE_VARIANT_TYPE(quadratic_bezier_t, ofd_namespace"QuadraticBezier")
+  DEFINE_VARIANT_TYPE(cubic_bezier_t, ofd_namespace"CubicBezier")
+  DEFINE_VARIANT_TYPE(arc_t, ofd_namespace"Arc")
+  DEFINE_VARIANT_TYPE(close_t, ofd_namespace"Close")
+)
 struct area_t {
   st_pos<st_double> start_;
   std::vector<area_op_t> ops_;
@@ -203,24 +206,23 @@ REFLECT_STRUCT(
   REFLECT_NODE()
 )
 
-struct bookmark_t {
+struct _bookmark_t {
   st_string name_;
 };
 
 REFLECT_STRUCT(
   ofd_namespace"Bookmark",
-  bookmark_t,
+  _bookmark_t,
   REFLECT_ATTR(
-    REFLECT_MEMBER("Name", &bookmark_t::name_)
+    REFLECT_MEMBER("Name", &_bookmark_t::name_)
   )
   REFLECT_NODE()
 )
 
 DEFINE_VARIANT(
-  goto_op_t,
-  DEFINE_VARIANT_TYPE(goto_op_t, dest_t, bookmark_t),
-  DEFINE_VARIANT_OPS("Dest", dest_t{})
-  DEFINE_VARIANT_OPS("Bookmark", bookmark_t{})
+  DEFINE_VARIANT_ALIAS(goto_op_t, dest_t, _bookmark_t),
+  DEFINE_VARIANT_TYPE(dest_t, ofd_namespace"Dest")
+  DEFINE_VARIANT_TYPE(_bookmark_t, ofd_namespace"Bookmark")
 )
 struct goto_t {
   goto_op_t ops_;
@@ -303,13 +305,12 @@ REFLECT_STRUCT(
 )
 
 DEFINE_VARIANT(
-  action_op_t,
-  DEFINE_VARIANT_TYPE(action_op_t, goto_t, uri_t, goto_a_t, sound_t, movie_t),
-  DEFINE_VARIANT_OPS("Goto", goto_t{})
-  DEFINE_VARIANT_OPS("URI", uri_t{})
-  DEFINE_VARIANT_OPS("GotoA", goto_a_t{})
-  DEFINE_VARIANT_OPS("Sound", sound_t{})
-  DEFINE_VARIANT_OPS("Movie", movie_t{})
+  DEFINE_VARIANT_ALIAS(action_op_t, goto_t, uri_t, goto_a_t, sound_t, movie_t),
+  DEFINE_VARIANT_TYPE(goto_t, ofd_namespace"Goto")
+  DEFINE_VARIANT_TYPE(uri_t, ofd_namespace"URI")
+  DEFINE_VARIANT_TYPE(goto_a_t, ofd_namespace"GotoA")
+  DEFINE_VARIANT_TYPE(sound_t, ofd_namespace"Sound")
+  DEFINE_VARIANT_TYPE(movie_t, ofd_namespace"Movie")
 )
 struct action_t {
   st_string event_;

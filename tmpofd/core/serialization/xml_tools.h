@@ -151,19 +151,19 @@ constexpr void parse_xml_attr(T &ins, Pos &&pos, Pos &&end) {
   auto reflected = get_reflected(ins);
 
   while (pos < end) {
-    skip_spaces_and_newline(pos, end);
+    skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
 
     if ('>' == *pos || '/' == *pos)
       return;
 
-    auto key = get_key<'='>(pos, end);
-    skip_to<'='>(pos, end);
+    auto key = get_key<'='>(std::forward<Pos>(pos), std::forward<Pos>(end));
+    skip_to<'='>(std::forward<Pos>(pos), std::forward<Pos>(end));
     ++pos;
 
-    skip_spaces_and_newline(pos, end);
+    skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
 
     auto value_begin = ++pos;
-    skip_to<'"', '\''>(pos, end);
+    skip_to<'"', '\''>(std::forward<Pos>(pos), std::forward<Pos>(end));
     auto value_end = pos;
 
     reflected.attr(
@@ -178,12 +178,8 @@ constexpr void parse_xml_attr(T &ins, Pos &&pos, Pos &&end) {
   }
 }
 
-template<is_string_view N, is_area_op_t T, typename Pos>
-constexpr void parse_xml_node( N name, T &ins, Pos &&pos, Pos &&end);
-template<is_string_view N, is_goto_op_t T, typename Pos>
-constexpr void parse_xml_node( N name, T &ins, Pos &&pos, Pos &&end);
-template<is_string_view N, is_action_op_t T, typename Pos>
-constexpr void parse_xml_node( N name, T &ins, Pos &&pos, Pos &&end);
+template<is_string_view N, is_variant T, typename Pos>
+constexpr void parse_xml_node(N name, T &ins, Pos &&pos, Pos &&end);
 template<is_string_view N, is_unique_ptr T, typename Pos>
 constexpr void parse_xml_node(N name, T &ins, Pos &&pos, Pos &&end);
 template<is_string_view N, is_st_vector T, typename Pos>
@@ -193,108 +189,78 @@ constexpr void parse_xml_node(N name, T &ins, Pos &&pos, Pos &&end);
 
 template<is_string_view N, is_base_type T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
-  skip_to<'>'>(pos, end);
+  skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   if ('/' == *(pos - 1)) {
     ++pos;
     return;
   }
 
   auto value_begin = ++pos;
-  skip_to<'<'>(pos, end);
+  skip_to<'<'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   while (pos < end && '!' == *(pos + 1)) {
     ++pos;
 
-    skip_comment(pos, end);
-    skip_cdata(pos, end);
+    skip_comment(std::forward<Pos>(pos), std::forward<Pos>(end));
+    skip_cdata(std::forward<Pos>(pos), std::forward<Pos>(end));
 
-    skip_to<'<'>(pos, end);
+    skip_to<'<'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   }
   auto value_end = pos;
 
   parse_xml_value(ins, get_value(value_begin, value_end));
 
-  matched_close(name, pos, end);
+  matched_close(name, std::forward<Pos>(pos), std::forward<Pos>(end));
 }
 
-template<is_string_view N, is_area_op_t T, typename Pos>
+template<is_string_view N, is_variant T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
+  [&]<typename... VT>(std::variant<VT...> *) {
+    bool parsed = false;
 
+    ([&] {
+      if (parsed) {
+        return;
+      }
+
+      if (name == variant_type_name<VT>) {
+        auto &member = ins.template emplace<VT>();
+        parse_xml_node(name, member, std::forward<Pos>(pos), std::forward<Pos>(end));
+        parsed = true;
+      }
+    }(), ...);
+  }(static_cast<T *>(nullptr));
 }
-
-template<is_string_view N, is_goto_op_t T, typename Pos>
-constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
-
-}
-template<is_string_view N, is_action_op_t T, typename Pos>
-constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
-
-}
-
-// template<is_string_view N, is_variant T, typename Pos>
-// constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
-//   if constexpr (is_area_op_t<T>) {
-//     auto var = get_area_op_t(name);
-//     std::visit(
-//       [&]<typename Opt>(Opt &&opt) {
-//         if constexpr (!std::is_same_v<std::monostate, std::decay_t<Opt> >) {
-//           parse_xml_node(name, opt, pos, end);
-//           ins = opt;
-//         }
-//       },
-//       var
-//     );
-//   } else if constexpr (is_goto_op_t<T>) {
-//     auto var = get_goto_op_t(name);
-//     std::visit(
-//       [&]<typename Opt>(Opt &&opt) {
-//         if constexpr (!std::is_same_v<std::monostate, std::decay_t<Opt> >) {
-//           parse_xml_node(name, opt, pos, end);
-//           ins = opt;
-//         }
-//       },
-//       var
-//     );
-//   } else if constexpr (is_action_op_t<T>) {
-//     auto var = get_action_op_t(name);
-//     std::visit(
-//       [&]<typename Opt>(Opt &&opt) {
-//         if constexpr (!std::is_same_v<std::monostate, std::decay_t<Opt> >) {
-//           parse_xml_node(name, opt, pos, end);
-//           ins = opt;
-//         }
-//       },
-//       var
-//     );
-//   } else {
-//     static_assert(always_false_v<T>, "Unknown variant type");
-//   }
-// }
 
 template<is_string_view N, is_unique_ptr T, typename Pos>
-constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {}
+constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
+  if (!ins)
+    ins = std::make_unique<typename T::element_type>();
+
+  parse_xml_node(name, *ins, std::forward<Pos>(pos), std::forward<Pos>(end));
+}
 
 template<is_string_view N, is_st_vector T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
-  parse_xml_node(name, ins.emplace_back(), pos, end);
+  parse_xml_node(name, ins.emplace_back(), std::forward<Pos>(pos), std::forward<Pos>(end));
 
   while (pos < end) {
-    skip_spaces_and_newline(pos, end);
+    skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
 
-    matched_skip<'<'>(pos, end);
+    matched_skip<'<'>(std::forward<Pos>(pos), std::forward<Pos>(end));
     if ('?' == *pos || '!' == *pos) {
       --pos;
       return;
     }
 
     const auto key_begin = pos;
-    auto key = get_key<'>', ' '>(pos, end);
+    auto key = get_key<'>', ' '>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
     if (name != key) {
       pos = key_begin - 1;
       return;
     }
 
-    parse_xml_node(name, ins.emplace_back(), pos, end);
+    parse_xml_node(name, ins.emplace_back(), std::forward<Pos>(pos), std::forward<Pos>(end));
   }
 }
 
@@ -302,24 +268,23 @@ template<is_string_view N, is_reflectable T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   auto reflected = get_reflected(ins);
 
-  if constexpr (0 != reflected.attr_size()) {
-    parse_xml_attr(ins, pos, end);
+  if constexpr (0 != reflected.attr_size())
+    parse_xml_attr(ins, std::forward<Pos>(pos), std::forward<Pos>(end));
 
-    if constexpr (is_leaf_node<std::decay_t<T> >) {
-      parse_xml_node(name, ins.leaf_value, pos, end);
-      return;
-    }
+  if constexpr (is_leaf_node<std::decay_t<T> >) {
+    parse_xml_node(name, ins.leaf_value, std::forward<Pos>(pos), std::forward<Pos>(end));
+    return;
   }
 
-  skip_to<'>'>(pos, end);
+  skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   ++pos;
 
   if constexpr (0 == reflected.node_size())
     return;
 
-  matched_close(name, pos, end);
+  matched_close(name, std::forward<Pos>(pos), std::forward<Pos>(end));
 
-  auto key = get_key<'>', ' '>(pos, end);
+  auto key = get_key<'>', ' '>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   while (true) {
     bool found = false;
@@ -328,27 +293,27 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
       key,
       [&](auto &&node) {
         if (key == node.name_) {
-          parse_xml_node(key, node.invoke(ins), pos, end);
+          parse_xml_node(key, node.invoke(ins), std::forward<Pos>(pos), std::forward<Pos>(end));
           found = true;
           return;
         }
 
-        if (matched_close(name, pos, end)) {
+        if (matched_close(name, std::forward<Pos>(pos), std::forward<Pos>(end))) {
           found = true;
           return;
         }
 
-        key = get_key<'>', ' '>(pos, end);
+        key = get_key<'>', ' '>(std::forward<Pos>(pos), std::forward<Pos>(end));
       }
     );
 
     if (!found)
-      skip_node(key, pos, end);
+      skip_node(key, std::forward<Pos>(pos), std::forward<Pos>(end));
 
-    if (matched_close(name, pos, end))
+    if (matched_close(name, std::forward<Pos>(pos), std::forward<Pos>(end)))
       return;
 
-    key = get_key<'>', ' '>(pos, end);
+    key = get_key<'>', ' '>(std::forward<Pos>(pos), std::forward<Pos>(end));
   }
 }
 

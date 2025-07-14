@@ -49,7 +49,7 @@ struct outline_elem_t {
   std::optional<st_int> count_;
   std::optional<st_bool> expanded_;
   std::optional<actions_t> actions_;
-  st_vector<std::unique_ptr<outline_elem_t>> outline_elem_;
+  st_vector<std::unique_ptr<outline_elem_t> > outline_elem_;
 };
 
 REFLECT_STRUCT(
@@ -76,6 +76,22 @@ REFLECT_STRUCT(
   REFLECT_ATTR()
   REFLECT_NODE(
     REFLECT_MEMBER(ofd_namespace"OutlineElem", &outlines_t::outline_elem_)
+  )
+)
+
+struct bookmark_t {
+  st_string name_;
+  dest_t dest_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Bookmark",
+  bookmark_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Name", &bookmark_t::name_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Dest", &bookmark_t::dest_)
   )
 )
 

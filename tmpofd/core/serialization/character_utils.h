@@ -399,6 +399,7 @@ constexpr void skip_node(const N name, T &&pos, T &&end) {
     skip_spaces_and_newline(pos, end);
   }
 
+  /// TODO: fix runtime error when parse ofd:OutlineElem
   throw std::runtime_error("Unclosed tag: " + std::string(name));
 }
 } // tmpofd

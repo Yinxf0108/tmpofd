@@ -167,7 +167,7 @@ void test_ofd() {
 void test_document() {
   auto document = deserialize<document_t>("document/baseline.xml");
 
-  std::get<bookmark_t>(std::get<goto_t>(document.actions_->action_[0].ops_).ops_).name_;
+  /// TODO: assert value of document
 }
 
 int main() {

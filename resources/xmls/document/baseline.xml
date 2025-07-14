@@ -1,160 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ofd:Document xmlns:ofd="http://www.ofdspec.org/2016">
     <ofd:CommonData>
-        <ofd:MaxUnitID>96</ofd:MaxUnitID>
+        <ofd:MaxUnitID>100</ofd:MaxUnitID>
         <ofd:PageArea>
             <ofd:PhysicalBox>0 0 210 297</ofd:PhysicalBox>
-            <ofd:ApplicationBox>10 10 200 287</ofd:ApplicationBox>
-            <ofd:ContentBox>20 20 190 277</ofd:ContentBox>
-            <ofd:BleedBox>-10 -10 220 307</ofd:BleedBox>
+            <ofd:ApplicationBox>0 0 210 297</ofd:ApplicationBox>
+            <ofd:ContentBox>10 10 200 287</ofd:ContentBox>
+            <ofd:BleedBox>5 5 205 292</ofd:BleedBox>
         </ofd:PageArea>
-        <ofd:PublicRes>PublicRes.xml</ofd:PublicRes>
-        <ofd:DocumentRes>DocumentRes.xml</ofd:DocumentRes>
-        <ofd:TemplatePage ID="1" Name="TemplatePage 1" ZOrder="Background" BaseLoc="Templates/Template_0/Content.xml"/>
-        <ofd:TemplatePage ID="2" Name="TemplatePage 2" ZOrder="Foreground" BaseLoc="Templates/Template_1/Content.xml"/>
-        <ofd:DefaultCS>2</ofd:DefaultCS>
+        <ofd:PublicRes>/Doc_0/PublicRes.xml</ofd:PublicRes>
+        <ofd:PublicRes>/Doc_0/PublicRes_2.xml</ofd:PublicRes>
+        <ofd:DocumentRes>/Doc_0/DocumentRes.xml</ofd:DocumentRes>
+        <ofd:DocumentRes>/Doc_0/DocumentRes_2.xml</ofd:DocumentRes>
+        <ofd:TemplatePage ID="1" Name="Tpl_A" ZOrder="Background" BaseLoc="/Doc_0/Tpls/Tpl_1.xml"/>
+        <ofd:TemplatePage ID="2" Name="Tpl_B" ZOrder="Foreground" BaseLoc="/Doc_0/Tpls/Tpl_2.xml"/>
+        <ofd:DefaultCS>1</ofd:DefaultCS>
     </ofd:CommonData>
     <ofd:Pages>
-        <ofd:Page ID="1" BaseLoc="Pages/Page_0/Content.xml"/>
-        <ofd:Page ID="2" BaseLoc="Pages/Page_1/Content.xml"/>
+        <ofd:Page ID="3" BaseLoc="/Doc_0/Pages/Page_0.xml"/>
+        <ofd:Page ID="4" BaseLoc="/Doc_0/Pages/Page_1.xml"/>
     </ofd:Pages>
     <ofd:Outlines>
-        <ofd:OutlineElem Title="outline 1" Count="1" Expanded="true">
+        <ofd:OutlineElem Title="第一章" Count="1" Expanded="true">
             <ofd:Actions>
-                <ofd:Action Event="CLICK">
-                    <ofd:Region>
-                        <ofd:Area Start="0 0">
-                            <ofd:Move Point1="1 1"/>
-                            <ofd:Line Point1="2 2"/>
-                            <ofd:QuadraticBezier Point1="3 3" Point2="4 4"/>
-                            <ofd:CubicBezier Point1="5 5" Point2="6 6" Point3="7 7"/>
-                            <ofd:Arc SweepDirection="true" LargeArc="true" RotationAngle="360" EllipseSize="200 100"
-                                     EndPoint="8 8"/>
-                            <ofd:Close>9 9</ofd:Close>
-                        </ofd:Area>
-                        <ofd:Area Start="0 0">
-                            <ofd:Move Point1="1 1"/>
-                            <ofd:Line Point1="2 2"/>
-                            <ofd:QuadraticBezier Point1="3 3" Point2="4 4"/>
-                            <ofd:CubicBezier Point1="5 5" Point2="6 6" Point3="7 7"/>
-                            <ofd:Arc SweepDirection="true" LargeArc="true" RotationAngle="360" EllipseSize="200 100"
-                                     EndPoint="8 8"/>
-                            <ofd:Close>9 9</ofd:Close>
-                        </ofd:Area>
-                    </ofd:Region>
-                    <ofd:Goto>
-                        <ofd:Dest Type="XYZ" PageID="1" Left="0" Top="0" Right="100" Bottom="100" Zoom="1"/>
-                    </ofd:Goto>
-                </ofd:Action>
                 <ofd:Action Event="DO">
                     <ofd:Goto>
-                        <ofd:Bookmark Name="Bookmark"/>
+                        <ofd:Dest Type="Fit" PageID="3"/>
                     </ofd:Goto>
                 </ofd:Action>
             </ofd:Actions>
-            <ofd:OutlineElem Title="outline 2" Count="1" Expanded="false">
+            <ofd:OutlineElem Title="1.1节" Count="1" Expanded="false">
                 <ofd:Actions>
-                    <ofd:Action Event="PO">
-                        <ofd:URI URI="uri" Base="base" Target="target"/>
-                    </ofd:Action>
                     <ofd:Action Event="CLICK">
-                        <ofd:GotoA AttachID="1" NewWindow="false"/>
+                        <ofd:Goto>
+                            <ofd:Dest Type="FitH" PageID="3" Top="200"/>
+                        </ofd:Goto>
                     </ofd:Action>
                 </ofd:Actions>
-                <ofd:OutlineElem Title="outline 3" Count="1" Expanded="false">
+                <ofd:OutlineElem Title="1.1.1 小节">
                     <ofd:Actions>
-                        <ofd:Action Event="PO">
-                            <ofd:Sound ResourceID="1" Volume="100" Repeat="false" Synchronous="true"/>
-                        </ofd:Action>
                         <ofd:Action Event="CLICK">
-                            <ofd:Movie ResourceID="1" Operator="Play"/>
+                            <ofd:Goto>
+                                <ofd:Dest Type="FitV" PageID="3" Left="50"/>
+                            </ofd:Goto>
                         </ofd:Action>
                     </ofd:Actions>
                 </ofd:OutlineElem>
             </ofd:OutlineElem>
         </ofd:OutlineElem>
+        <ofd:OutlineElem Title="第二章">
+            <ofd:OutlineElem Title="2.1节"/>
+            <ofd:OutlineElem Title="2.2节"/>
+        </ofd:OutlineElem>
     </ofd:Outlines>
     <ofd:Permissions>
-        <ofd:Edit>true</ofd:Edit>
+        <ofd:Edit>false</ofd:Edit>
         <ofd:Annot>true</ofd:Annot>
         <ofd:Export>true</ofd:Export>
-        <ofd:Signature>true</ofd:Signature>
+        <ofd:Signature>false</ofd:Signature>
         <ofd:Watermark>true</ofd:Watermark>
-        <ofd:PrintScreen>true</ofd:PrintScreen>
-        <ofd:Print Printable="true" Copies="-1"/>
-        <ofd:ValidPeriod StartDate="2024-12-08T17:50:29" EndDate="2024-12-09T18:50:29"/>
+        <ofd:PrintScreen>false</ofd:PrintScreen>
+        <ofd:Print Printable="true" Copies="10"/>
+        <ofd:ValidPeriod StartDate="2025-01-01T00:00:00" EndDate="2025-12-31T23:59:59"/>
     </ofd:Permissions>
     <ofd:Actions>
-        <ofd:Action Event="CLICK">
-            <ofd:Region>
-                <ofd:Area Start="0 0">
-                    <ofd:Move Point1="1 1"/>
-                    <ofd:Line Point1="2 2"/>
-                    <ofd:QuadraticBezier Point1="3 3" Point2="4 4"/>
-                    <ofd:CubicBezier Point1="5 5" Point2="6 6" Point3="7 7"/>
-                    <ofd:Arc SweepDirection="true" LargeArc="true" RotationAngle="360" EllipseSize="200 100"
-                             EndPoint="8 8"/>
-                    <ofd:Close>9 9</ofd:Close>
-                </ofd:Area>
-                <ofd:Area Start="0 0">
-                    <ofd:Move Point1="1 1"/>
-                    <ofd:Line Point1="2 2"/>
-                    <ofd:QuadraticBezier Point1="3 3" Point2="4 4"/>
-                    <ofd:CubicBezier Point1="5 5" Point2="6 6" Point3="7 7"/>
-                    <ofd:Arc SweepDirection="true" LargeArc="true" RotationAngle="360" EllipseSize="200 100"
-                             EndPoint="8 8"/>
-                    <ofd:Close>9 9</ofd:Close>
-                </ofd:Area>
-            </ofd:Region>
+        <ofd:Action Event="DO">
             <ofd:Goto>
-                <ofd:Dest Type="XYZ" PageID="1" Left="0" Top="0" Right="100" Bottom="100" Zoom="1"/>
+                <Bookmark Name="Bookmark 1"/>
             </ofd:Goto>
         </ofd:Action>
+        <ofd:Action Event="PO">
+            <ofd:URI URI="http://www.ofdspec.org" Target="_blank"/>
+        </ofd:Action>
         <ofd:Action Event="CLICK">
-            <ofd:Region>
-                <ofd:Area Start="0 0">
-                    <ofd:Move Point1="1 1"/>
-                    <ofd:Line Point1="2 2"/>
-                    <ofd:QuadraticBezier Point1="3 3" Point2="4 4"/>
-                    <ofd:CubicBezier Point1="5 5" Point2="6 6" Point3="7 7"/>
-                    <ofd:Arc SweepDirection="true" LargeArc="true" RotationAngle="360" EllipseSize="200 100"
-                             EndPoint="8 8"/>
-                    <ofd:Close>9 9</ofd:Close>
-                </ofd:Area>
-                <ofd:Area Start="0 0">
-                    <ofd:Move Point1="1 1"/>
-                    <ofd:Line Point1="2 2"/>
-                    <ofd:QuadraticBezier Point1="3 3" Point2="4 4"/>
-                    <ofd:CubicBezier Point1="5 5" Point2="6 6" Point3="7 7"/>
-                    <ofd:Arc SweepDirection="true" LargeArc="true" RotationAngle="360" EllipseSize="200 100"
-                             EndPoint="8 8"/>
-                    <ofd:Close>9 9</ofd:Close>
-                </ofd:Area>
-            </ofd:Region>
-            <ofd:Goto>
-                <ofd:Dest Type="XYZ" PageID="1" Left="0" Top="0" Right="100" Bottom="100" Zoom="1"/>
-            </ofd:Goto>
+            <ofd:GotoA AttachID="4" NewWindow="false"/>
+        </ofd:Action>
+        <ofd:Action Event="DO">
+            <ofd:Sound ResourceID="4" Volume="100" Repeat="false" Synchronous="true"/>
+        </ofd:Action>
+        <ofd:Action Event="PO">
+            <ofd:Movie ResourceID="5" Operator="Play"/>
         </ofd:Action>
     </ofd:Actions>
     <ofd:VPreferences>
-        <ofd:PageMode>None</ofd:PageMode>
-        <ofd:PageLayout>OneColumn</ofd:PageLayout>
+        <ofd:PageMode>UseOutlines</ofd:PageMode>
+        <ofd:PageLayout>TwoPageL</ofd:PageLayout>
         <ofd:TabDisplay>DocTitle</ofd:TabDisplay>
         <ofd:HideToolbar>false</ofd:HideToolbar>
         <ofd:HideMenubar>false</ofd:HideMenubar>
         <ofd:HideWindowUI>false</ofd:HideWindowUI>
-        <ofd:ZoomMode>Default</ofd:ZoomMode>
+        <ofd:ZoomMode>FitWidth</ofd:ZoomMode>
+        <ofd:Zoom>150.0</ofd:Zoom>
     </ofd:VPreferences>
     <ofd:Bookmarks>
         <ofd:Bookmark Name="Bookmark 1">
-            <ofd:Dest Type="XYZ" PageID="1" Left="0" Top="0" Right="100" Bottom="100" Zoom="1"/>
+            <ofd:Dest Type="FitH" PageID="3" Top="200"/>
         </ofd:Bookmark>
         <ofd:Bookmark Name="Bookmark 2">
-            <ofd:Dest Type="XYZ" PageID="2" Left="0" Top="0" Right="100" Bottom="100" Zoom="1"/>
+            <ofd:Dest Type="FitR" PageID="4" Left="10" Top="10" Right="100" Bottom="100"/>
         </ofd:Bookmark>
     </ofd:Bookmarks>
-    <ofd:Annotations>Annotations/Annotations.xml</ofd:Annotations>
-    <ofd:CustomTags>CustomTags/CustomTags.xml</ofd:CustomTags>
-    <ofd:Attachments>Attachments/Attachments.xml</ofd:Attachments>
-    <ofd:Extensions>Extensions/Extensions.xml</ofd:Extensions>
+    <ofd:Annotations>/Doc_0/Annotations.xml</ofd:Annotations>
+    <ofd:CustomTags>/Doc_0/CustomTags.xml</ofd:CustomTags>
+    <ofd:Attachments>/Doc_0/Attachments.xml</ofd:Attachments>
+    <ofd:Extensions>/Doc_0/Extensions.xml</ofd:Extensions>
 </ofd:Document>

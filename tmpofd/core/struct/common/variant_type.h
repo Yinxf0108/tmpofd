@@ -25,21 +25,19 @@
 #pragma once
 
 namespace tmpofd {
-#define DEFINE_VARIANT_TYPE(variant_name, ...)                            \
-using variant_name = std::variant<__VA_ARGS__>;                           \
-template<typename>                                                        \
-struct is_##variant_name##_trait : std::false_type {};                    \
-template<typename>                                                   \
-struct is_##variant_name##_trait<variant_name> : std::true_type {}; \
-template<typename T>                                                      \
-concept is_##variant_name = is_##variant_name##_trait<remove_opt_t<std::remove_cvref_t<T> > >::value;
+template<typename T>
+struct variant_type;
 
-#define DEFINE_VARIANT_OPS(type_name, type) if (type_name == name) return type;
+template<typename T>
+constexpr auto variant_type_name = variant_type<T>::name_;
 
-#define DEFINE_VARIANT(variant_name, define_variant_type, ...)        \
-define_variant_type                                                   \
-inline variant_name get_##variant_name(const std::string_view name) { \
-  __VA_ARGS__                                                         \
-  return {};                                                          \
-}
+#define DEFINE_VARIANT_ALIAS(variant_name, ...) \
+using variant_name = std::variant<__VA_ARGS__>;
+
+#define DEFINE_VARIANT_TYPE(type, name) \
+template<> struct variant_type<type> { static constexpr auto name_ = name; };
+
+#define DEFINE_VARIANT(variant_alias, ...) \
+variant_alias                              \
+__VA_ARGS__
 } // tmpofd
