@@ -65,8 +65,20 @@ void serialize(const T &entry, const std::string_view &name) {
         std::string content;
         content.assign(std::istreambuf_iterator(file), std::istreambuf_iterator<char>());
 
-        const auto xml = to_xml(entry);
+        auto xml = to_xml(entry);
         std::cout << xml << std::endl;
+
+        auto pos = content.find("\r\n");
+        while (std::string::npos != pos) {
+          content.replace(pos, 2, new_line);
+          pos = content.find("\r\n");
+        }
+
+        pos = xml.find("\r\n");
+        while (std::string::npos != pos) {
+          xml.replace(pos, 2, new_line);
+          pos = xml.find("\r\n");
+        }
 
         assert(xml == content);
       }
