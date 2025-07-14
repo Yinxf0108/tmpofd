@@ -29,6 +29,8 @@
 
 #include <array>
 
+#include "tmpofd/core/struct/common/complex_type.h"
+
 namespace tmpofd {
 template<is_st_bool T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
@@ -58,14 +60,22 @@ constexpr void parse_xml_value(T &ins, const V value) {
 
 template<is_st_number T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
-  if (auto result = std::from_chars(value.data(), value.data() + value.size(), ins);
-    result.ec != std::errc()
-  ) {
-    throw std::runtime_error("Expected number value, but got '" + std::string{value} + "'");
+  if constexpr (is_optional<decltype(ins)>) {
+    if (const auto result = std::from_chars(value.data(), value.data() + value.size(), *ins);
+      std::errc() == result.ec
+    )
+      return;
+  } else {
+    if (const auto result = std::from_chars(value.data(), value.data() + value.size(), ins);
+      std::errc() == result.ec
+    )
+      return;
   }
+
+  throw std::runtime_error("Expected number value, but got '" + std::string{value} + "'");
 }
 
-template<can_passed_via_string_view T, is_string V>
+template<is_string_container T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   ins = value;
 }
@@ -129,7 +139,11 @@ constexpr void parse_xml_value(T &ins, const V value) {
 
 template<has_from_string T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
-  ins.from_string(value);
+  if constexpr (is_optional<decltype(ins)>) {
+    ins->from_string(value);
+  } else {
+    ins.from_string(value);
+  }
 }
 
 template<is_reflectable T, typename Pos>
@@ -164,6 +178,14 @@ constexpr void parse_xml_attr(T &ins, Pos &&pos, Pos &&end) {
   }
 }
 
+template<is_string_view N, is_area_op_t T, typename Pos>
+constexpr void parse_xml_node( N name, T &ins, Pos &&pos, Pos &&end);
+template<is_string_view N, is_goto_op_t T, typename Pos>
+constexpr void parse_xml_node( N name, T &ins, Pos &&pos, Pos &&end);
+template<is_string_view N, is_action_op_t T, typename Pos>
+constexpr void parse_xml_node( N name, T &ins, Pos &&pos, Pos &&end);
+template<is_string_view N, is_unique_ptr T, typename Pos>
+constexpr void parse_xml_node(N name, T &ins, Pos &&pos, Pos &&end);
 template<is_string_view N, is_st_vector T, typename Pos>
 constexpr void parse_xml_node(N name, T &ins, Pos &&pos, Pos &&end);
 template<is_string_view N, is_reflectable T, typename Pos>
@@ -193,6 +215,63 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
 
   matched_close(name, pos, end);
 }
+
+template<is_string_view N, is_area_op_t T, typename Pos>
+constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
+
+}
+
+template<is_string_view N, is_goto_op_t T, typename Pos>
+constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
+
+}
+template<is_string_view N, is_action_op_t T, typename Pos>
+constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
+
+}
+
+// template<is_string_view N, is_variant T, typename Pos>
+// constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
+//   if constexpr (is_area_op_t<T>) {
+//     auto var = get_area_op_t(name);
+//     std::visit(
+//       [&]<typename Opt>(Opt &&opt) {
+//         if constexpr (!std::is_same_v<std::monostate, std::decay_t<Opt> >) {
+//           parse_xml_node(name, opt, pos, end);
+//           ins = opt;
+//         }
+//       },
+//       var
+//     );
+//   } else if constexpr (is_goto_op_t<T>) {
+//     auto var = get_goto_op_t(name);
+//     std::visit(
+//       [&]<typename Opt>(Opt &&opt) {
+//         if constexpr (!std::is_same_v<std::monostate, std::decay_t<Opt> >) {
+//           parse_xml_node(name, opt, pos, end);
+//           ins = opt;
+//         }
+//       },
+//       var
+//     );
+//   } else if constexpr (is_action_op_t<T>) {
+//     auto var = get_action_op_t(name);
+//     std::visit(
+//       [&]<typename Opt>(Opt &&opt) {
+//         if constexpr (!std::is_same_v<std::monostate, std::decay_t<Opt> >) {
+//           parse_xml_node(name, opt, pos, end);
+//           ins = opt;
+//         }
+//       },
+//       var
+//     );
+//   } else {
+//     static_assert(always_false_v<T>, "Unknown variant type");
+//   }
+// }
+
+template<is_string_view N, is_unique_ptr T, typename Pos>
+constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {}
 
 template<is_string_view N, is_st_vector T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
@@ -283,7 +362,7 @@ constexpr void generate_xml_value(T &ins, XML &xml) {
   xml += std::to_string(ins);
 }
 
-template<can_passed_via_string_view T, is_string XML>
+template<is_string_container T, is_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
   if constexpr (is_st_string<T>) {
     xml += ins;
@@ -292,7 +371,7 @@ constexpr void generate_xml_value(T &ins, XML &xml) {
   } else if constexpr (is_enum_string<T>) {
     xml += ins.str();
   } else {
-    static_assert(always_false_v<T>, "Unknown time type");
+    static_assert(always_false_v<T>, "Unknown instance type");
   }
 }
 

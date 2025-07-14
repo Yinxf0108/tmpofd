@@ -24,7 +24,7 @@
 
 #include "tmpofd/core/serialization/serialization.h"
 #include "tmpofd/core/struct/ofd/ofd.h"
-#include "tmpofd/core/struct/common/simple_type.h"
+#include "tmpofd/core/struct/document/document.h"
 
 #include <filesystem>
 #include <fstream>
@@ -88,7 +88,7 @@ void serialize(const T &entry, const std::string_view &name) {
   }
 }
 
-int main() {
+void test_ofd() {
   auto ofd = deserialize<ofd_t>("ofd/baseline.xml");
 
   const auto &[namespace_, version_, doc_type_, doc_bodies_] = ofd;
@@ -162,6 +162,17 @@ int main() {
   ofd = deserialize<ofd_t>("ofd/minimal_robustness.xml");
   ofd = deserialize<ofd_t>("ofd/special_chars.xml");
   ofd = deserialize<ofd_t>("ofd/syntax_edge_cases.xml");
+}
+
+void test_document() {
+  auto document = deserialize<document_t>("document/baseline.xml");
+
+  std::get<bookmark_t>(std::get<goto_t>(document.actions_->action_[0].ops_).ops_).name_;
+}
+
+int main() {
+  test_ofd();
+  test_document();
 
   return 0;
 }

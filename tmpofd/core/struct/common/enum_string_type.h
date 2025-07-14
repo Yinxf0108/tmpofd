@@ -46,99 +46,6 @@ struct enum_converter<z_order_t> {
 };
 
 // TODO: Move the full specialization converter to the corresponding file
-enum class page_mode_t {
-  None, FullScreen, UseOutlines, UseThumbs, UseCustomTags, UseLayers, UseAttatchs, UseBookmarks
-};
-template<>
-struct enum_converter<page_mode_t> {
-  static std::string to_string(const page_mode_t e) {
-    switch (e) {
-      case page_mode_t::None: return "None";
-      case page_mode_t::FullScreen: return "FullScreen";
-      case page_mode_t::UseOutlines: return "UseOutlines";
-      case page_mode_t::UseThumbs: return "UseThumbs";
-      case page_mode_t::UseCustomTags: return "UseCustomTags";
-      case page_mode_t::UseLayers: return "UseLayers";
-      case page_mode_t::UseAttatchs: return "UseAttatchs";
-      case page_mode_t::UseBookmarks: return "UseBookmarks";
-    }
-    return "";
-  }
-  static std::optional<page_mode_t> from_string(const std::string_view s) {
-    if (s == "None") return page_mode_t::None;
-    if (s == "FullScreen") return page_mode_t::FullScreen;
-    if (s == "UseOutlines") return page_mode_t::UseOutlines;
-    if (s == "UseThumbs") return page_mode_t::UseThumbs;
-    if (s == "UseCustomTags") return page_mode_t::UseCustomTags;
-    if (s == "UseLayers") return page_mode_t::UseLayers;
-    if (s == "UseAttatchs") return page_mode_t::UseAttatchs;
-    if (s == "UseBookmarks") return page_mode_t::UseBookmarks;
-    return std::nullopt;
-  }
-};
-
-enum class page_layout_t { OnePage, OneColumn, TwoPageL, TwoColumnL, TwoPageR, TwoColumnR };
-template<>
-struct enum_converter<page_layout_t> {
-  static std::string to_string(const page_layout_t e) {
-    switch (e) {
-      case page_layout_t::OnePage: return "OnePage";
-      case page_layout_t::OneColumn: return "OneColumn";
-      case page_layout_t::TwoPageL: return "TwoPageL";
-      case page_layout_t::TwoColumnL: return "TwoColumnL";
-      case page_layout_t::TwoPageR: return "TwoPageR";
-      case page_layout_t::TwoColumnR: return "TwoColumnR";
-    }
-    return "";
-  }
-  static std::optional<page_layout_t> from_string(const std::string_view s) {
-    if (s == "OnePage") return page_layout_t::OnePage;
-    if (s == "OneColumn") return page_layout_t::OneColumn;
-    if (s == "TwoPageL") return page_layout_t::TwoPageL;
-    if (s == "TwoColumnL") return page_layout_t::TwoColumnL;
-    if (s == "TwoPageR") return page_layout_t::TwoPageR;
-    if (s == "TwoColumnR") return page_layout_t::TwoColumnR;
-    return std::nullopt;
-  }
-};
-
-enum class tab_display_t { DocTitle, FileName };
-template<>
-struct enum_converter<tab_display_t> {
-  static std::string to_string(const tab_display_t e) {
-    switch (e) {
-      case tab_display_t::DocTitle: return "DocTitle";
-      case tab_display_t::FileName: return "FileName";
-    }
-    return "";
-  }
-  static std::optional<tab_display_t> from_string(const std::string_view s) {
-    if (s == "DocTitle") return tab_display_t::DocTitle;
-    if (s == "FileName") return tab_display_t::FileName;
-    return std::nullopt;
-  }
-};
-
-enum class zoom_mode_t { Default, FitHeight, FitWidth, FitRect };
-template<>
-struct enum_converter<zoom_mode_t> {
-  static std::string to_string(const zoom_mode_t e) {
-    switch (e) {
-      case zoom_mode_t::Default: return "Default";
-      case zoom_mode_t::FitHeight: return "FitHeight";
-      case zoom_mode_t::FitWidth: return "FitWidth";
-      case zoom_mode_t::FitRect: return "FitRect";
-    }
-    return "";
-  }
-  static std::optional<zoom_mode_t> from_string(const std::string_view s) {
-    if (s == "Default") return zoom_mode_t::Default;
-    if (s == "FitHeight") return zoom_mode_t::FitHeight;
-    if (s == "FitWidth") return zoom_mode_t::FitWidth;
-    if (s == "FitRect") return zoom_mode_t::FitRect;
-    return std::nullopt;
-  }
-};
 
 enum class annotation_type_t { Link, Path, Highlight, Stamp, Watermark };
 template<>
@@ -492,7 +399,7 @@ struct enum_string_t {
     explicit operator const st_string &() const { return value_; }
     explicit operator st_string &() { return value_; }
 
-    const st_string &str() const { return value_; }
+    [[nodiscard]] const st_string &str() const { return value_; }
 
     std::optional<E> to_enum() const {
       return enum_converter<E>::from_string(value_);

@@ -24,8 +24,7 @@
 
 #include "tmpofd/core/struct/common/simple_type.h"
 #include "tmpofd/core/struct/ofd/ofd.h"
-
-#include <variant>
+#include "tmpofd/core/struct/document/document.h"
 
 using namespace tmpofd;
 
@@ -127,7 +126,7 @@ void test_st_int() {
   static_assert(!is_st_int<st_string &>);
   static_assert(!is_st_int<const st_string &>);
 
-  static_assert(!is_st_int<st_vector<std::monostate>>);
+  static_assert(!is_st_int<st_vector<std::monostate> >);
   static_assert(!is_st_int<const st_vector<std::monostate>>);
   static_assert(!is_st_int<st_vector<std::monostate> &>);
   static_assert(!is_st_int<const st_vector<std::monostate> &>);
@@ -199,7 +198,7 @@ void test_st_float() {
   static_assert(!is_st_float<st_string &>);
   static_assert(!is_st_float<const st_string &>);
 
-  static_assert(!is_st_float<st_vector<std::monostate>>);
+  static_assert(!is_st_float<st_vector<std::monostate> >);
   static_assert(!is_st_float<const st_vector<std::monostate>>);
   static_assert(!is_st_float<st_vector<std::monostate> &>);
   static_assert(!is_st_float<const st_vector<std::monostate> &>);
@@ -271,7 +270,7 @@ void test_st_double() {
   static_assert(!is_st_double<st_string &>);
   static_assert(!is_st_double<const st_string &>);
 
-  static_assert(!is_st_double<st_vector<std::monostate>>);
+  static_assert(!is_st_double<st_vector<std::monostate> >);
   static_assert(!is_st_double<const st_vector<std::monostate>>);
   static_assert(!is_st_double<st_vector<std::monostate> &>);
   static_assert(!is_st_double<const st_vector<std::monostate> &>);
@@ -343,7 +342,7 @@ void test_st_string() {
   static_assert(is_st_string<st_string &>);
   static_assert(is_st_string<const st_string &>);
 
-  static_assert(!is_st_string<st_vector<std::monostate>>);
+  static_assert(!is_st_string<st_vector<std::monostate> >);
   static_assert(!is_st_string<const st_vector<std::monostate>>);
   static_assert(!is_st_string<st_vector<std::monostate> &>);
   static_assert(!is_st_string<const st_vector<std::monostate> &>);
@@ -415,7 +414,7 @@ void test_st_vector() {
   static_assert(!is_st_vector<st_string &>);
   static_assert(!is_st_vector<const st_string &>);
 
-  static_assert(is_st_vector<st_vector<std::monostate>>);
+  static_assert(is_st_vector<st_vector<std::monostate> >);
   static_assert(is_st_vector<const st_vector<std::monostate>>);
   static_assert(is_st_vector<st_vector<std::monostate> &>);
   static_assert(is_st_vector<const st_vector<std::monostate> &>);
@@ -487,7 +486,7 @@ void test_st_date() {
   static_assert(!is_st_date<st_string &>);
   static_assert(!is_st_date<const st_string &>);
 
-  static_assert(!is_st_date<st_vector<std::monostate>>);
+  static_assert(!is_st_date<st_vector<std::monostate> >);
   static_assert(!is_st_date<const st_vector<std::monostate>>);
   static_assert(!is_st_date<st_vector<std::monostate> &>);
   static_assert(!is_st_date<const st_vector<std::monostate> &>);
@@ -559,7 +558,7 @@ void test_st_date_time() {
   static_assert(!is_st_date_time<st_string &>);
   static_assert(!is_st_date_time<const st_string &>);
 
-  static_assert(!is_st_date_time<st_vector<std::monostate>>);
+  static_assert(!is_st_date_time<st_vector<std::monostate> >);
   static_assert(!is_st_date_time<const st_vector<std::monostate>>);
   static_assert(!is_st_date_time<st_vector<std::monostate> &>);
   static_assert(!is_st_date_time<const st_vector<std::monostate> &>);
@@ -631,7 +630,7 @@ void test_st_loc() {
   static_assert(!is_st_loc<st_string &>);
   static_assert(!is_st_loc<const st_string &>);
 
-  static_assert(!is_st_loc<st_vector<std::monostate>>);
+  static_assert(!is_st_loc<st_vector<std::monostate> >);
   static_assert(!is_st_loc<const st_vector<std::monostate>>);
   static_assert(!is_st_loc<st_vector<std::monostate> &>);
   static_assert(!is_st_loc<const st_vector<std::monostate> &>);
@@ -703,7 +702,7 @@ void test_st_array() {
   static_assert(!is_st_array<st_string &>);
   static_assert(!is_st_array<const st_string &>);
 
-  static_assert(!is_st_array<st_vector<std::monostate>>);
+  static_assert(!is_st_array<st_vector<std::monostate> >);
   static_assert(!is_st_array<const st_vector<std::monostate>>);
   static_assert(!is_st_array<st_vector<std::monostate> &>);
   static_assert(!is_st_array<const st_vector<std::monostate> &>);
@@ -775,7 +774,7 @@ void test_st_id() {
   static_assert(!is_st_id<st_string &>);
   static_assert(!is_st_id<const st_string &>);
 
-  static_assert(!is_st_id<st_vector<std::monostate>>);
+  static_assert(!is_st_id<st_vector<std::monostate> >);
   static_assert(!is_st_id<const st_vector<std::monostate>>);
   static_assert(!is_st_id<st_vector<std::monostate> &>);
   static_assert(!is_st_id<const st_vector<std::monostate> &>);
@@ -847,7 +846,7 @@ void test_st_ref_id() {
   static_assert(!is_st_ref_id<st_string &>);
   static_assert(!is_st_ref_id<const st_string &>);
 
-  static_assert(!is_st_ref_id<st_vector<std::monostate>>);
+  static_assert(!is_st_ref_id<st_vector<std::monostate> >);
   static_assert(!is_st_ref_id<const st_vector<std::monostate>>);
   static_assert(!is_st_ref_id<st_vector<std::monostate> &>);
   static_assert(!is_st_ref_id<const st_vector<std::monostate> &>);
@@ -919,7 +918,7 @@ void test_st_pos() {
   static_assert(!is_st_pos<st_string &>);
   static_assert(!is_st_pos<const st_string &>);
 
-  static_assert(!is_st_pos<st_vector<std::monostate>>);
+  static_assert(!is_st_pos<st_vector<std::monostate> >);
   static_assert(!is_st_pos<const st_vector<std::monostate>>);
   static_assert(!is_st_pos<st_vector<std::monostate> &>);
   static_assert(!is_st_pos<const st_vector<std::monostate> &>);
@@ -991,7 +990,7 @@ void test_st_box() {
   static_assert(!is_st_box<st_string &>);
   static_assert(!is_st_box<const st_string &>);
 
-  static_assert(!is_st_box<st_vector<std::monostate>>);
+  static_assert(!is_st_box<st_vector<std::monostate> >);
   static_assert(!is_st_box<const st_vector<std::monostate>>);
   static_assert(!is_st_box<st_vector<std::monostate> &>);
   static_assert(!is_st_box<const st_vector<std::monostate> &>);
@@ -1038,18 +1037,40 @@ void test_st_box() {
 }
 
 void test_is_leaf_node() {
-  static_assert(is_leaf_node<custom_data_t >);
+  static_assert(is_leaf_node<custom_data_t>);
   static_assert(is_leaf_node<const custom_data_t>);
   static_assert(is_leaf_node<custom_data_t &>);
   static_assert(is_leaf_node<const custom_data_t &>);
 
-  static_assert(!is_leaf_node<ofd_t >);
+  static_assert(!is_leaf_node<ofd_t>);
   static_assert(!is_leaf_node<const ofd_t>);
   static_assert(!is_leaf_node<ofd_t &>);
   static_assert(!is_leaf_node<const ofd_t &>);
 }
 
-st_int main() {
+void test_is_unique_ptr() {
+  auto ptr = std::make_unique<outline_elem_t>();
+  const auto const_prt = std::make_unique<outline_elem_t>();
+  auto &ref_ptr = ptr;
+  const auto &const_ref_ptr = const_prt;
+
+  static_assert(is_unique_ptr<decltype(ptr)>);
+  static_assert(is_unique_ptr<decltype(const_prt)>);
+  static_assert(is_unique_ptr<decltype(ref_ptr)>);
+  static_assert(is_unique_ptr<decltype(const_ref_ptr)>);
+
+  static_assert(!is_unique_ptr<decltype(*ptr)>);
+  static_assert(!is_unique_ptr<decltype(*const_prt)>);
+  static_assert(!is_unique_ptr<decltype(*ref_ptr)>);
+  static_assert(!is_unique_ptr<decltype(*const_ref_ptr)>);
+
+  static_assert(!is_unique_ptr<decltype(ptr.get())>);
+  static_assert(!is_unique_ptr<decltype(const_prt.get())>);
+  static_assert(!is_unique_ptr<decltype(ref_ptr.get())>);
+  static_assert(!is_unique_ptr<decltype(const_ref_ptr.get())>);
+}
+
+int main() {
   test_st_bool();
   test_st_int();
   test_st_float();
@@ -1066,6 +1087,7 @@ st_int main() {
   test_st_box();
 
   test_is_leaf_node();
+  test_is_unique_ptr();
 
   return 0;
 }

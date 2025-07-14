@@ -13,5 +13,6 @@ macro(TEST_CASE DIR NAME)
     message(STATUS "added test [${NAME}] to ${EXECUTABLE_OUTPUT_PATH}")
 endmacro(TEST_CASE)
 
-add_subdirectory(traits)
+add_subdirectory(simple_type)
+add_subdirectory(complex_type)
 add_subdirectory(serialization)

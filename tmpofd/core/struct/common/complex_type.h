@@ -25,6 +25,7 @@
 #pragma once
 
 #include "tmpofd/core/reflection/reflection.h"
+#include "tmpofd/core/struct/common/variant_type.h"
 
 namespace tmpofd {
 struct page_area_t {
@@ -46,7 +47,7 @@ REFLECT_STRUCT(
   )
 )
 struct move_t {
-  st_pos point1_;
+  st_pos<st_double> point1_;
 };
 
 REFLECT_STRUCT(
@@ -59,7 +60,7 @@ REFLECT_STRUCT(
 )
 
 struct line_t {
-  st_pos point1_;
+  st_pos<st_double> point1_;
 };
 
 REFLECT_STRUCT(
@@ -72,8 +73,8 @@ REFLECT_STRUCT(
 )
 
 struct quadratic_bezier_t {
-  st_pos point1_;
-  st_pos point2_;
+  st_pos<st_double> point1_;
+  st_pos<st_double> point2_;
 };
 
 REFLECT_STRUCT(
@@ -87,9 +88,9 @@ REFLECT_STRUCT(
 )
 
 struct cubic_bezier_t {
-  std::optional<st_pos> point1_;
-  std::optional<st_pos> point2_;
-  st_pos point3_;
+  std::optional<st_pos<st_double> > point1_;
+  std::optional<st_pos<st_double> > point2_;
+  st_pos<st_double> point3_;
 };
 
 REFLECT_STRUCT(
@@ -104,11 +105,11 @@ REFLECT_STRUCT(
 )
 
 struct arc_t {
-  st_bool sweep_direction_;
-  st_bool large_arc_;
-  st_double rotation_angle_;
-  st_array ellipse_size_;
-  st_pos end_point_;
+  st_bool sweep_direction_{};
+  st_bool large_arc_{};
+  st_double rotation_angle_{};
+  st_array<st_double> ellipse_size_;
+  st_pos<st_double> end_point_;
 };
 
 REFLECT_STRUCT(
@@ -132,10 +133,19 @@ REFLECT_STRUCT(
   REFLECT_ATTR()
   REFLECT_NODE()
 )
+DEFINE_VARIANT(
+  area_op_t,
+  DEFINE_VARIANT_TYPE(area_op_t, move_t, line_t, quadratic_bezier_t, cubic_bezier_t, arc_t, close_t),
+  DEFINE_VARIANT_OPS("Move", move_t{})
+  DEFINE_VARIANT_OPS("Line", line_t{})
+  DEFINE_VARIANT_OPS("QuadraticBezier", quadratic_bezier_t{})
+  DEFINE_VARIANT_OPS("CubicBezier", cubic_bezier_t{})
+  DEFINE_VARIANT_OPS("Arc", arc_t{})
+  DEFINE_VARIANT_OPS("Close", close_t{})
+)
 
-using area_op_t = std::variant<move_t, line_t, quadratic_bezier_t, cubic_bezier_t, arc_t, close_t>;
 struct area_t {
-  st_pos start_;
+  st_pos<st_double> start_;
   std::vector<area_op_t> ops_;
 };
 
@@ -206,7 +216,12 @@ REFLECT_STRUCT(
   REFLECT_NODE()
 )
 
-using goto_op_t = std::variant<dest_t, bookmark_t>;
+DEFINE_VARIANT(
+  goto_op_t,
+  DEFINE_VARIANT_TYPE(goto_op_t, dest_t, bookmark_t),
+  DEFINE_VARIANT_OPS("Dest", dest_t{})
+  DEFINE_VARIANT_OPS("Bookmark", bookmark_t{})
+)
 struct goto_t {
   goto_op_t ops_;
 };
@@ -287,7 +302,15 @@ REFLECT_STRUCT(
   REFLECT_NODE()
 )
 
-using action_op_t = std::variant<goto_t, uri_t, goto_a_t, sound_t, movie_t>;
+DEFINE_VARIANT(
+  action_op_t,
+  DEFINE_VARIANT_TYPE(action_op_t, goto_t, uri_t, goto_a_t, sound_t, movie_t),
+  DEFINE_VARIANT_OPS("Goto", goto_t{})
+  DEFINE_VARIANT_OPS("URI", uri_t{})
+  DEFINE_VARIANT_OPS("GotoA", goto_a_t{})
+  DEFINE_VARIANT_OPS("Sound", sound_t{})
+  DEFINE_VARIANT_OPS("Movie", movie_t{})
+)
 struct action_t {
   st_string event_;
   std::optional<region_t> region_;

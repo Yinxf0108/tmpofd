@@ -26,6 +26,8 @@
 
 #include "tmpofd/core/traits/simple_type.h"
 
+#include <cassert>
+
 namespace tmpofd {
 /**
 * 数组，以空格来分割元素。元素可以是除st_loc、st_array外的数据类型，不可嵌套
@@ -113,7 +115,7 @@ struct st_id {
   explicit operator const std::uint64_t &() const { return value_; }
   explicit operator std::uint64_t &() { return value_; }
 
-  const std::uint64_t &value() const { return value_; }
+  [[nodiscard]] const std::uint64_t &value() const { return value_; }
 
   auto operator<=>(const st_id &) const = default;
 };
@@ -143,7 +145,7 @@ struct st_ref_id {
   explicit operator const std::uint64_t &() const { return value_; }
   explicit operator std::uint64_t &() { return value_; }
 
-  const std::uint64_t &value() const { return value_; }
+  [[nodiscard]] const std::uint64_t &value() const { return value_; }
 
   auto operator<=>(const st_ref_id &) const = default;
 };
