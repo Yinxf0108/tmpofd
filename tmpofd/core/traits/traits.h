@@ -41,26 +41,13 @@ template<typename T>
 concept is_optional = is_optional_trait<std::remove_cvref_t<T> >::value;
 
 template<typename T>
-struct remove_opt {
-  using type = T;
-};
-
-template<typename T>
-struct remove_opt<std::optional<T> > {
-  using type = T;
-};
-
-template<typename T>
-using remove_opt_t = typename remove_opt<T>::type;
-
-template<typename T>
 concept is_number = std::integral<T> || std::floating_point<T>;
 
 template<typename T>
-concept is_string = std::same_as<std::string, remove_opt_t<std::remove_cvref_t<T> > >;
+concept is_string = std::same_as<std::string, std::remove_cvref_t<T> >;
 
 template<typename T>
-concept is_string_view = std::same_as<std::string_view, remove_opt_t<std::remove_cvref_t<T> > >;
+concept is_string_view = std::same_as<std::string_view, std::remove_cvref_t<T> >;
 
 template<typename>
 struct is_vector_trait : std::false_type {};
@@ -69,5 +56,5 @@ template<typename T, typename Allocator>
 struct is_vector_trait<std::vector<T, Allocator> > : std::true_type {};
 
 template<typename T>
-concept is_vector = is_vector_trait<remove_opt_t<std::remove_cvref_t<T> > >::value;
+concept is_vector = is_vector_trait<std::remove_cvref_t<T> >::value;
 } // tmpofd

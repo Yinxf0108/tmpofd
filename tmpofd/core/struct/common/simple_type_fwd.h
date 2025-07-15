@@ -36,7 +36,7 @@ inline constexpr bool always_false_v = false;
 using st_bool = bool;
 using st_int = int;
 using st_float = float;
-using st_double = double;
+using st_double = double; /// TODO: floating point precision between serialize and deserialize
 using st_string = std::string;
 template<typename T, typename Allocator = std::allocator<T> >
 using st_vector = std::vector<T, Allocator>;
@@ -55,7 +55,7 @@ using st_loc = std::filesystem::path;
 /**
 * 数组，以空格来分割元素。元素可以是除st_loc、st_array外的数据类型，不可嵌套
 */
-template<typename T> requires (!std::same_as<st_loc, remove_opt_t<std::remove_cvref_t<T>> > && !is_vector<T>)
+template<typename T> requires (!std::same_as<st_loc, std::remove_cvref_t<T> > && !is_vector<T>)
 struct st_array;
 
 /**

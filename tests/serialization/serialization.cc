@@ -270,7 +270,7 @@ void test_document() {
   assert(!dest_0_0_0->right_.has_value());
   assert(!dest_0_0_0->bottom_.has_value());
   assert(!dest_0_0_0->zoom_.has_value());
-  assert(outline_elem_0_0_0_0.size() == 0);
+  assert(outline_elem_0_0_0_0.empty());
 
   const auto &[title_1, count_1, expanded_1, actions_1, outline_elem_1_0] = outline_elem_0[1];
   assert(title_1 == "第二章");
@@ -284,14 +284,14 @@ void test_document() {
   assert(!count_1_0.has_value());
   assert(!expanded_1_0.has_value());
   assert(!actions_1_0.has_value());
-  assert(outline_elem_1_0_0.size() == 0);
+  assert(outline_elem_1_0_0.empty());
 
   const auto &[title_1_1, count_1_1, expanded_1_1, actions_1_1, outline_elem_1_1_0] = *outline_elem_1_0[1];
   assert(title_1_1 == "2.2节");
   assert(!count_1_1.has_value());
   assert(!expanded_1_1.has_value());
   assert(!actions_1_1.has_value());
-  assert(outline_elem_1_1_0.size() == 0);
+  assert(outline_elem_1_1_0.empty());
 
   assert(document.permissions_.has_value());
   const auto &permissions = *document.permissions_;
@@ -394,8 +394,7 @@ void test_document() {
   assert(document.attachments_ == "/Doc_0/Attachments.xml");
   assert(document.extensions_ == "/Doc_0/Extensions.xml");
 
-  /// TODO: serialize document
-  // serialize(document, "document/baseline.xml");
+  serialize(document, "document/baseline.xml");
 }
 
 int main() {

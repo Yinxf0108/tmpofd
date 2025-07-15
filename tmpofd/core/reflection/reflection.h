@@ -35,7 +35,7 @@ template<typename>
 struct is_reflectable_trait : std::false_type {};
 
 template<typename T>
-concept is_reflectable = is_reflectable_trait<remove_opt_t<std::remove_cvref_t<T> > >::value;
+concept is_reflectable = is_reflectable_trait<std::remove_cvref_t<T> >::value;
 
 template<typename T>
 struct member_t {
@@ -127,6 +127,6 @@ constexpr auto get_reflected(const member &mb) {                            \
 }                                                                           \
                                                                             \
 constexpr auto get_reflected(const std::optional<member> &mb) {             \
-  return reflected_t<remove_opt_t<std::remove_cvref_t<decltype(mb)> > >{};  \
+  return reflected_t<std::remove_cvref_t<decltype(mb)> >{};                 \
 }
 } // tmpofd

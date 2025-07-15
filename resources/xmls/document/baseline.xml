@@ -33,7 +33,7 @@
                 <ofd:Actions>
                     <ofd:Action Event="CLICK">
                         <ofd:Goto>
-                            <ofd:Dest Type="FitH" PageID="3" Top="200"/>
+                            <ofd:Dest Type="FitH" PageID="3" Top="200.000000"/>
                         </ofd:Goto>
                     </ofd:Action>
                 </ofd:Actions>
@@ -41,7 +41,7 @@
                     <ofd:Actions>
                         <ofd:Action Event="CLICK">
                             <ofd:Goto>
-                                <ofd:Dest Type="FitV" PageID="3" Left="50"/>
+                                <ofd:Dest Type="FitV" PageID="3" Left="50.000000"/>
                             </ofd:Goto>
                         </ofd:Action>
                     </ofd:Actions>
@@ -90,14 +90,14 @@
         <ofd:HideMenubar>false</ofd:HideMenubar>
         <ofd:HideWindowUI>false</ofd:HideWindowUI>
         <ofd:ZoomMode>FitWidth</ofd:ZoomMode>
-        <ofd:Zoom>150.0</ofd:Zoom>
+        <ofd:Zoom>150.000000</ofd:Zoom>
     </ofd:VPreferences>
     <ofd:Bookmarks>
         <ofd:Bookmark Name="Bookmark 1">
-            <ofd:Dest Type="FitH" PageID="3" Top="200"/>
+            <ofd:Dest Type="FitH" PageID="3" Top="200.000000"/>
         </ofd:Bookmark>
         <ofd:Bookmark Name="Bookmark 2">
-            <ofd:Dest Type="FitR" PageID="4" Left="10" Top="10" Right="100" Bottom="100"/>
+            <ofd:Dest Type="FitR" PageID="4" Left="10.000000" Top="10.000000" Right="100.000000" Bottom="100.000000"/>
         </ofd:Bookmark>
     </ofd:Bookmarks>
     <ofd:Annotations>/Doc_0/Annotations.xml</ofd:Annotations>

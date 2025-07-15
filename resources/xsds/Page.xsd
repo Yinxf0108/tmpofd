@@ -19,8 +19,7 @@
                         </xs:attribute>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="PageRes" type="ST_Loc" minOccurs="0"
-                            maxOccurs="unbounded"/>
+                <xs:element name="PageRes" type="ST_Loc" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="Area" type="CT_PageArea" minOccurs="0"/>
                 <xs:element name="Content" minOccurs="0">
                     <xs:complexType>
