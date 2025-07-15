@@ -29,9 +29,9 @@ using namespace tmpofd;
 int main() {
   goto_t goto_;
 
-  goto_.ops_ = dest_t{"type", static_cast<st_ref_id>(0)};
+  goto_.ops_ = dest_t{enum_string_t(dest_type_t::Fit), static_cast<st_ref_id>(0)};
 
-  goto_.ops_ = bookmark_t{"name"};
+  goto_.ops_ = _bookmark_t{"name"};
 
   return 0;
 }

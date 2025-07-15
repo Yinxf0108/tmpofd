@@ -27,6 +27,8 @@
 #include "tmpofd/core/struct/common/simple_type_fwd.h"
 #include "tmpofd/core/struct/common/enum_string_type.h"
 
+#include <variant>
+
 namespace tmpofd {
 template<typename T>
 concept is_st_bool = std::same_as<st_bool, remove_opt_t<std::remove_cvref_t<T> > >;

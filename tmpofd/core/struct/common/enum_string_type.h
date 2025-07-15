@@ -135,69 +135,6 @@ struct enum_converter<multimedia_type_t> {
   }
 };
 
-enum class dest_type_t { XYZ, Fit, FitH, FitV, FitR };
-template<>
-struct enum_converter<dest_type_t> {
-  static std::string to_string(const dest_type_t e) {
-    switch (e) {
-      case dest_type_t::XYZ: return "XYZ";
-      case dest_type_t::Fit: return "Fit";
-      case dest_type_t::FitH: return "FitH";
-      case dest_type_t::FitV: return "FitV";
-      case dest_type_t::FitR: return "FitR";
-    }
-    return "";
-  }
-  static std::optional<dest_type_t> from_string(const std::string_view s) {
-    if (s == "XYZ") return dest_type_t::XYZ;
-    if (s == "Fit") return dest_type_t::Fit;
-    if (s == "FitH") return dest_type_t::FitH;
-    if (s == "FitV") return dest_type_t::FitV;
-    if (s == "FitR") return dest_type_t::FitR;
-    return std::nullopt;
-  }
-};
-
-enum class movie_operator_t { Play, Stop, Pause, Resume };
-template<>
-struct enum_converter<movie_operator_t> {
-  static std::string to_string(const movie_operator_t e) {
-    switch (e) {
-      case movie_operator_t::Play: return "Play";
-      case movie_operator_t::Stop: return "Stop";
-      case movie_operator_t::Pause: return "Pause";
-      case movie_operator_t::Resume: return "Resume";
-    }
-    return "";
-  }
-  static std::optional<movie_operator_t> from_string(const std::string_view s) {
-    if (s == "Play") return movie_operator_t::Play;
-    if (s == "Stop") return movie_operator_t::Stop;
-    if (s == "Pause") return movie_operator_t::Pause;
-    if (s == "Resume") return movie_operator_t::Resume;
-    return std::nullopt;
-  }
-};
-
-enum class action_event_t { DO, PO, CLICK };
-template<>
-struct enum_converter<action_event_t> {
-  static std::string to_string(const action_event_t e) {
-    switch (e) {
-      case action_event_t::DO: return "DO";
-      case action_event_t::PO: return "PO";
-      case action_event_t::CLICK: return "CLICK";
-    }
-    return "";
-  }
-  static std::optional<action_event_t> from_string(const std::string_view s) {
-    if (s == "DO") return action_event_t::DO;
-    if (s == "PO") return action_event_t::PO;
-    if (s == "CLICK") return action_event_t::CLICK;
-    return std::nullopt;
-  }
-};
-
 enum class signature_type_t { Seal, Sign };
 template<>
 struct enum_converter<signature_type_t> {

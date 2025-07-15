@@ -61,6 +61,7 @@ constexpr void parse_xml_value(T &ins, const V value) {
 template<is_st_number T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   if constexpr (is_optional<decltype(ins)>) {
+    ins.emplace();
     if (const auto result = std::from_chars(value.data(), value.data() + value.size(), *ins);
       std::errc() == result.ec
     )
@@ -113,9 +114,13 @@ constexpr void parse_xml_value(T &ins, const V value) {
       ss >> std::get_time(&tm, fmt.data());
 
       if (!ss.fail() && ss.eof()) {
-        const auto time_point = std::chrono::system_clock::from_time_t(std::mktime(&tm));
-        ins = time_point;
-        return;
+        if (const auto ymd = std::chrono::year{tm.tm_year + 1900} / (tm.tm_mon + 1) / tm.tm_mday; ymd.ok()) {
+          ins = std::chrono::sys_days(ymd)
+              + std::chrono::hours{tm.tm_hour}
+              + std::chrono::minutes{tm.tm_min}
+              + std::chrono::seconds{tm.tm_sec};
+          return;
+        }
       }
     }
   } else {
@@ -140,6 +145,7 @@ constexpr void parse_xml_value(T &ins, const V value) {
 template<has_from_string T, is_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   if constexpr (is_optional<decltype(ins)>) {
+    ins.emplace();
     ins->from_string(value);
   } else {
     ins.from_string(value);
@@ -276,7 +282,12 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
     return;
   }
 
-  skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
+  skip_to<'/', '>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
+  if ('/' == *pos && '>' == *(pos + 1)) {
+    pos += 2;
+    return;
+  }
+
   ++pos;
 
   if constexpr (0 == reflected.node_size())
@@ -293,7 +304,14 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
       key,
       [&](auto &&node) {
         if (key == node.name_) {
-          parse_xml_node(key, node.invoke(ins), std::forward<Pos>(pos), std::forward<Pos>(end));
+          auto &member = node.invoke(ins);
+          if constexpr (is_optional<std::remove_cvref_t<decltype(member)> >) {
+            member.emplace();
+            parse_xml_node(key, *member, std::forward<Pos>(pos), std::forward<Pos>(end));
+          } else {
+            parse_xml_node(key, member, std::forward<Pos>(pos), std::forward<Pos>(end));
+          }
+
           found = true;
           return;
         }
@@ -367,8 +385,7 @@ constexpr void generate_xml_attr(T &ins, XML &xml) {
 
       auto &member = attr.invoke(ins);
       if constexpr (is_optional<std::remove_cvref_t<decltype(member)> >) {
-        if (member)
-          generate_xml_value(*member, xml);
+        generate_xml_value(*member, xml);
       } else {
         generate_xml_value(member, xml);
       }
