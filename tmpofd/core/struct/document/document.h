@@ -109,6 +109,7 @@ REFLECT_STRUCT(
 )
 
 struct document_t {
+  std::optional<st_string> namespace_;
   common_data_t common_data_;
   pages_t pages_;
   std::optional<outlines_t> outlines_;
@@ -125,7 +126,9 @@ struct document_t {
 REFLECT_STRUCT(
   ofd_namespace"Document",
   document_t,
-  REFLECT_ATTR()
+  REFLECT_ATTR(
+    REFLECT_MEMBER("xmlns:ofd", &document_t::namespace_)
+  )
   REFLECT_NODE(
     REFLECT_MEMBER(ofd_namespace"CommonData", &document_t::common_data_),
     REFLECT_MEMBER(ofd_namespace"Pages", &document_t::pages_),

@@ -147,6 +147,7 @@ DEFINE_VARIANT(
   DEFINE_VARIANT_TYPE(arc_t, ofd_namespace"Arc")
   DEFINE_VARIANT_TYPE(close_t, ofd_namespace"Close")
 )
+
 struct area_t {
   st_pos<st_double> start_;
   std::vector<area_op_t> ops_;
@@ -181,8 +182,31 @@ REFLECT_STRUCT(
   )
 )
 
+enum class dest_type_t { XYZ, Fit, FitH, FitV, FitR };
+template<>
+struct enum_converter<dest_type_t> {
+  static std::string to_string(const dest_type_t e) {
+    switch (e) {
+      case dest_type_t::XYZ: return "XYZ";
+      case dest_type_t::Fit: return "Fit";
+      case dest_type_t::FitH: return "FitH";
+      case dest_type_t::FitV: return "FitV";
+      case dest_type_t::FitR: return "FitR";
+    }
+    return "";
+  }
+  static std::optional<dest_type_t> from_string(const std::string_view s) {
+    if (s == "XYZ") return dest_type_t::XYZ;
+    if (s == "Fit") return dest_type_t::Fit;
+    if (s == "FitH") return dest_type_t::FitH;
+    if (s == "FitV") return dest_type_t::FitV;
+    if (s == "FitR") return dest_type_t::FitR;
+    return std::nullopt;
+  }
+};
+
 struct dest_t {
-  st_string type_;
+  enum_string_t<dest_type_t> type_;
   st_ref_id page_id_;
   std::optional<st_double> left_;
   std::optional<st_double> top_;
@@ -224,6 +248,7 @@ DEFINE_VARIANT(
   DEFINE_VARIANT_TYPE(dest_t, ofd_namespace"Dest")
   DEFINE_VARIANT_TYPE(_bookmark_t, ofd_namespace"Bookmark")
 )
+
 struct goto_t {
   goto_op_t ops_;
 };
@@ -289,9 +314,30 @@ REFLECT_STRUCT(
   REFLECT_NODE()
 )
 
+enum class movie_operator_t { Play, Stop, Pause, Resume };
+template<>
+struct enum_converter<movie_operator_t> {
+  static std::string to_string(const movie_operator_t e) {
+    switch (e) {
+      case movie_operator_t::Play: return "Play";
+      case movie_operator_t::Stop: return "Stop";
+      case movie_operator_t::Pause: return "Pause";
+      case movie_operator_t::Resume: return "Resume";
+    }
+    return "";
+  }
+  static std::optional<movie_operator_t> from_string(const std::string_view s) {
+    if (s == "Play") return movie_operator_t::Play;
+    if (s == "Stop") return movie_operator_t::Stop;
+    if (s == "Pause") return movie_operator_t::Pause;
+    if (s == "Resume") return movie_operator_t::Resume;
+    return std::nullopt;
+  }
+};
+
 struct movie_t {
   st_ref_id resource_id_;
-  std::optional<st_string> operator_;
+  std::optional<enum_string_t<movie_operator_t> > operator_;
 };
 
 REFLECT_STRUCT(
@@ -312,8 +358,28 @@ DEFINE_VARIANT(
   DEFINE_VARIANT_TYPE(sound_t, ofd_namespace"Sound")
   DEFINE_VARIANT_TYPE(movie_t, ofd_namespace"Movie")
 )
+
+enum class action_event_t { DO, PO, CLICK };
+template<>
+struct enum_converter<action_event_t> {
+  static std::string to_string(const action_event_t e) {
+    switch (e) {
+      case action_event_t::DO: return "DO";
+      case action_event_t::PO: return "PO";
+      case action_event_t::CLICK: return "CLICK";
+    }
+    return "";
+  }
+  static std::optional<action_event_t> from_string(const std::string_view s) {
+    if (s == "DO") return action_event_t::DO;
+    if (s == "PO") return action_event_t::PO;
+    if (s == "CLICK") return action_event_t::CLICK;
+    return std::nullopt;
+  }
+};
+
 struct action_t {
-  st_string event_;
+  enum_string_t<action_event_t> event_;
   std::optional<region_t> region_;
   action_op_t ops_;
 };

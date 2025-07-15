@@ -66,14 +66,14 @@
     <ofd:Actions>
         <ofd:Action Event="DO">
             <ofd:Goto>
-                <Bookmark Name="Bookmark 1"/>
+                <ofd:Bookmark Name="Bookmark 1"/>
             </ofd:Goto>
         </ofd:Action>
         <ofd:Action Event="PO">
-            <ofd:URI URI="http://www.ofdspec.org" Target="_blank"/>
+            <ofd:URI URI="/logout" Base="https://github.com" Target="_blank"/>
         </ofd:Action>
         <ofd:Action Event="CLICK">
-            <ofd:GotoA AttachID="4" NewWindow="false"/>
+            <ofd:GotoA AttachID="7" NewWindow="false"/>
         </ofd:Action>
         <ofd:Action Event="DO">
             <ofd:Sound ResourceID="4" Volume="100" Repeat="false" Synchronous="true"/>

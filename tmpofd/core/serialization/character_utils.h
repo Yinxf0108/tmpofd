@@ -42,16 +42,17 @@ inline std::string to_string(const std::optional<st_date> &date) {
 }
 
 inline std::string to_string(const st_date_time &dt) {
-  return std::format("{:%Y-%m-%dT%H:%M:%S}", dt);
+  const auto seconds_tp = std::chrono::floor<std::chrono::seconds>(dt);
+  return std::format("{:%Y-%m-%dT%H:%M:%S}", seconds_tp);
 }
 
 inline std::string to_string(const std::optional<st_date_time> &dt) {
   return to_string(*dt);
 }
 
-template<char... characters, typename T>
-constexpr void matched_skip(T &&pos, T &&end) {
-  if (static_cast<size_t>(std::distance(pos, end)) < sizeof...(characters))
+template<char... characters, typename Pos>
+constexpr void matched_skip(Pos &&pos, Pos &&end) {
+  if (static_cast<size_t>(std::distance(std::forward<Pos>(pos), std::forward<Pos>(end))) < sizeof...(characters))
     throw std::runtime_error(
       std::string("Unexpected end of buffer. Expected matched skip : ").append(std::to_string(sizeof...(characters)))
     );
@@ -81,12 +82,12 @@ constexpr uint64_t has_char(const uint64_t chunk) {
   return ret;
 }
 
-template<char... characters, typename T>
-constexpr void skip_to(T &&pos, T &&end) {
+template<char... characters, typename Pos>
+constexpr void skip_to(Pos &&pos, Pos &&end) {
   static_assert(sizeof...(characters) > 0, "Least one character must be specified");
-  static_assert(std::contiguous_iterator<std::decay_t<T> >, "Discontinuous memory");
+  static_assert(std::contiguous_iterator<std::decay_t<Pos> >, "Discontinuous memory");
 
-  if (sizeof(uint64_t) <= std::distance(pos, end)) {
+  if (sizeof(uint64_t) <= std::distance(std::forward<Pos>(pos), std::forward<Pos>(end))) {
     for (; pos <= end - sizeof(uint64_t); pos += sizeof(uint64_t)) {
       uint64_t chunk;
       std::memcpy(&chunk, std::to_address(pos), sizeof(chunk));
@@ -109,16 +110,16 @@ constexpr void skip_to(T &&pos, T &&end) {
   throw std::runtime_error(std::string("Expected skip to : ") + std::string(expected, sizeof...(characters)));
 }
 
-template<typename T>
-constexpr void skip_spaces_and_newline(T &&pos, T &&end) {
+template<typename Pos>
+constexpr void skip_spaces_and_newline(Pos &&pos, Pos &&end) {
   static_assert(std::is_same_v<std::decay_t<decltype(*pos)>, char>, "Not character parameter");
 
   while (pos < end && static_cast<std::uint8_t>(*pos) < 33)
     ++pos;
 }
 
-template<typename T>
-constexpr void skip_instructions(T &&pos, T &&end) {
+template<typename Pos>
+constexpr void skip_instructions(Pos &&pos, Pos &&end) {
   if ('<' != *(pos - 1) && '?' != *pos)
     return;
 
@@ -127,7 +128,7 @@ constexpr void skip_instructions(T &&pos, T &&end) {
   ++pos;
 
   while (true) {
-    skip_to<'?'>(pos, end);
+    skip_to<'?'>(std::forward<Pos>(pos), std::forward<Pos>(end));
     ++pos;
 
     if (pos >= end - 1)
@@ -142,8 +143,8 @@ constexpr void skip_instructions(T &&pos, T &&end) {
   }
 }
 
-template<typename T>
-constexpr void skip_comment(T &&pos, T &&end) {
+template<typename Pos>
+constexpr void skip_comment(Pos &&pos, Pos &&end) {
   if ('<' != *(pos - 1) && '!' != *pos)
     return;
 
@@ -154,12 +155,12 @@ constexpr void skip_comment(T &&pos, T &&end) {
 
   /// <!-- This is a comment -->
   ///     ^
-  matched_skip<'!', '-', '-'>(pos, end);
+  matched_skip<'!', '-', '-'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   while (true) {
     /// <!-- This is a comment -->
     ///                        ^
-    skip_to<'-'>(pos, end);
+    skip_to<'-'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
     /// <!-- This is a comment -->
     ///                         ^
@@ -181,8 +182,8 @@ constexpr void skip_comment(T &&pos, T &&end) {
   throw std::runtime_error("Unterminated comment");
 }
 
-template<typename T>
-constexpr void skip_doctype(T &&pos, T &&end) {
+template<typename Pos>
+constexpr void skip_doctype(Pos &&pos, Pos &&end) {
   if ('<' != *(pos - 1) && '!' != *pos)
     return;
 
@@ -201,19 +202,19 @@ constexpr void skip_doctype(T &&pos, T &&end) {
 
   /// <!DOCTYPE root [<SYSTEM "example.dtd">]>
   ///          ^
-  matched_skip<'!', 'D', 'O', 'C', 'T', 'Y', 'P', 'E'>(pos, end);
+  matched_skip<'!', 'D', 'O', 'C', 'T', 'Y', 'P', 'E'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   /// <!DOCTYPE root [<SYSTEM "example.dtd">]>
   ///                ^
   /// <!DOCTYPE root SYSTEM "example.dtd">
   ///                                    ^
-  skip_to<'[', '>'>(pos, end);
+  skip_to<'[', '>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   if ('[' == *pos) {
     /// <!DOCTYPE root [<SYSTEM "example.dtd">]>
     ///                                       ^
-    skip_to<']'>(pos, end);
-    skip_to<'>'>(pos, end);
+    skip_to<']'>(std::forward<Pos>(pos), std::forward<Pos>(end));
+    skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   }
 
   /// <!DOCTYPE root [<SYSTEM "example.dtd">]>
@@ -222,8 +223,8 @@ constexpr void skip_doctype(T &&pos, T &&end) {
     ++pos;
 }
 
-template<typename T>
-constexpr void skip_cdata(T &&pos, T &&end) {
+template<typename Pos>
+constexpr void skip_cdata(Pos &&pos, Pos &&end) {
   if ('<' != *(pos - 1) && '!' != *pos)
     return;
 
@@ -242,45 +243,45 @@ constexpr void skip_cdata(T &&pos, T &&end) {
 
   /// <![CDATA[This is a CDATA block.]]>
   ///          ^
-  matched_skip<'!', '[', 'C', 'D', 'A', 'T', 'A', '['>(pos, end);
+  matched_skip<'!', '[', 'C', 'D', 'A', 'T', 'A', '['>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   /// <![CDATA[This is a CDATA block.]]>
   ///                                 ^
-  skip_to<']'>(pos, end);
-  matched_skip<']'>(pos, end);
+  skip_to<']'>(std::forward<Pos>(pos), std::forward<Pos>(end));
+  matched_skip<']'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   /// <![CDATA[This is a CDATA block.]]>
   ///                                  ^
-  skip_to<']'>(pos, end);
-  matched_skip<']'>(pos, end);
+  skip_to<']'>(std::forward<Pos>(pos), std::forward<Pos>(end));
+  matched_skip<']'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   /// <![CDATA[This is a CDATA block.]]>
   ///                                   ^
-  skip_to<'>'>(pos, end);
-  matched_skip<'>'>(pos, end);
+  skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
+  matched_skip<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 }
 
-template<typename T>
-constexpr void skip_to_first_key(T &&pos, T &&end) {
+template<typename Pos>
+constexpr void skip_to_first_key(Pos &&pos, Pos &&end) {
   while (pos < end) {
-    skip_spaces_and_newline(pos, end);
-    matched_skip<'<'>(pos, end);
+    skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
+    matched_skip<'<'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
     if ('?' == *pos) {
-      skip_instructions(pos, end);
+      skip_instructions(std::forward<Pos>(pos), std::forward<Pos>(end));
     } else if ('!' == *pos) {
-      skip_comment(pos, end);
-      skip_doctype(pos, end);
+      skip_comment(std::forward<Pos>(pos), std::forward<Pos>(end));
+      skip_doctype(std::forward<Pos>(pos), std::forward<Pos>(end));
     } else {
       break;
     }
   }
 }
 
-template<char... characters, typename T>
-constexpr auto get_key(T &&pos, T &&end) {
+template<char... characters, typename Pos>
+constexpr auto get_key(Pos &&pos, Pos &&end) {
   auto begin = pos;
-  skip_to<characters...>(pos, end);
+  skip_to<characters...>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
   while (pos > begin && static_cast<std::uint8_t>(*(pos - 1)) < 33) {
     --pos;
@@ -289,8 +290,8 @@ constexpr auto get_key(T &&pos, T &&end) {
   return std::string_view{&*begin, static_cast<size_t>(std::distance(begin, pos))};
 }
 
-template<typename T>
-constexpr auto get_value(T &&value_begin, T &&value_end) {
+template<typename Pos>
+constexpr auto get_value(Pos &&value_begin, Pos &&value_end) {
   auto value = std::string{&*value_begin, static_cast<size_t>(std::distance(value_begin, value_end))};
 
   constexpr auto cdata_prefix = std::string_view{"<![CDATA["};
@@ -329,16 +330,16 @@ constexpr auto get_value(T &&value_begin, T &&value_end) {
   return result;
 }
 
-template<is_string_view N, typename T>
-constexpr auto matched_close(const N name, T &&pos, T &&end) {
+template<is_string_view N, typename Pos>
+constexpr auto matched_close(const N name, Pos &&pos, Pos &&end) {
   while (pos < end) {
-    skip_spaces_and_newline(pos, end);
-    matched_skip<'<'>(pos, end);
+    skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
+    matched_skip<'<'>(std::forward<Pos>(pos), std::forward<Pos>(end));
 
     if ('/' == *pos) {
       ++pos;
 
-      const auto key = get_key<'>'>(pos, end);
+      const auto key = get_key<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
       if (key != name)
         throw std::runtime_error(
           "Mismatched closing tag, expected " + std::string(name) + " but got " + std::string(key)
@@ -349,14 +350,14 @@ constexpr auto matched_close(const N name, T &&pos, T &&end) {
     }
 
     if ('?' == *pos) {
-      skip_instructions(pos, end);
+      skip_instructions(std::forward<Pos>(pos), std::forward<Pos>(end));
       continue;
     }
 
     if ('!' == *pos) {
-      skip_comment(pos, end);
-      skip_doctype(pos, end);
-      skip_cdata(pos, end);
+      skip_comment(std::forward<Pos>(pos), std::forward<Pos>(end));
+      skip_doctype(std::forward<Pos>(pos), std::forward<Pos>(end));
+      skip_cdata(std::forward<Pos>(pos), std::forward<Pos>(end));
       continue;
     }
 
@@ -366,9 +367,9 @@ constexpr auto matched_close(const N name, T &&pos, T &&end) {
   return false;
 }
 
-template<is_string_view N, typename T>
-constexpr void skip_node(const N name, T &&pos, T &&end) {
-  skip_to<'>'>(pos, end);
+template<is_string_view N, typename Pos>
+constexpr void skip_node(const N name, Pos &&pos, Pos &&end) {
+  skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   ++pos;
 
   /// name />
@@ -379,7 +380,7 @@ constexpr void skip_node(const N name, T &&pos, T &&end) {
   while (pos < end) {
     /// <name> ... </name>
     ///             ^
-    skip_to<'<'>(pos, end);
+    skip_to<'<'>(std::forward<Pos>(pos), std::forward<Pos>(end));
     ++pos;
 
     /// <name> ... </name>
@@ -389,17 +390,16 @@ constexpr void skip_node(const N name, T &&pos, T &&end) {
 
     /// <name> ... </name>
     ///                  ^
-    const auto key = get_key<'>'>(pos, end);
+    const auto key = get_key<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
     if (name == key) {
       ++pos;
       return;
     }
 
     ++pos;
-    skip_spaces_and_newline(pos, end);
+    skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
   }
 
-  /// TODO: fix runtime error when parse ofd:OutlineElem
   throw std::runtime_error("Unclosed tag: " + std::string(name));
 }
 } // tmpofd
