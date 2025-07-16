@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "tmpofd/core/traits/simple_type.h"
+#include "tmpofd/core/traits/type_traits.h"
 
 #include <cassert>
 
@@ -99,68 +99,17 @@ struct st_array {
 };
 
 /**
-* 标识，无符号整数，应在文档内唯一。0表示无效标识
+* 标识，在simple_type_fwd.h中声明
 */
-struct st_id {
-  std::uint64_t value_;
-
-  constexpr st_id() : value_(0) {}
-  constexpr explicit st_id(const std::uint64_t value) : value_(value) {}
-
-  constexpr st_id &operator=(const std::uint64_t value) {
-    value_ = value;
-    return *this;
-  }
-
-  explicit operator const std::uint64_t &() const { return value_; }
-  explicit operator std::uint64_t &() { return value_; }
-
-  [[nodiscard]] const std::uint64_t &value() const { return value_; }
-
-  auto operator<=>(const st_id &) const = default;
-};
-
-inline std::istream &operator>>(std::istream &is, st_id &id) {
-  return is >> id.value_;
-}
-inline std::ostream &operator<<(std::ostream &os, const st_id &id) {
-  return os << id.value_;
-}
 
 /**
-* 标识引用，无符号整数，此标识应为文档内已定义的标识
+* 标识引用，在simple_type_fwd.h中声明
 */
-struct st_ref_id {
-  std::uint64_t value_;
-
-  constexpr st_ref_id() : value_(0) {}
-  constexpr explicit st_ref_id(const std::uint64_t v) : value_(v) {}
-  constexpr explicit st_ref_id(const st_id &id) : value_(id.value_) {}
-
-  constexpr st_ref_id &operator=(const std::uint64_t value) {
-    value_ = value;
-    return *this;
-  }
-
-  explicit operator const std::uint64_t &() const { return value_; }
-  explicit operator std::uint64_t &() { return value_; }
-
-  [[nodiscard]] const std::uint64_t &value() const { return value_; }
-
-  auto operator<=>(const st_ref_id &) const = default;
-};
-
-inline std::istream &operator>>(std::istream &is, st_ref_id &id) {
-  return is >> id.value_;
-}
-inline std::ostream &operator<<(std::ostream &os, const st_ref_id &id) {
-  return os << id.value_;
-}
 
 /**
 * 点坐标，以空格分割，前者为x值，后者为y值，可以是整数或者浮点数
 */
-template<is_number T>
+template<is_st_number T>
 struct st_pos {
   T x_;
   T y_;
@@ -194,7 +143,7 @@ struct st_pos {
 /**
 * 矩形区域，以空格分割，前两个值代表了该矩形的左上角的坐标，后两个值依次表示该矩形的宽和高，可以是整数或者浮点数，后两个值应大于0
 */
-template<is_number T>
+template<is_st_number T>
 struct st_box {
   T x_;
   T y_;
@@ -205,7 +154,7 @@ struct st_box {
 
   constexpr st_box(T x, T y, T width, T height)
     : x_(x), y_(y), width_(width), height_(height) {
-    assert(width_ > T{0} && height_ > T{0} && "st_box: width and height must be positive.");
+    assert(width_ > 0 && height_ > 0 && "st_box: width and height must be positive.");
   }
 
   void from_string(const std::string_view str, const char sep = ' ') {
@@ -220,7 +169,7 @@ struct st_box {
 
     std::stringstream ss(s);
     ss >> x_ >> y_ >> width_ >> height_;
-    assert(width_ > T{0} && height_ > T{0} && "st_box: width and height must be positive.");
+    assert(width_ > 0 && height_ > 0 && "st_box: width and height must be positive.");
   }
 
   [[nodiscard]] std::string to_string(char sep = ' ') const {

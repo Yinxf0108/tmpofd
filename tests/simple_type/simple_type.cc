@@ -39,11 +39,6 @@ void test_st_bool() {
   static_assert(!is_st_bool<st_int &>);
   static_assert(!is_st_bool<const st_int &>);
 
-  static_assert(!is_st_bool<st_float>);
-  static_assert(!is_st_bool<const st_float>);
-  static_assert(!is_st_bool<st_float &>);
-  static_assert(!is_st_bool<const st_float &>);
-
   static_assert(!is_st_bool<st_double>);
   static_assert(!is_st_bool<const st_double>);
   static_assert(!is_st_bool<st_double &>);
@@ -111,11 +106,6 @@ void test_st_int() {
   static_assert(is_st_int<st_int &>);
   static_assert(is_st_int<const st_int &>);
 
-  static_assert(!is_st_int<st_float>);
-  static_assert(!is_st_int<const st_float>);
-  static_assert(!is_st_int<st_float &>);
-  static_assert(!is_st_int<const st_float &>);
-
   static_assert(!is_st_int<st_double>);
   static_assert(!is_st_int<const st_double>);
   static_assert(!is_st_int<st_double &>);
@@ -172,148 +162,71 @@ void test_st_int() {
   static_assert(!is_st_int<const st_box<st_int> &>);
 }
 
-void test_st_float() {
-  static_assert(!is_st_float<st_bool>);
-  static_assert(!is_st_float<const st_bool>);
-  static_assert(!is_st_float<st_bool &>);
-  static_assert(!is_st_float<const st_bool &>);
+void test_floating_t() {
+  static_assert(!is_floating_t<st_bool>);
+  static_assert(!is_floating_t<const st_bool>);
+  static_assert(!is_floating_t<st_bool &>);
+  static_assert(!is_floating_t<const st_bool &>);
 
-  static_assert(!is_st_float<st_int>);
-  static_assert(!is_st_float<const st_int>);
-  static_assert(!is_st_float<st_int &>);
-  static_assert(!is_st_float<const st_int &>);
+  static_assert(!is_floating_t<st_int>);
+  static_assert(!is_floating_t<const st_int>);
+  static_assert(!is_floating_t<st_int &>);
+  static_assert(!is_floating_t<const st_int &>);
 
-  static_assert(is_st_float<st_float>);
-  static_assert(is_st_float<const st_float>);
-  static_assert(is_st_float<st_float &>);
-  static_assert(is_st_float<const st_float &>);
+  static_assert(is_floating_t<st_double>);
+  static_assert(is_floating_t<const st_double>);
+  static_assert(is_floating_t<st_double &>);
+  static_assert(is_floating_t<const st_double &>);
 
-  static_assert(!is_st_float<st_double>);
-  static_assert(!is_st_float<const st_double>);
-  static_assert(!is_st_float<st_double &>);
-  static_assert(!is_st_float<const st_double &>);
+  static_assert(!is_floating_t<st_string>);
+  static_assert(!is_floating_t<const st_string>);
+  static_assert(!is_floating_t<st_string &>);
+  static_assert(!is_floating_t<const st_string &>);
 
-  static_assert(!is_st_float<st_string>);
-  static_assert(!is_st_float<const st_string>);
-  static_assert(!is_st_float<st_string &>);
-  static_assert(!is_st_float<const st_string &>);
+  static_assert(!is_floating_t<st_vector<std::monostate> >);
+  static_assert(!is_floating_t<const st_vector<std::monostate>>);
+  static_assert(!is_floating_t<st_vector<std::monostate> &>);
+  static_assert(!is_floating_t<const st_vector<std::monostate> &>);
 
-  static_assert(!is_st_float<st_vector<std::monostate> >);
-  static_assert(!is_st_float<const st_vector<std::monostate>>);
-  static_assert(!is_st_float<st_vector<std::monostate> &>);
-  static_assert(!is_st_float<const st_vector<std::monostate> &>);
+  static_assert(!is_floating_t<st_date>);
+  static_assert(!is_floating_t<const st_date>);
+  static_assert(!is_floating_t<st_date &>);
+  static_assert(!is_floating_t<const st_date &>);
 
-  static_assert(!is_st_float<st_date>);
-  static_assert(!is_st_float<const st_date>);
-  static_assert(!is_st_float<st_date &>);
-  static_assert(!is_st_float<const st_date &>);
+  static_assert(!is_floating_t<st_date_time>);
+  static_assert(!is_floating_t<const st_date_time>);
+  static_assert(!is_floating_t<st_date_time &>);
+  static_assert(!is_floating_t<const st_date_time &>);
 
-  static_assert(!is_st_float<st_date_time>);
-  static_assert(!is_st_float<const st_date_time>);
-  static_assert(!is_st_float<st_date_time &>);
-  static_assert(!is_st_float<const st_date_time &>);
+  static_assert(!is_floating_t<st_loc>);
+  static_assert(!is_floating_t<const st_loc>);
+  static_assert(!is_floating_t<st_loc &>);
+  static_assert(!is_floating_t<const st_loc &>);
 
-  static_assert(!is_st_float<st_loc>);
-  static_assert(!is_st_float<const st_loc>);
-  static_assert(!is_st_float<st_loc &>);
-  static_assert(!is_st_float<const st_loc &>);
+  static_assert(!is_floating_t<st_array<st_id> >);
+  static_assert(!is_floating_t<const st_array<st_id>>);
+  static_assert(!is_floating_t<st_array<st_id> &>);
+  static_assert(!is_floating_t<const st_array<st_id> &>);
 
-  static_assert(!is_st_float<st_array<st_id> >);
-  static_assert(!is_st_float<const st_array<st_id>>);
-  static_assert(!is_st_float<st_array<st_id> &>);
-  static_assert(!is_st_float<const st_array<st_id> &>);
+  static_assert(!is_floating_t<st_id>);
+  static_assert(!is_floating_t<const st_id>);
+  static_assert(!is_floating_t<st_id &>);
+  static_assert(!is_floating_t<const st_id &>);
 
-  static_assert(!is_st_float<st_id>);
-  static_assert(!is_st_float<const st_id>);
-  static_assert(!is_st_float<st_id &>);
-  static_assert(!is_st_float<const st_id &>);
+  static_assert(!is_floating_t<st_ref_id>);
+  static_assert(!is_floating_t<const st_ref_id>);
+  static_assert(!is_floating_t<st_ref_id &>);
+  static_assert(!is_floating_t<const st_ref_id &>);
 
-  static_assert(!is_st_float<st_ref_id>);
-  static_assert(!is_st_float<const st_ref_id>);
-  static_assert(!is_st_float<st_ref_id &>);
-  static_assert(!is_st_float<const st_ref_id &>);
+  static_assert(!is_floating_t<st_pos<st_int> >);
+  static_assert(!is_floating_t<const st_pos<st_int>>);
+  static_assert(!is_floating_t<st_pos<st_int> &>);
+  static_assert(!is_floating_t<const st_pos<st_int> &>);
 
-  static_assert(!is_st_float<st_pos<st_int> >);
-  static_assert(!is_st_float<const st_pos<st_int>>);
-  static_assert(!is_st_float<st_pos<st_int> &>);
-  static_assert(!is_st_float<const st_pos<st_int> &>);
-
-  static_assert(!is_st_float<st_box<st_int> >);
-  static_assert(!is_st_float<const st_box<st_int>>);
-  static_assert(!is_st_float<st_box<st_int> &>);
-  static_assert(!is_st_float<const st_box<st_int> &>);
-}
-
-void test_st_double() {
-  static_assert(!is_st_double<st_bool>);
-  static_assert(!is_st_double<const st_bool>);
-  static_assert(!is_st_double<st_bool &>);
-  static_assert(!is_st_double<const st_bool &>);
-
-  static_assert(!is_st_double<st_int>);
-  static_assert(!is_st_double<const st_int>);
-  static_assert(!is_st_double<st_int &>);
-  static_assert(!is_st_double<const st_int &>);
-
-  static_assert(!is_st_double<st_float>);
-  static_assert(!is_st_double<const st_float>);
-  static_assert(!is_st_double<st_float &>);
-  static_assert(!is_st_double<const st_float &>);
-
-  static_assert(is_st_double<st_double>);
-  static_assert(is_st_double<const st_double>);
-  static_assert(is_st_double<st_double &>);
-  static_assert(is_st_double<const st_double &>);
-
-  static_assert(!is_st_double<st_string>);
-  static_assert(!is_st_double<const st_string>);
-  static_assert(!is_st_double<st_string &>);
-  static_assert(!is_st_double<const st_string &>);
-
-  static_assert(!is_st_double<st_vector<std::monostate> >);
-  static_assert(!is_st_double<const st_vector<std::monostate>>);
-  static_assert(!is_st_double<st_vector<std::monostate> &>);
-  static_assert(!is_st_double<const st_vector<std::monostate> &>);
-
-  static_assert(!is_st_double<st_date>);
-  static_assert(!is_st_double<const st_date>);
-  static_assert(!is_st_double<st_date &>);
-  static_assert(!is_st_double<const st_date &>);
-
-  static_assert(!is_st_double<st_date_time>);
-  static_assert(!is_st_double<const st_date_time>);
-  static_assert(!is_st_double<st_date_time &>);
-  static_assert(!is_st_double<const st_date_time &>);
-
-  static_assert(!is_st_double<st_loc>);
-  static_assert(!is_st_double<const st_loc>);
-  static_assert(!is_st_double<st_loc &>);
-  static_assert(!is_st_double<const st_loc &>);
-
-  static_assert(!is_st_double<st_array<st_id> >);
-  static_assert(!is_st_double<const st_array<st_id>>);
-  static_assert(!is_st_double<st_array<st_id> &>);
-  static_assert(!is_st_double<const st_array<st_id> &>);
-
-  static_assert(!is_st_double<st_id>);
-  static_assert(!is_st_double<const st_id>);
-  static_assert(!is_st_double<st_id &>);
-  static_assert(!is_st_double<const st_id &>);
-
-  static_assert(!is_st_double<st_ref_id>);
-  static_assert(!is_st_double<const st_ref_id>);
-  static_assert(!is_st_double<st_ref_id &>);
-  static_assert(!is_st_double<const st_ref_id &>);
-
-  static_assert(!is_st_double<st_pos<st_int> >);
-  static_assert(!is_st_double<const st_pos<st_int>>);
-  static_assert(!is_st_double<st_pos<st_int> &>);
-  static_assert(!is_st_double<const st_pos<st_int> &>);
-
-  static_assert(!is_st_double<st_box<st_int> >);
-  static_assert(!is_st_double<const st_box<st_int>>);
-  static_assert(!is_st_double<st_box<st_int> &>);
-  static_assert(!is_st_double<const st_box<st_int> &>);
+  static_assert(!is_floating_t<st_box<st_int> >);
+  static_assert(!is_floating_t<const st_box<st_int>>);
+  static_assert(!is_floating_t<st_box<st_int> &>);
+  static_assert(!is_floating_t<const st_box<st_int> &>);
 }
 
 void test_st_string() {
@@ -326,11 +239,6 @@ void test_st_string() {
   static_assert(!is_st_string<const st_int>);
   static_assert(!is_st_string<st_int &>);
   static_assert(!is_st_string<const st_int &>);
-
-  static_assert(!is_st_string<st_float>);
-  static_assert(!is_st_string<const st_float>);
-  static_assert(!is_st_string<st_float &>);
-  static_assert(!is_st_string<const st_float &>);
 
   static_assert(!is_st_string<st_double>);
   static_assert(!is_st_string<const st_double>);
@@ -399,11 +307,6 @@ void test_st_vector() {
   static_assert(!is_st_vector<st_int &>);
   static_assert(!is_st_vector<const st_int &>);
 
-  static_assert(!is_st_vector<st_float>);
-  static_assert(!is_st_vector<const st_float>);
-  static_assert(!is_st_vector<st_float &>);
-  static_assert(!is_st_vector<const st_float &>);
-
   static_assert(!is_st_vector<st_double>);
   static_assert(!is_st_vector<const st_double>);
   static_assert(!is_st_vector<st_double &>);
@@ -470,11 +373,6 @@ void test_st_date() {
   static_assert(!is_st_date<const st_int>);
   static_assert(!is_st_date<st_int &>);
   static_assert(!is_st_date<const st_int &>);
-
-  static_assert(!is_st_date<st_float>);
-  static_assert(!is_st_date<const st_float>);
-  static_assert(!is_st_date<st_float &>);
-  static_assert(!is_st_date<const st_float &>);
 
   static_assert(!is_st_date<st_double>);
   static_assert(!is_st_date<const st_double>);
@@ -543,11 +441,6 @@ void test_st_date_time() {
   static_assert(!is_st_date_time<st_int &>);
   static_assert(!is_st_date_time<const st_int &>);
 
-  static_assert(!is_st_date_time<st_float>);
-  static_assert(!is_st_date_time<const st_float>);
-  static_assert(!is_st_date_time<st_float &>);
-  static_assert(!is_st_date_time<const st_float &>);
-
   static_assert(!is_st_date_time<st_double>);
   static_assert(!is_st_date_time<const st_double>);
   static_assert(!is_st_date_time<st_double &>);
@@ -614,11 +507,6 @@ void test_st_loc() {
   static_assert(!is_st_loc<const st_int>);
   static_assert(!is_st_loc<st_int &>);
   static_assert(!is_st_loc<const st_int &>);
-
-  static_assert(!is_st_loc<st_float>);
-  static_assert(!is_st_loc<const st_float>);
-  static_assert(!is_st_loc<st_float &>);
-  static_assert(!is_st_loc<const st_float &>);
 
   static_assert(!is_st_loc<st_double>);
   static_assert(!is_st_loc<const st_double>);
@@ -687,11 +575,6 @@ void test_st_array() {
   static_assert(!is_st_array<st_int &>);
   static_assert(!is_st_array<const st_int &>);
 
-  static_assert(!is_st_array<st_float>);
-  static_assert(!is_st_array<const st_float>);
-  static_assert(!is_st_array<st_float &>);
-  static_assert(!is_st_array<const st_float &>);
-
   static_assert(!is_st_array<st_double>);
   static_assert(!is_st_array<const st_double>);
   static_assert(!is_st_array<st_double &>);
@@ -759,11 +642,6 @@ void test_st_id() {
   static_assert(!is_st_id<st_int &>);
   static_assert(!is_st_id<const st_int &>);
 
-  static_assert(!is_st_id<st_float>);
-  static_assert(!is_st_id<const st_float>);
-  static_assert(!is_st_id<st_float &>);
-  static_assert(!is_st_id<const st_float &>);
-
   static_assert(!is_st_id<st_double>);
   static_assert(!is_st_id<const st_double>);
   static_assert(!is_st_id<st_double &>);
@@ -804,10 +682,10 @@ void test_st_id() {
   static_assert(is_st_id<st_id &>);
   static_assert(is_st_id<const st_id &>);
 
-  static_assert(!is_st_id<st_ref_id>);
-  static_assert(!is_st_id<const st_ref_id>);
-  static_assert(!is_st_id<st_ref_id &>);
-  static_assert(!is_st_id<const st_ref_id &>);
+  static_assert(is_st_id<st_ref_id>);
+  static_assert(is_st_id<const st_ref_id>);
+  static_assert(is_st_id<st_ref_id &>);
+  static_assert(is_st_id<const st_ref_id &>);
 
   static_assert(!is_st_id<st_pos<st_int> >);
   static_assert(!is_st_id<const st_pos<st_int>>);
@@ -830,11 +708,6 @@ void test_st_ref_id() {
   static_assert(!is_st_ref_id<const st_int>);
   static_assert(!is_st_ref_id<st_int &>);
   static_assert(!is_st_ref_id<const st_int &>);
-
-  static_assert(!is_st_ref_id<st_float>);
-  static_assert(!is_st_ref_id<const st_float>);
-  static_assert(!is_st_ref_id<st_float &>);
-  static_assert(!is_st_ref_id<const st_float &>);
 
   static_assert(!is_st_ref_id<st_double>);
   static_assert(!is_st_ref_id<const st_double>);
@@ -871,10 +744,10 @@ void test_st_ref_id() {
   static_assert(!is_st_ref_id<st_array<st_id> &>);
   static_assert(!is_st_ref_id<const st_array<st_id> &>);
 
-  static_assert(!is_st_ref_id<st_id>);
-  static_assert(!is_st_ref_id<const st_id>);
-  static_assert(!is_st_ref_id<st_id &>);
-  static_assert(!is_st_ref_id<const st_id &>);
+  static_assert(is_st_ref_id<st_id>);
+  static_assert(is_st_ref_id<const st_id>);
+  static_assert(is_st_ref_id<st_id &>);
+  static_assert(is_st_ref_id<const st_id &>);
 
   static_assert(is_st_ref_id<st_ref_id>);
   static_assert(is_st_ref_id<const st_ref_id>);
@@ -902,11 +775,6 @@ void test_st_pos() {
   static_assert(!is_st_pos<const st_int>);
   static_assert(!is_st_pos<st_int &>);
   static_assert(!is_st_pos<const st_int &>);
-
-  static_assert(!is_st_pos<st_float>);
-  static_assert(!is_st_pos<const st_float>);
-  static_assert(!is_st_pos<st_float &>);
-  static_assert(!is_st_pos<const st_float &>);
 
   static_assert(!is_st_pos<st_double>);
   static_assert(!is_st_pos<const st_double>);
@@ -974,11 +842,6 @@ void test_st_box() {
   static_assert(!is_st_box<const st_int>);
   static_assert(!is_st_box<st_int &>);
   static_assert(!is_st_box<const st_int &>);
-
-  static_assert(!is_st_box<st_float>);
-  static_assert(!is_st_box<const st_float>);
-  static_assert(!is_st_box<st_float &>);
-  static_assert(!is_st_box<const st_float &>);
 
   static_assert(!is_st_box<st_double>);
   static_assert(!is_st_box<const st_double>);
@@ -1051,8 +914,8 @@ void test_is_leaf_node() {
 void test_is_unique_ptr() {
   auto ptr = std::make_unique<outline_elem_t>();
   const auto const_prt = std::make_unique<outline_elem_t>();
-  auto &ref_ptr = ptr;
-  const auto &const_ref_ptr = const_prt;
+  [[maybe_unused]] auto &ref_ptr = ptr;
+  [[maybe_unused]] const auto &const_ref_ptr = const_prt;
 
   static_assert(is_unique_ptr<decltype(ptr)>);
   static_assert(is_unique_ptr<decltype(const_prt)>);
@@ -1073,8 +936,7 @@ void test_is_unique_ptr() {
 int main() {
   test_st_bool();
   test_st_int();
-  test_st_float();
-  test_st_double();
+  test_floating_t();
   test_st_string();
   test_st_vector();
   test_st_date();

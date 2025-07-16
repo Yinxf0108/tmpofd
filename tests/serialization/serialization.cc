@@ -45,7 +45,7 @@ T deserialize(const std::string_view &name) {
         std::string content;
         content.assign(std::istreambuf_iterator(file), std::istreambuf_iterator<char>());
 
-        from_xml(entry, std::string_view(content));
+        from_xml(entry, std::string_view{content});
       }
     }
   } catch (const std::exception &e) {
@@ -143,12 +143,12 @@ void test_ofd() {
     const auto &[version_] = *versions_;
     assert(version_.size() == 2);
     const auto &[id1, index1, current1, base_loc1] = version_[0];
-    assert(id1 == static_cast<st_id>(1));
+    assert(id1 == 1);
     assert(index1 == 0);
     assert(current1 == false);
     assert(base_loc1 == "Doc_0/Versions/Version_0/DocVersion.xml");
     const auto &[id2, index2, current2, base_loc2] = version_[1];
-    assert(id2 == static_cast<st_id>(2));
+    assert(id2 == 2);
     assert(index2 == 1);
     assert(current2 == true);
     assert(base_loc2 == "Doc_0/Versions/Version_1/DocVersion.xml");
@@ -175,7 +175,7 @@ void test_document() {
     template_page_,
     default_cs_
   ] = document.common_data_;
-  assert(max_unit_id_ == static_cast<st_id>(100));
+  assert(max_unit_id_ == 100);
   assert(page_area_.physical_box_.to_string() == "0 0 210 297");
   assert(page_area_.application_box_->to_string() == "0 0 210 297");
   assert(page_area_.content_box_->to_string() == "10 10 200 287");
@@ -190,22 +190,22 @@ void test_document() {
   assert(document_res_[1] == "/Doc_0/DocumentRes_2.xml");
 
   assert(template_page_.size() == 2);
-  assert(template_page_[0].id_ == static_cast<st_id>(1));
+  assert(template_page_[0].id_ == 1);
   assert(*template_page_[0].name_ == "Tpl_A");
   assert(*template_page_[0].z_order_ == z_order_t::Background);
   assert(template_page_[0].base_loc_ == "/Doc_0/Tpls/Tpl_1.xml");
-  assert(template_page_[1].id_ == static_cast<st_id>(2));
+  assert(template_page_[1].id_ == "2");
   assert(*template_page_[1].name_ == "Tpl_B");
   assert(*template_page_[1].z_order_ == z_order_t::Foreground);
   assert(template_page_[1].base_loc_ == "/Doc_0/Tpls/Tpl_2.xml");
 
-  assert(default_cs_ == static_cast<st_ref_id>(1));
+  assert(default_cs_ == 1);
 
   const auto &[page_] = document.pages_;
   assert(page_.size() == 2);
-  assert(page_[0].id_ == static_cast<st_id>(3));
+  assert(page_[0].id_ == 3);
   assert(page_[0].base_loc_ == "/Doc_0/Pages/Page_0.xml");
-  assert(page_[1].id_ == static_cast<st_id>(4));
+  assert(page_[1].id_ == 4);
   assert(page_[1].base_loc_ == "/Doc_0/Pages/Page_1.xml");
 
   assert(document.outlines_.has_value());
@@ -224,7 +224,7 @@ void test_document() {
   const auto dest_0 = std::get_if<dest_t>(&goto_0->ops_);
   assert(dest_0 != nullptr);
   assert(dest_0->type_ == dest_type_t::Fit);
-  assert(dest_0->page_id_ == static_cast<st_ref_id>(3));
+  assert(dest_0->page_id_ == 3);
   assert(!dest_0->left_.has_value());
   assert(!dest_0->top_.has_value());
   assert(!dest_0->right_.has_value());
@@ -244,9 +244,9 @@ void test_document() {
   const auto dest_0_0 = std::get_if<dest_t>(&goto_0_0->ops_);
   assert(dest_0_0 != nullptr);
   assert(dest_0_0->type_ == dest_type_t::FitH);
-  assert(dest_0_0->page_id_ == static_cast<st_ref_id>(3));
+  assert(dest_0_0->page_id_ == 3);
   assert(!dest_0_0->left_.has_value());
-  assert(dest_0_0->top_.has_value() && dest_0_0->top_ == 200);
+  assert(dest_0_0->top_.has_value() && dest_0_0->top_ == "200");
   assert(!dest_0_0->right_.has_value());
   assert(!dest_0_0->bottom_.has_value());
   assert(!dest_0_0->zoom_.has_value());
@@ -264,8 +264,8 @@ void test_document() {
   const auto dest_0_0_0 = std::get_if<dest_t>(&goto_0_0_0->ops_);
   assert(dest_0_0_0 != nullptr);
   assert(dest_0_0_0->type_ == dest_type_t::FitV);
-  assert(dest_0_0_0->page_id_ == static_cast<st_ref_id>(3));
-  assert(dest_0_0_0->left_.has_value() && dest_0_0_0->left_ == 50);
+  assert(dest_0_0_0->page_id_ == 3);
+  assert(dest_0_0_0->left_.has_value() && dest_0_0_0->left_ == 50.1);
   assert(!dest_0_0_0->top_.has_value());
   assert(!dest_0_0_0->right_.has_value());
   assert(!dest_0_0_0->bottom_.has_value());
@@ -337,14 +337,14 @@ void test_document() {
   assert(actions_t_2.event_ == action_event_t::CLICK);
   const auto actions_t_2_goto_a = std::get_if<goto_a_t>(&actions_t_2.ops_);
   assert(actions_t_2_goto_a != nullptr);
-  assert(actions_t_2_goto_a->attach_id_ == static_cast<st_ref_id>(7));
+  assert(actions_t_2_goto_a->attach_id_ == 7);
   assert(actions_t_2_goto_a->new_window_.has_value() &&actions_t_2_goto_a->new_window_ == false);
 
   const auto &actions_t_3 = document.actions_->action_[3];
   assert(actions_t_3.event_ == action_event_t::DO);
   const auto actions_t_3_sound = std::get_if<sound_t>(&actions_t_3.ops_);
   assert(actions_t_3_sound != nullptr);
-  assert(actions_t_3_sound->resource_id_ == static_cast<st_ref_id>(4));
+  assert(actions_t_3_sound->resource_id_ == 4);
   assert(actions_t_3_sound->volume_.has_value() &&actions_t_3_sound->volume_ == 100);
   assert(actions_t_3_sound->repeat_.has_value() &&actions_t_3_sound->repeat_ == false);
   assert(actions_t_3_sound->synchronous_.has_value() &&actions_t_3_sound->synchronous_ == true);
@@ -353,7 +353,7 @@ void test_document() {
   assert(actions_t_4.event_ == action_event_t::PO);
   const auto actions_t_4_movie = std::get_if<movie_t>(&actions_t_4.ops_);
   assert(actions_t_4_movie != nullptr);
-  assert(actions_t_4_movie->resource_id_ == static_cast<st_ref_id>(5));
+  assert(actions_t_4_movie->resource_id_ == 5);
   assert(actions_t_4_movie->operator_.has_value() && actions_t_4_movie->operator_ == movie_operator_t::Play);
 
   assert(document.v_preferences_.has_value());
@@ -364,8 +364,10 @@ void test_document() {
   assert(v_preferences.hide_toolbar_.has_value() && v_preferences.hide_toolbar_ == false);
   assert(v_preferences.hide_menubar_.has_value() && v_preferences.hide_menubar_ == false);
   assert(v_preferences.hide_window_ui_.has_value() && v_preferences.hide_window_ui_ == false);
-  assert(v_preferences.zoom_mode_.has_value() && v_preferences.zoom_mode_ == zoom_mode_t::FitWidth);
-  assert(v_preferences.zoom_.has_value() && v_preferences.zoom_ == 150.0);
+  assert(v_preferences.zoom_ops_.has_value());
+  const auto zoom = std::get_if<enum_string_t<zoom_mode_t> >(&*v_preferences.zoom_ops_);
+  assert(zoom != nullptr);
+  assert(*zoom == zoom_mode_t::FitWidth);
 
   assert(document.bookmarks_.has_value());
   const auto &bookmarks = *document.bookmarks_;
@@ -373,20 +375,26 @@ void test_document() {
 
   assert(bookmarks.bookmark_[0].name_ == "Bookmark 1");
   assert(bookmarks.bookmark_[0].dest_.type_ == dest_type_t::FitH);
-  assert(bookmarks.bookmark_[0].dest_.page_id_ == static_cast<st_ref_id>(3));
+  assert(bookmarks.bookmark_[0].dest_.page_id_ == 3);
   assert(!bookmarks.bookmark_[0].dest_.left_.has_value());
-  assert(bookmarks.bookmark_[0].dest_.top_.has_value() && bookmarks.bookmark_[0].dest_.top_ == 200);
+  assert(bookmarks.bookmark_[0].dest_.top_.has_value() && bookmarks.bookmark_[0].dest_.top_ == 200.12);
+  assert(bookmarks.bookmark_[0].dest_.top_.has_value() && bookmarks.bookmark_[0].dest_.top_ == "200.12");
   assert(!bookmarks.bookmark_[0].dest_.right_.has_value());
   assert(!bookmarks.bookmark_[0].dest_.bottom_.has_value());
   assert(!bookmarks.bookmark_[0].dest_.zoom_.has_value());
 
   assert(bookmarks.bookmark_[1].name_ == "Bookmark 2");
   assert(bookmarks.bookmark_[1].dest_.type_ == dest_type_t::FitR);
-  assert(bookmarks.bookmark_[1].dest_.page_id_ == static_cast<st_ref_id>(4));
-  assert(bookmarks.bookmark_[1].dest_.left_.has_value() && bookmarks.bookmark_[1].dest_.left_ == 10);
-  assert(bookmarks.bookmark_[1].dest_.top_.has_value() && bookmarks.bookmark_[1].dest_.top_ == 10);
-  assert(bookmarks.bookmark_[1].dest_.right_.has_value() && bookmarks.bookmark_[1].dest_.right_ == 100);
-  assert(bookmarks.bookmark_[1].dest_.bottom_.has_value() && bookmarks.bookmark_[1].dest_.bottom_ == 100);
+  assert(bookmarks.bookmark_[1].dest_.page_id_ == 4);
+  assert(bookmarks.bookmark_[1].dest_.left_.has_value() && bookmarks.bookmark_[1].dest_.left_ == 10.123);
+  assert(bookmarks.bookmark_[1].dest_.top_.has_value() && bookmarks.bookmark_[1].dest_.top_ == 10.123456);
+  assert(bookmarks.bookmark_[1].dest_.right_.has_value() && bookmarks.bookmark_[1].dest_.right_ == 100.000000);
+  assert(
+    bookmarks.bookmark_[1].dest_.bottom_.has_value()
+    && bookmarks.bookmark_[1].dest_.bottom_ == 100
+    && bookmarks.bookmark_[1].dest_.bottom_ == 100.0
+    && bookmarks.bookmark_[1].dest_.bottom_ != 100.1
+  );
   assert(!bookmarks.bookmark_[1].dest_.zoom_.has_value());
 
   assert(document.annotations_ == "/Doc_0/Annotations.xml");

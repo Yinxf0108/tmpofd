@@ -32,7 +32,7 @@
 #include "tmpofd/core/struct/common/complex_type.h"
 
 namespace tmpofd {
-template<is_st_bool T, is_string V>
+template<is_st_bool T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   if ((4 == value.size()
       && ('t' == value[0] || 'T' == value[0])
@@ -58,18 +58,22 @@ constexpr void parse_xml_value(T &ins, const V value) {
   }
 }
 
-template<is_st_number T, is_string V>
+template<is_st_number T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
-  if (const auto result = std::from_chars(value.data(), value.data() + value.size(), ins); std::errc() != result.ec)
-    throw std::runtime_error("Expected number value, but got '" + std::string{value} + "'");
+  if constexpr (is_floating_t<T>) {
+    ins = value;
+  } else {
+    if (const auto result = std::from_chars(value.data(), value.data() + value.size(), ins); std::errc() != result.ec)
+      throw std::runtime_error("Expected number value, but got '" + std::string{value} + "'");
+  }
 }
 
-template<is_string_container T, is_string V>
+template<is_string_container T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   ins = value;
 }
 
-template<is_time T, is_string V>
+template<is_time T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   if constexpr (is_st_date<T>) {
     if (10 == value.length() && '-' == value[4] && '-' == value[7]) {
@@ -118,24 +122,17 @@ constexpr void parse_xml_value(T &ins, const V value) {
   throw std::runtime_error("Expected date/time value, but got '" + std::string{value} + "'");
 }
 
-template<is_id T, is_string V>
+template<is_id T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
-  std::uint64_t id = 0;
-  if (auto result = std::from_chars(value.data(), value.data() + value.size(), id);
-    result.ec != std::errc()
-  ) {
-    throw std::runtime_error("Expected ID value (unsigned integer), but got '" + std::string{value} + "'");
-  }
-
-  ins = id;
+  ins = value;
 }
 
-template<has_from_string T, is_string V>
+template<is_spliting_string T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   ins.from_string(value);
 }
 
-template<is_optional T, is_string V>
+template<is_optional T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
   ins.emplace();
   parse_xml_value(*ins, value);
@@ -173,7 +170,7 @@ constexpr void parse_xml_attr(T &ins, Pos &&pos, Pos &&end) {
   }
 }
 
-template<is_string_view N, is_base_type T, typename Pos>
+template<is_st_string_view N, is_base_type T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   if ('/' == *(pos - 1)) {
@@ -198,7 +195,7 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   matched_close(name, std::forward<Pos>(pos), std::forward<Pos>(end));
 }
 
-template<is_string_view N, is_variant T, typename Pos>
+template<is_st_string_view N, is_variant T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   [&]<typename... VT>(std::variant<VT...> *) {
     bool parsed = false;
@@ -217,13 +214,13 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   }(static_cast<T *>(nullptr));
 }
 
-template<is_string_view N, is_optional T, typename Pos>
+template<is_st_string_view N, is_optional T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   ins.emplace();
   parse_xml_node(name, *ins, std::forward<Pos>(pos), std::forward<Pos>(end));
 }
 
-template<is_string_view N, is_unique_ptr T, typename Pos>
+template<is_st_string_view N, is_unique_ptr T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   if (!ins)
     ins = std::make_unique<typename T::element_type>();
@@ -231,7 +228,7 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   parse_xml_node(name, *ins, std::forward<Pos>(pos), std::forward<Pos>(end));
 }
 
-template<is_string_view N, is_st_vector T, typename Pos>
+template<is_st_string_view N, is_st_vector T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   parse_xml_node(name, ins.emplace_back(), std::forward<Pos>(pos), std::forward<Pos>(end));
 
@@ -256,7 +253,7 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   }
 }
 
-template<is_string_view N, is_reflectable T, typename Pos>
+template<is_st_string_view N, is_reflectable T, typename Pos>
 constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   auto reflected = get_reflected(ins);
 
@@ -315,17 +312,21 @@ constexpr void parse_xml_node(const N name, T &ins, Pos &&pos, Pos &&end) {
   }
 }
 
-template<is_st_bool T, is_string XML>
+template<is_st_bool T, is_st_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
   xml += ins ? "true" : "false";
 }
 
-template<is_st_number T, is_string XML>
+template<is_st_number T, is_st_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
-  xml += std::to_string(ins);
+  if constexpr (is_floating_t<T>) {
+    xml += ins.to_string();
+  } else {
+    xml += std::to_string(ins);
+  }
 }
 
-template<is_string_container T, is_string XML>
+template<is_string_container T, is_st_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
   if constexpr (is_st_string<T>) {
     xml += ins;
@@ -338,28 +339,28 @@ constexpr void generate_xml_value(T &ins, XML &xml) {
   }
 }
 
-template<is_time T, is_string XML>
+template<is_time T, is_st_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
   xml += to_string(ins);
 }
 
-template<is_id T, is_string XML>
-constexpr void generate_xml_value(T &ins, XML &xml) {
-  xml += std::to_string(ins.value());
-}
-
-template<has_from_string T, is_string XML>
+template<is_id T, is_st_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
   xml += ins.to_string();
 }
 
-template<is_optional T, is_string XML>
+template<is_spliting_string T, is_st_string XML>
+constexpr void generate_xml_value(T &ins, XML &xml) {
+  xml += ins.to_string();
+}
+
+template<is_optional T, is_st_string XML>
 constexpr void generate_xml_value(T &ins, XML &xml) {
   if (ins.has_value())
     generate_xml_value(*ins, xml);
 }
 
-template<is_reflectable T, is_string XML>
+template<is_reflectable T, is_st_string XML>
 constexpr void generate_xml_attr(T &ins, XML &xml) {
   auto reflected = get_reflected(ins);
 
@@ -381,7 +382,7 @@ constexpr void generate_xml_attr(T &ins, XML &xml) {
   );
 }
 
-template<is_string_view N, is_base_type T, is_string XML>
+template<is_st_string_view N, is_base_type T, is_st_string XML>
 constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
 #ifdef PRETTY_SERIALIZE
   xml += new_line;
@@ -401,7 +402,7 @@ constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml
   xml += ">";
 }
 
-template<is_string_view N, is_variant T, is_string XML>
+template<is_st_string_view N, is_variant T, is_st_string XML>
 constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
   std::visit(
     [&]<typename VT>(VT &&member) {
@@ -412,26 +413,26 @@ constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml
   );
 }
 
-template<is_string_view N, is_optional T, is_string XML>
+template<is_st_string_view N, is_optional T, is_st_string XML>
 constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
   if (ins.has_value())
     generate_xml_node(name, *ins, depth, xml);
 }
 
-template<is_string_view N, is_unique_ptr T, is_string XML>
+template<is_st_string_view N, is_unique_ptr T, is_st_string XML>
 constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
   if (ins)
     generate_xml_node(name, *ins, depth, xml);
 }
 
-template<is_string_view N, is_st_vector T, is_string XML>
+template<is_st_string_view N, is_st_vector T, is_st_string XML>
 constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
   for (const auto &item : ins) {
     generate_xml_node(name, item, depth, xml);
   }
 }
 
-template<is_string_view N, is_reflectable T, is_string XML>
+template<is_st_string_view N, is_reflectable T, is_st_string XML>
 constexpr void generate_xml_node(const N name, T &ins, const int depth, XML &xml) {
 #ifdef PRETTY_SERIALIZE
   xml += new_line;

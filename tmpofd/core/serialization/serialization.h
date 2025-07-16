@@ -28,7 +28,7 @@
 #include "tmpofd/core/serialization/xml_tools.h"
 
 namespace tmpofd {
-template<is_reflectable T, is_string_view XML>
+template<is_reflectable T, is_st_string_view XML>
 constexpr void from_xml(T &ins, const XML &xml) {
   auto pos = std::begin(xml);
   auto end = std::end(xml);

@@ -24,13 +24,23 @@
 
 #pragma once
 
-#include <concepts>
 #include <type_traits>
-#include <string>
-#include <vector>
+
+#include <variant>
 #include <optional>
+#include <memory>
+#include <vector>
 
 namespace tmpofd {
+template<typename>
+struct is_variant_trait : std::false_type {};
+
+template<typename... T>
+struct is_variant_trait<std::variant<T...> > : std::true_type {};
+
+template<typename T>
+concept is_variant = is_variant_trait<std::remove_cvref_t<T> >::value;
+
 template<typename>
 struct is_optional_trait : std::false_type {};
 
@@ -40,14 +50,14 @@ struct is_optional_trait<std::optional<T> > : std::true_type {};
 template<typename T>
 concept is_optional = is_optional_trait<std::remove_cvref_t<T> >::value;
 
-template<typename T>
-concept is_number = std::integral<T> || std::floating_point<T>;
+template<typename>
+struct is_unique_ptr_trait : std::false_type {};
+
+template<typename T, typename Deleter>
+struct is_unique_ptr_trait<std::unique_ptr<T, Deleter> > : std::true_type {};
 
 template<typename T>
-concept is_string = std::same_as<std::string, std::remove_cvref_t<T> >;
-
-template<typename T>
-concept is_string_view = std::same_as<std::string_view, std::remove_cvref_t<T> >;
+concept is_unique_ptr = is_unique_ptr_trait<std::remove_cvref_t<T> >::value;
 
 template<typename>
 struct is_vector_trait : std::false_type {};
@@ -57,4 +67,5 @@ struct is_vector_trait<std::vector<T, Allocator> > : std::true_type {};
 
 template<typename T>
 concept is_vector = is_vector_trait<std::remove_cvref_t<T> >::value;
+
 } // tmpofd

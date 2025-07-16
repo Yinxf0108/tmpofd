@@ -27,44 +27,30 @@
 #include "tmpofd/core/struct/common/simple_type_fwd.h"
 #include "tmpofd/core/struct/common/enum_string_type.h"
 
-#include <variant>
-
 namespace tmpofd {
 template<typename T>
 concept is_st_bool = std::same_as<st_bool, std::remove_cvref_t<T> > ;
 
 template<typename T>
-concept is_st_int = std::same_as<st_int, std::remove_cvref_t<T> > ;
-
-template<typename T>
-concept is_st_float = std::same_as<st_float, std::remove_cvref_t<T> > ;
-
-template<typename T>
-concept is_st_double = std::same_as<st_double, std::remove_cvref_t<T> > ;
-
-template<typename T>
-concept is_st_number = is_st_int<T> || is_st_float<T> || is_st_double<T>;
-
-template<typename T>
 concept is_st_string = std::same_as<st_string, std::remove_cvref_t<T> > ;
 
-template<typename>
-struct is_unique_ptr_trait : std::false_type {};
-
-template<typename T, typename Deleter>
-struct is_unique_ptr_trait<std::unique_ptr<T, Deleter> > : std::true_type {};
-
 template<typename T>
-concept is_unique_ptr = is_unique_ptr_trait<std::remove_cvref_t<T> >::value;
+concept is_st_string_view = std::same_as<st_string_view, std::remove_cvref_t<T> > ;
 
 template<typename>
-struct is_st_vector_trait : std::false_type {};
-
-template<typename T, typename Allocator>
-struct is_st_vector_trait<st_vector<T, Allocator> > : std::true_type {};
+struct is_enum_string_trait : std::false_type {};
 
 template<typename T>
-concept is_st_vector = is_st_vector_trait<std::remove_cvref_t<T> >::value;
+struct is_enum_string_trait<enum_string_t<T> > : std::true_type {};
+
+template<typename T>
+concept is_enum_string = is_enum_string_trait<std::remove_cvref_t<T> >::value;
+
+template<typename T>
+concept is_st_loc = std::same_as<st_loc, std::remove_cvref_t<T> >;
+
+template<typename T>
+concept is_string_container = is_st_string<T> || is_st_string_view<T> || is_st_loc<T> || is_enum_string<T>;
 
 template<typename T>
 concept is_st_date = std::same_as<st_date, std::remove_cvref_t<T> >;
@@ -73,7 +59,7 @@ template<typename T>
 concept is_st_date_time = std::same_as<st_date_time, std::remove_cvref_t<T> >;
 
 template<typename T>
-concept is_st_loc = std::same_as<st_loc, std::remove_cvref_t<T> >;
+concept is_time = is_st_date<T> || is_st_date_time<T>;
 
 template<typename>
 struct is_st_array_trait : std::false_type {};
@@ -90,10 +76,13 @@ concept is_st_id = std::same_as<st_id, std::remove_cvref_t<T> >;
 template<typename T>
 concept is_st_ref_id = std::same_as<st_ref_id, std::remove_cvref_t<T> >;
 
+template<typename T>
+concept is_id = is_st_id<T> || is_st_ref_id<T>;
+
 template<typename>
 struct is_st_pos_trait : std::false_type {};
 
-template<is_number T>
+template<is_st_number T>
 struct is_st_pos_trait<st_pos<T> > : std::true_type {};
 
 template<typename T>
@@ -102,45 +91,18 @@ concept is_st_pos = is_st_pos_trait<std::remove_cvref_t<T> >::value;
 template<typename>
 struct is_st_box_trait : std::false_type {};
 
-template<is_number T>
+template<is_st_number T>
 struct is_st_box_trait<st_box<T> > : std::true_type {};
 
 template<typename T>
 concept is_st_box = is_st_box_trait<std::remove_cvref_t<T> >::value;
 
-template<typename>
-struct is_enum_string_trait : std::false_type {};
-
 template<typename T>
-struct is_enum_string_trait<enum_string_t<T> > : std::true_type {};
-
-template<typename T>
-concept is_enum_string = is_enum_string_trait<std::remove_cvref_t<T> >::value;
-
-template<typename T>
-concept is_string_container = is_st_string<T> || is_string_view<T> || is_st_loc<T> || is_enum_string<T>;
-
-template<typename T>
-concept is_time = is_st_date<T> || is_st_date_time<T>;
-
-template<typename T>
-concept is_id = is_st_id<T> || is_st_ref_id<T>;
-
-template<typename T>
-concept has_from_string = is_st_array<T> || is_st_pos<T> || is_st_box<T>;
+concept is_spliting_string = is_st_array<T> || is_st_pos<T> || is_st_box<T>;
 
 template<typename T>
 concept is_base_type = is_st_bool<T> || is_st_number<T> || is_string_container<T>
-    || is_time<T> || is_id<T> || has_from_string<T>;
-
-template<typename>
-struct is_variant_trait : std::false_type {};
-
-template<typename... T>
-struct is_variant_trait<std::variant<T...> > : std::true_type {};
-
-template<typename T>
-concept is_variant = is_variant_trait<std::remove_cvref_t<T> >::value;
+    || is_time<T> || is_id<T> || is_spliting_string<T>;
 
 template<typename, typename = std::void_t<> >
 struct is_leaf_node_trait : std::false_type {};
@@ -150,4 +112,13 @@ struct is_leaf_node_trait<T, std::void_t<decltype(std::declval<T>().leaf_value)>
 
 template<typename T>
 concept is_leaf_node = is_leaf_node_trait<std::remove_cvref_t<T> >::value;
+
+template<typename>
+struct is_st_vector_trait : std::false_type {};
+
+template<typename T, typename Allocator>
+struct is_st_vector_trait<st_vector<T, Allocator> > : std::true_type {};
+
+template<typename T>
+concept is_st_vector = is_st_vector_trait<std::remove_cvref_t<T> >::value;
 } // tmpofd

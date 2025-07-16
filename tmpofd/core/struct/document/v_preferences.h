@@ -121,6 +121,12 @@ struct enum_converter<zoom_mode_t> {
   }
 };
 
+DEFINE_VARIANT(
+  DEFINE_VARIANT_ALIAS(zoom_op_t, enum_string_t<zoom_mode_t>, st_double),
+  DEFINE_VARIANT_TYPE(enum_string_t<zoom_mode_t>, ofd_namespace"ZoomMode")
+  DEFINE_VARIANT_TYPE(st_double, ofd_namespace"Zoom")
+)
+
 struct v_preferences_t {
   std::optional<enum_string_t<page_mode_t> > page_mode_;
   std::optional<enum_string_t<page_layout_t> > page_layout_;
@@ -128,8 +134,7 @@ struct v_preferences_t {
   std::optional<st_bool> hide_toolbar_;
   std::optional<st_bool> hide_menubar_;
   std::optional<st_bool> hide_window_ui_;
-  std::optional<enum_string_t<zoom_mode_t> > zoom_mode_;
-  std::optional<st_double> zoom_;
+  std::optional<zoom_op_t> zoom_ops_;
 };
 
 REFLECT_STRUCT(
@@ -143,8 +148,8 @@ REFLECT_STRUCT(
     REFLECT_MEMBER(ofd_namespace"HideToolbar", &v_preferences_t::hide_toolbar_),
     REFLECT_MEMBER(ofd_namespace"HideMenubar", &v_preferences_t::hide_menubar_),
     REFLECT_MEMBER(ofd_namespace"HideWindowUI", &v_preferences_t::hide_window_ui_),
-    REFLECT_MEMBER(ofd_namespace"ZoomMode", &v_preferences_t::zoom_mode_),
-    REFLECT_MEMBER(ofd_namespace"Zoom", &v_preferences_t::zoom_)
+    REFLECT_MEMBER(ofd_namespace"ZoomMode", &v_preferences_t::zoom_ops_),
+    REFLECT_MEMBER(ofd_namespace"Zoom", &v_preferences_t::zoom_ops_)
   )
 )
 } // tmpofd

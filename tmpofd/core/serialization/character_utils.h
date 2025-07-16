@@ -54,13 +54,13 @@ template<char... characters, typename Pos>
 constexpr void matched_skip(Pos &&pos, Pos &&end) {
   if (static_cast<size_t>(std::distance(std::forward<Pos>(pos), std::forward<Pos>(end))) < sizeof...(characters))
     throw std::runtime_error(
-      std::string("Unexpected end of buffer. Expected matched skip : ").append(std::to_string(sizeof...(characters)))
+      std::string{"Unexpected end of buffer. Expected matched skip : "}.append(std::to_string(sizeof...(characters)))
     );
 
   constexpr char expected[] = {characters...};
   for (size_t i = 0; i < sizeof...(characters); ++i) {
     if (*pos++ != expected[i])
-      throw std::runtime_error(std::string("Expected matched skip : ") + std::string(expected, sizeof...(characters)));
+      throw std::runtime_error(std::string{"Expected matched skip : "} + std::string{expected, sizeof...(characters)});
   }
 }
 
@@ -107,7 +107,7 @@ constexpr void skip_to(Pos &&pos, Pos &&end) {
   }
 
   constexpr char expected[] = {characters...};
-  throw std::runtime_error(std::string("Expected skip to : ") + std::string(expected, sizeof...(characters)));
+  throw std::runtime_error(std::string{"Expected skip to : "} + std::string{expected, sizeof...(characters)});
 }
 
 template<typename Pos>
@@ -330,7 +330,7 @@ constexpr auto get_value(Pos &&value_begin, Pos &&value_end) {
   return result;
 }
 
-template<is_string_view N, typename Pos>
+template<is_st_string_view N, typename Pos>
 constexpr auto matched_close(const N name, Pos &&pos, Pos &&end) {
   while (pos < end) {
     skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
@@ -342,7 +342,7 @@ constexpr auto matched_close(const N name, Pos &&pos, Pos &&end) {
       const auto key = get_key<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
       if (key != name)
         throw std::runtime_error(
-          "Mismatched closing tag, expected " + std::string(name) + " but got " + std::string(key)
+          "Mismatched closing tag, expected " + std::string{name} + " but got " + std::string{key}
         );
 
       ++pos;
@@ -367,7 +367,7 @@ constexpr auto matched_close(const N name, Pos &&pos, Pos &&end) {
   return false;
 }
 
-template<is_string_view N, typename Pos>
+template<is_st_string_view N, typename Pos>
 constexpr void skip_node(const N name, Pos &&pos, Pos &&end) {
   skip_to<'>'>(std::forward<Pos>(pos), std::forward<Pos>(end));
   ++pos;
@@ -400,6 +400,6 @@ constexpr void skip_node(const N name, Pos &&pos, Pos &&end) {
     skip_spaces_and_newline(std::forward<Pos>(pos), std::forward<Pos>(end));
   }
 
-  throw std::runtime_error("Unclosed tag: " + std::string(name));
+  throw std::runtime_error("Unclosed tag: " + std::string{name});
 }
 } // tmpofd
