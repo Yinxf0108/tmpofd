@@ -48,11 +48,10 @@ struct enum_converter<layer_type_t> {
   }
 };
 
-struct layer_t {
+struct layer_t : page_block_t {
   st_id id_;
   std::optional<enum_string_t<layer_type_t> > type_;
   std::optional<st_ref_id> draw_param_;
-  st_vector<page_block_t> page_block_ops_;
 };
 
 REFLECT_STRUCT(
@@ -64,11 +63,11 @@ REFLECT_STRUCT(
     REFLECT_MEMBER("DrawParam", &layer_t::draw_param_)
   )
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"TextObject", &layer_t::page_block_ops_),
-    REFLECT_MEMBER(ofd_namespace"PathObject", &layer_t::page_block_ops_),
-    REFLECT_MEMBER(ofd_namespace"ImageObject", &layer_t::page_block_ops_),
-    REFLECT_MEMBER(ofd_namespace"CompositeObject", &layer_t::page_block_ops_),
-    REFLECT_MEMBER(ofd_namespace"PageBlock", &layer_t::page_block_ops_)
+    REFLECT_MEMBER(ofd_namespace"TextObject", &layer_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"PathObject", &layer_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"ImageObject", &layer_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"CompositeObject", &layer_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"PageBlock", &layer_t::ops_)
   )
 )
 } // tmpofd

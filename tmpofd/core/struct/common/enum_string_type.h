@@ -45,6 +45,46 @@ struct enum_converter<z_order_t> {
   }
 };
 
+enum class map_type_t { Direct, Repeat, Reflect };
+template<>
+struct enum_converter<map_type_t> {
+  static std::string to_string(const map_type_t e) {
+    switch (e) {
+      case map_type_t::Direct: return "Direct";
+      case map_type_t::Repeat: return "Repeat";
+      case map_type_t::Reflect: return "Reflect";
+    }
+    return "";
+  }
+  static std::optional<map_type_t> from_string(const std::string_view s) {
+    if (s == "Direct") return map_type_t::Direct;
+    if (s == "Repeat") return map_type_t::Repeat;
+    if (s == "Reflect") return map_type_t::Reflect;
+    return std::nullopt;
+  }
+};
+
+enum class extend_t { Extend0, Extend1, Extend2, Extend3 };
+template<>
+struct enum_converter<extend_t> {
+  static std::string to_string(const extend_t e) {
+    switch (e) {
+      case extend_t::Extend0: return "0";
+      case extend_t::Extend1: return "1";
+      case extend_t::Extend2: return "2";
+      case extend_t::Extend3: return "3";
+    }
+    return "";
+  }
+  static std::optional<extend_t> from_string(const std::string_view s) {
+    if (s == "0") return extend_t::Extend0;
+    if (s == "1") return extend_t::Extend1;
+    if (s == "2") return extend_t::Extend2;
+    if (s == "3") return extend_t::Extend3;
+    return std::nullopt;
+  }
+};
+
 // TODO: Move the full specialization converter to the corresponding file
 
 enum class annotation_type_t { Link, Path, Highlight, Stamp, Watermark };
@@ -165,23 +205,6 @@ struct enum_converter<references_check_method_t> {
   static std::optional<references_check_method_t> from_string(const std::string_view s) {
     if (s == "MD5") return references_check_method_t::MD5;
     if (s == "SHA1") return references_check_method_t::SHA1;
-    return std::nullopt;
-  }
-};
-
-enum class rule_type_t { NonZero, EvenOdd };
-template<>
-struct enum_converter<rule_type_t> {
-  static std::string to_string(const rule_type_t e) {
-    switch (e) {
-      case rule_type_t::NonZero: return "NonZero";
-      case rule_type_t::EvenOdd: return "Even-Odd";
-    }
-    return "";
-  }
-  static std::optional<rule_type_t> from_string(const std::string_view s) {
-    if (s == "NonZero") return rule_type_t::NonZero;
-    if (s == "Even-Odd") return rule_type_t::EvenOdd;
     return std::nullopt;
   }
 };

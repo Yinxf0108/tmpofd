@@ -27,5 +27,31 @@
 #include "tmpofd/core/struct/page/graphic_unit.h"
 
 namespace tmpofd {
-struct composite_t {};
+struct composite_t : graphic_unit_t {
+  st_ref_id resource_id_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Composite",
+  composite_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Boundary", &composite_t::boundary_),
+    REFLECT_MEMBER("Name", &composite_t::name_),
+    REFLECT_MEMBER("Visible", &composite_t::visible_),
+    REFLECT_MEMBER("CTM", &composite_t::ctm_),
+    REFLECT_MEMBER("DrawParam", &composite_t::draw_param_),
+    REFLECT_MEMBER("LineWidth", &composite_t::line_width_),
+    REFLECT_MEMBER("Cap", &composite_t::cap_),
+    REFLECT_MEMBER("Join", &composite_t::join_),
+    REFLECT_MEMBER("MiterLimit", &composite_t::miter_limit_),
+    REFLECT_MEMBER("DashOffset", &composite_t::dash_offset_),
+    REFLECT_MEMBER("DashPattern", &composite_t::dash_pattern_),
+    REFLECT_MEMBER("Alpha", &composite_t::alpha_),
+    REFLECT_MEMBER("ResourceID", &composite_t::resource_id_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Actions", &composite_t::actions_),
+    REFLECT_MEMBER(ofd_namespace"Clips", &composite_t::clips_)
+  )
+)
 } // tmpofd

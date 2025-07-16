@@ -27,6 +27,58 @@
 #include "tmpofd/core/struct/page/graphic_unit.h"
 
 namespace tmpofd {
-struct path_t {};
+enum class rule_type_t { NonZero, EvenOdd };
+template<>
+struct enum_converter<rule_type_t> {
+  static std::string to_string(const rule_type_t e) {
+    switch (e) {
+      case rule_type_t::NonZero: return "NonZero";
+      case rule_type_t::EvenOdd: return "Even-Odd";
+    }
+    return "";
+  }
+  static std::optional<rule_type_t> from_string(const std::string_view s) {
+    if (s == "NonZero") return rule_type_t::NonZero;
+    if (s == "Even-Odd") return rule_type_t::EvenOdd;
+    return std::nullopt;
+  }
+};
 
+struct path_t : graphic_unit_t {
+  std::optional<st_bool> stroke_;
+  std::optional<st_bool> fill_;
+  std::optional<enum_string_t<rule_type_t> > rule_;
+  std::unique_ptr<color_t> stroke_color_;
+  std::unique_ptr<color_t> fill_color_;
+  st_string abbreviated_data_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Path",
+  path_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Boundary", &path_t::boundary_),
+    REFLECT_MEMBER("Name", &path_t::name_),
+    REFLECT_MEMBER("Visible", &path_t::visible_),
+    REFLECT_MEMBER("CTM", &path_t::ctm_),
+    REFLECT_MEMBER("DrawParam", &path_t::draw_param_),
+    REFLECT_MEMBER("LineWidth", &path_t::line_width_),
+    REFLECT_MEMBER("Cap", &path_t::cap_),
+    REFLECT_MEMBER("Join", &path_t::join_),
+    REFLECT_MEMBER("MiterLimit", &path_t::miter_limit_),
+    REFLECT_MEMBER("DashOffset", &path_t::dash_offset_),
+    REFLECT_MEMBER("DashPattern", &path_t::dash_pattern_),
+    REFLECT_MEMBER("Alpha", &path_t::alpha_),
+    REFLECT_MEMBER("Stroke", &path_t::stroke_),
+    REFLECT_MEMBER("Fill", &path_t::fill_),
+    REFLECT_MEMBER("Rule", &path_t::rule_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Actions", &path_t::actions_),
+    REFLECT_MEMBER(ofd_namespace"Clips", &path_t::clips_),
+    REFLECT_MEMBER(ofd_namespace"StrokeColor", &path_t::stroke_color_),
+    REFLECT_MEMBER(ofd_namespace"FillColor", &path_t::fill_color_),
+    REFLECT_MEMBER(ofd_namespace"AbbreviatedData", &path_t::abbreviated_data_)
+  )
+)
 } // tmpofd

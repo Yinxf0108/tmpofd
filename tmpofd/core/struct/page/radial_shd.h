@@ -27,5 +27,35 @@
 #include "tmpofd/core/struct/common/complex_type.h"
 
 namespace tmpofd {
-struct radial_shd_t {};
+struct radial_shd_t {
+  std::optional<enum_string_t<map_type_t> > map_type_;
+  std::optional<st_double> map_unit_;
+  std::optional<st_double> eccentricity_;
+  std::optional<st_double> angle_;
+  st_pos<st_double> start_point_;
+  std::optional<st_double> start_radius_;
+  st_pos<st_double> end_point_;
+  st_double end_radius_;
+  std::optional<extend_t> extend_;
+  std::vector<segment_t> segments_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"RadialShd",
+  radial_shd_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("MapType", &radial_shd_t::map_type_),
+    REFLECT_MEMBER("MapUnit", &radial_shd_t::map_unit_),
+    REFLECT_MEMBER("Eccentricity", &radial_shd_t::eccentricity_),
+    REFLECT_MEMBER("Angle", &radial_shd_t::angle_),
+    REFLECT_MEMBER("StartPoint", &radial_shd_t::start_point_),
+    REFLECT_MEMBER("StartRadius", &radial_shd_t::start_radius_),
+    REFLECT_MEMBER("EndPoint", &radial_shd_t::end_point_),
+    REFLECT_MEMBER("EndRadius", &radial_shd_t::end_radius_),
+    REFLECT_MEMBER("Extend", &radial_shd_t::extend_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Segment", &radial_shd_t::segments_)
+  )
+)
 } // tmpofd

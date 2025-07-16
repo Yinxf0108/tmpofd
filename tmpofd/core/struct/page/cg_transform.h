@@ -24,10 +24,26 @@
 
 #pragma once
 
+#include "tmpofd/core/struct/common/complex_type.h"
+
 namespace tmpofd {
-
 struct cg_transform_t {
-
+  st_int code_position_;
+  std::optional<st_int> code_count_;
+  std::optional<st_int> glyph_count_;
+  std::optional<st_array<st_int> > glyphs_;
 };
 
+REFLECT_STRUCT(
+  ofd_namespace"CGTransform",
+  cg_transform_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("CodePosition", &cg_transform_t::code_position_),
+    REFLECT_MEMBER("CodeCount", &cg_transform_t::code_count_),
+    REFLECT_MEMBER("GlyphCount", &cg_transform_t::glyph_count_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Glyphs", &cg_transform_t::glyphs_)
+  )
+)
 } // tmpofd

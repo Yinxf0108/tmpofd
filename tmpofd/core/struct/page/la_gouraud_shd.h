@@ -27,5 +27,41 @@
 #include "tmpofd/core/struct/common/complex_type.h"
 
 namespace tmpofd {
-struct la_gouraud_shd_t {};
+struct la_gouraud_point_t {
+  st_double x_;
+  st_double y_;
+  std::unique_ptr<color_t> color_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Point",
+  la_gouraud_point_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("X", &la_gouraud_point_t::x_),
+    REFLECT_MEMBER("Y", &la_gouraud_point_t::y_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Color", &la_gouraud_point_t::color_)
+  )
+)
+
+struct la_gouraud_shd_t {
+  st_int vertices_per_row_;
+  std::optional<extend_t> extend_;
+  std::vector<la_gouraud_point_t> point_;
+  std::unique_ptr<color_t> back_color_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"LaGourandShd",
+  la_gouraud_shd_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("VerticesPerRow", &la_gouraud_shd_t::vertices_per_row_),
+    REFLECT_MEMBER("Extend", &la_gouraud_shd_t::extend_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Point", &la_gouraud_shd_t::point_),
+    REFLECT_MEMBER(ofd_namespace"BackColor", &la_gouraud_shd_t::back_color_)
+  )
+)
 } // tmpofd

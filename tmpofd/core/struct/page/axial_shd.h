@@ -27,5 +27,27 @@
 #include "tmpofd/core/struct/common/complex_type.h"
 
 namespace tmpofd {
-struct axial_shd_t {};
+struct axial_shd_t {
+  std::optional<enum_string_t<map_type_t> > map_type_;
+  std::optional<st_double> map_unit_;
+  std::optional<extend_t> extend_;
+  st_pos<st_double> start_point_;
+  st_pos<st_double> end_point_;
+  std::vector<segment_t> segments_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"AxialShd",
+  axial_shd_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("MapType", &axial_shd_t::map_type_),
+    REFLECT_MEMBER("MapUnit", &axial_shd_t::map_unit_),
+    REFLECT_MEMBER("Extend", &axial_shd_t::extend_),
+    REFLECT_MEMBER("StartPoint", &axial_shd_t::start_point_),
+    REFLECT_MEMBER("EndPoint", &axial_shd_t::end_point_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Segment", &axial_shd_t::segments_)
+  )
+)
 } // tmpofd

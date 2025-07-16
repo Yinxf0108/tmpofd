@@ -31,17 +31,46 @@
 
 namespace tmpofd {
 struct page_block_t;
+
+struct _text_t : text_t {
+  st_id id_;
+};
+
+struct _path_t : path_t {
+  st_id id_;
+};
+
+struct _image_t : image_t {
+  st_id id_;
+};
+
+struct _composite_t : composite_t {
+  st_id id_;
+};
+
 DEFINE_VARIANT(
-  DEFINE_VARIANT_ALIAS(page_block_op_t, text_t, path_t, image_t, composite_t, std::unique_ptr<page_block_t>),
-  DEFINE_VARIANT_TYPE(text_t, ofd_namespace"TextObject")
-  DEFINE_VARIANT_TYPE(path_t, ofd_namespace"PathObject")
-  DEFINE_VARIANT_TYPE(image_t, ofd_namespace"ImageObject")
-  DEFINE_VARIANT_TYPE(composite_t, ofd_namespace"CompositeObject")
+  DEFINE_VARIANT_ALIAS(page_block_op_t, _text_t, _path_t, _image_t, _composite_t, std:: unique_ptr<page_block_t >),
+  DEFINE_VARIANT_TYPE(_text_t, ofd_namespace"TextObject")
+  DEFINE_VARIANT_TYPE(_path_t, ofd_namespace"PathObject")
+  DEFINE_VARIANT_TYPE(_image_t, ofd_namespace"ImageObject")
+  DEFINE_VARIANT_TYPE(_composite_t, ofd_namespace"CompositeObject")
   DEFINE_VARIANT_TYPE(std::unique_ptr<page_block_t>, ofd_namespace"PageBlock")
 )
 
 struct page_block_t {
-  st_id id_;
-  page_block_op_t page_block_op_;
+  st_vector<page_block_op_t> ops_;
 };
+
+REFLECT_STRUCT(
+  ofd_namespace"PageBlock",
+  page_block_t,
+  REFLECT_ATTR()
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"TextObject", &page_block_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"PathObject", &page_block_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"ImageObject", &page_block_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"CompositeObject", &page_block_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"PageBlock", &page_block_t::ops_)
+  )
+)
 } // tmpofd

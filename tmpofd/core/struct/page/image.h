@@ -27,5 +27,62 @@
 #include "tmpofd/core/struct/page/graphic_unit.h"
 
 namespace tmpofd {
-struct image_t {};
+struct border_t {
+  std::optional<st_double> line_width_;
+  std::optional<st_double> horizonal_corner_radius_;
+  std::optional<st_double> vertical_corner_radius_;
+  std::optional<st_double> dash_offset_;
+  std::optional<st_array<st_double> > dash_pattern_;
+
+  std::unique_ptr<color_t> border_color_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Border",
+  border_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("LineWidth", &border_t::line_width_),
+    REFLECT_MEMBER("HorizonalCornerRadius", &border_t::horizonal_corner_radius_),
+    REFLECT_MEMBER("VerticalCornerRadius", &border_t::vertical_corner_radius_),
+    REFLECT_MEMBER("DashOffset", &border_t::dash_offset_),
+    REFLECT_MEMBER("DashPattern", &border_t::dash_pattern_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"BorderColor", &border_t::border_color_)
+  )
+)
+
+struct image_t : graphic_unit_t {
+  st_ref_id resource_id_;
+  std::optional<st_ref_id> substitution_;
+  std::optional<st_ref_id> image_mask_;
+  std::optional<border_t> border_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Image",
+  image_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Boundary", &image_t::boundary_),
+    REFLECT_MEMBER("Name", &image_t::name_),
+    REFLECT_MEMBER("Visible", &image_t::visible_),
+    REFLECT_MEMBER("CTM", &image_t::ctm_),
+    REFLECT_MEMBER("DrawParam", &image_t::draw_param_),
+    REFLECT_MEMBER("LineWidth", &image_t::line_width_),
+    REFLECT_MEMBER("Cap", &image_t::cap_),
+    REFLECT_MEMBER("Join", &image_t::join_),
+    REFLECT_MEMBER("MiterLimit", &image_t::miter_limit_),
+    REFLECT_MEMBER("DashOffset", &image_t::dash_offset_),
+    REFLECT_MEMBER("DashPattern", &image_t::dash_pattern_),
+    REFLECT_MEMBER("Alpha", &image_t::alpha_),
+    REFLECT_MEMBER("ResourceID", &image_t::resource_id_),
+    REFLECT_MEMBER("Substitution", &image_t::substitution_),
+    REFLECT_MEMBER("ImageMask", &image_t::image_mask_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Actions", &image_t::actions_),
+    REFLECT_MEMBER(ofd_namespace"Clips", &image_t::clips_),
+    REFLECT_MEMBER(ofd_namespace"Border", &image_t::border_)
+  )
+)
 } // tmpofd

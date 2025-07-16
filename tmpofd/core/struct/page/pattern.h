@@ -68,8 +68,23 @@ struct enum_converter<relative_to_t> {
 
 struct cell_content_t {
   std::optional<st_ref_id> thumbnail_;
-  std::vector<page_block_op_t> objects_;
+  std::vector<page_block_op_t> page_block_ops_;
 };
+
+REFLECT_STRUCT(
+    ofd_namespace"CellContent",
+    cell_content_t,
+    REFLECT_ATTR(
+        REFLECT_MEMBER("Thumbnail", &cell_content_t::thumbnail_)
+    )
+    REFLECT_NODE(
+        REFLECT_MEMBER(ofd_namespace"TextObject", &cell_content_t::page_block_ops_),
+        REFLECT_MEMBER(ofd_namespace"PathObject", &cell_content_t::page_block_ops_),
+        REFLECT_MEMBER(ofd_namespace"ImageObject", &cell_content_t::page_block_ops_),
+        REFLECT_MEMBER(ofd_namespace"CompositeObject", &cell_content_t::page_block_ops_),
+        REFLECT_MEMBER(ofd_namespace"PageBlock", &cell_content_t::page_block_ops_)
+    )
+)
 
 struct pattern_t {
   st_double width_;
@@ -81,6 +96,20 @@ struct pattern_t {
   std::optional<st_array<st_double> > ctm_;
   cell_content_t cell_content_;
 };
-
-/// TODO: finish this
+REFLECT_STRUCT(
+  ofd_namespace"Pattern",
+  pattern_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Width", &pattern_t::width_),
+    REFLECT_MEMBER("Height", &pattern_t::height_),
+    REFLECT_MEMBER("XStep", &pattern_t::x_step_),
+    REFLECT_MEMBER("YStep", &pattern_t::y_step_),
+    REFLECT_MEMBER("ReflectMethod", &pattern_t::reflect_method_),
+    REFLECT_MEMBER("RelativeTo", &pattern_t::relative_to_),
+    REFLECT_MEMBER("CTM", &pattern_t::ctm_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER("CellContent", &pattern_t::cell_content_)
+  )
+)
 } // tmpofd

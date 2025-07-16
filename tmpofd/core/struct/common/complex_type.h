@@ -412,4 +412,21 @@ REFLECT_STRUCT(
     REFLECT_MEMBER(ofd_namespace"Action", &actions_t::action_)
   )
 )
+
+struct color_t;
+struct segment_t {
+  std::optional<st_double> position_;
+  std::unique_ptr<color_t> color_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Segment",
+  segment_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Position", &segment_t::position_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Color", &segment_t::color_)
+  )
+)
 } // tmpofd
