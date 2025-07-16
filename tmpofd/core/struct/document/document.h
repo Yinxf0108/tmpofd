@@ -31,19 +31,6 @@
 #include "tmpofd/core/struct/common/complex_type.h"
 
 namespace tmpofd {
-struct actions_t {
-  st_vector<action_t> action_;
-};
-
-REFLECT_STRUCT(
-  ofd_namespace"Actions",
-  actions_t,
-  REFLECT_ATTR()
-  REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"Action", &actions_t::action_)
-  )
-)
-
 struct outline_elem_t {
   st_string title_;
   std::optional<st_int> count_;

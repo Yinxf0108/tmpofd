@@ -169,103 +169,6 @@ struct enum_converter<references_check_method_t> {
   }
 };
 
-enum class layer_type_t { Body, Background, Foreground, Custom };
-template<>
-struct enum_converter<layer_type_t> {
-  static std::string to_string(const layer_type_t e) {
-    switch (e) {
-      case layer_type_t::Body: return "Body";
-      case layer_type_t::Background: return "Background";
-      case layer_type_t::Foreground: return "Foreground";
-      case layer_type_t::Custom: return "Custom";
-    }
-    return "";
-  }
-  static std::optional<layer_type_t> from_string(const std::string_view s) {
-    if (s == "Body") return layer_type_t::Body;
-    if (s == "Background") return layer_type_t::Background;
-    if (s == "Foreground") return layer_type_t::Foreground;
-    if (s == "Custom") return layer_type_t::Custom;
-    return std::nullopt;
-  }
-};
-
-enum class cap_type_t { Butt, Round, Square };
-template<>
-struct enum_converter<cap_type_t> {
-  static std::string to_string(const cap_type_t e) {
-    switch (e) {
-      case cap_type_t::Butt: return "Butt";
-      case cap_type_t::Round: return "Round";
-      case cap_type_t::Square: return "Square";
-    }
-    return "";
-  }
-  static std::optional<cap_type_t> from_string(const std::string_view s) {
-    if (s == "Butt") return cap_type_t::Butt;
-    if (s == "Round") return cap_type_t::Round;
-    if (s == "Square") return cap_type_t::Square;
-    return std::nullopt;
-  }
-};
-
-enum class join_type_t { Miter, Round, Bevel };
-template<>
-struct enum_converter<join_type_t> {
-  static std::string to_string(const join_type_t e) {
-    switch (e) {
-      case join_type_t::Miter: return "Miter";
-      case join_type_t::Round: return "Round";
-      case join_type_t::Bevel: return "Bevel";
-    }
-    return "";
-  }
-  static std::optional<join_type_t> from_string(const std::string_view s) {
-    if (s == "Miter") return join_type_t::Miter;
-    if (s == "Round") return join_type_t::Round;
-    if (s == "Bevel") return join_type_t::Bevel;
-    return std::nullopt;
-  }
-};
-
-enum class weight_t {
-  _0 = 0, _100 = 100, _200 = 200, _300 = 300, _400 = 400, _500 = 500,
-  _600 = 600, _700 = 700, _800 = 800, _900 = 900, _1000 = 1000
-};
-template<>
-struct enum_converter<weight_t> {
-  static std::string to_string(const weight_t e) {
-    switch (e) {
-      case weight_t::_0: return "0";
-      case weight_t::_100: return "100";
-      case weight_t::_200: return "200";
-      case weight_t::_300: return "300";
-      case weight_t::_400: return "400";
-      case weight_t::_500: return "500";
-      case weight_t::_600: return "600";
-      case weight_t::_700: return "700";
-      case weight_t::_800: return "800";
-      case weight_t::_900: return "900";
-      case weight_t::_1000: return "1000";
-    }
-    return "";
-  }
-  static std::optional<weight_t> from_string(const std::string_view s) {
-    if (s == "0") return weight_t::_0;
-    if (s == "100") return weight_t::_100;
-    if (s == "200") return weight_t::_200;
-    if (s == "300") return weight_t::_300;
-    if (s == "400") return weight_t::_400;
-    if (s == "500") return weight_t::_500;
-    if (s == "600") return weight_t::_600;
-    if (s == "700") return weight_t::_700;
-    if (s == "800") return weight_t::_800;
-    if (s == "900") return weight_t::_900;
-    if (s == "1000") return weight_t::_1000;
-    return std::nullopt;
-  }
-};
-
 enum class rule_type_t { NonZero, EvenOdd };
 template<>
 struct enum_converter<rule_type_t> {
@@ -279,27 +182,6 @@ struct enum_converter<rule_type_t> {
   static std::optional<rule_type_t> from_string(const std::string_view s) {
     if (s == "NonZero") return rule_type_t::NonZero;
     if (s == "Even-Odd") return rule_type_t::EvenOdd;
-    return std::nullopt;
-  }
-};
-
-enum class reflect_method_t { Normal, Row, Column, RowAndColumn };
-template<>
-struct enum_converter<reflect_method_t> {
-  static std::string to_string(const reflect_method_t e) {
-    switch (e) {
-      case reflect_method_t::Normal: return "Normal";
-      case reflect_method_t::Row: return "Row";
-      case reflect_method_t::Column: return "Column";
-      case reflect_method_t::RowAndColumn: return "RowAndColumn";
-    }
-    return "";
-  }
-  static std::optional<reflect_method_t> from_string(const std::string_view s) {
-    if (s == "Normal") return reflect_method_t::Normal;
-    if (s == "Row") return reflect_method_t::Row;
-    if (s == "Column") return reflect_method_t::Column;
-    if (s == "RowAndColumn") return reflect_method_t::RowAndColumn;
     return std::nullopt;
   }
 };

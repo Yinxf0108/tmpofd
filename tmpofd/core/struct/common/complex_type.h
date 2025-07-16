@@ -150,7 +150,7 @@ DEFINE_VARIANT(
 
 struct area_t {
   st_pos<st_double> start_;
-  std::vector<area_op_t> ops_;
+  st_vector<area_op_t> ops_;
 };
 
 REFLECT_STRUCT(
@@ -170,7 +170,7 @@ REFLECT_STRUCT(
 )
 
 struct region_t {
-  std::vector<area_t> area_;
+  st_vector<area_t> area_;
 };
 
 REFLECT_STRUCT(
@@ -397,6 +397,19 @@ REFLECT_STRUCT(
     REFLECT_MEMBER(ofd_namespace"GotoA", &action_t::ops_),
     REFLECT_MEMBER(ofd_namespace"Sound", &action_t::ops_),
     REFLECT_MEMBER(ofd_namespace"Movie", &action_t::ops_)
+  )
+)
+
+struct actions_t {
+  st_vector<action_t> action_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Actions",
+  actions_t,
+  REFLECT_ATTR()
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Action", &actions_t::action_)
   )
 )
 } // tmpofd

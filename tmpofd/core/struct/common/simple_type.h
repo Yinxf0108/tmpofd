@@ -35,12 +35,12 @@ namespace tmpofd {
 template<typename T> requires (!std::same_as<st_loc, std::remove_cvref_t<T> > && !is_vector<T>)
 struct st_array {
   private:
-    std::vector<T> data_;
+    st_vector<T> data_;
 
   public:
-    using value_type = typename std::vector<T>::value_type;
-    using iterator = typename std::vector<T>::iterator;
-    using const_iterator = typename std::vector<T>::const_iterator;
+    using value_type = typename st_vector<T>::value_type;
+    using iterator = typename st_vector<T>::iterator;
+    using const_iterator = typename st_vector<T>::const_iterator;
 
     st_array() = default;
     st_array(std::initializer_list<T> init) : data_(init) {}
