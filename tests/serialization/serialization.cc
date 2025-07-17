@@ -409,7 +409,71 @@ void test_document() {
 void test_page() {
   auto page = deserialize<page_t>("page/baseline.xml");
 
-  /// TODO: assert for values of page_t
+  assert(page.namespace_.has_value() && page.namespace_ == "http://www.ofdspec.org/2016");
+
+  assert(page.templates_.size() == 2);
+  const auto &tpl1 = page.templates_[0];
+  assert(tpl1.template_id_ == 1);
+  assert(tpl1.z_order_.has_value() && tpl1.z_order_ == z_order_t::Background);
+
+  const auto &tpl2 = page.templates_[1];
+  assert(tpl2.template_id_ == 2);
+  assert(tpl2.z_order_.has_value() && tpl2.z_order_ == z_order_t::Foreground);
+
+  assert(page.page_res_.size() == 2);
+  assert(page.page_res_[0] == "/Res/Font.xml");
+  assert(page.page_res_[1] == "/Res/Image.xml");
+
+  assert(page.area_.has_value());
+  const auto &area = *page.area_;
+  assert(area.physical_box_.to_string() == "0 0 210 297");
+  assert(area.application_box_.has_value() && area.application_box_->to_string() == "10 10 190 277");
+  assert(area.content_box_.has_value() && area.content_box_->to_string() == "15 15 180 267");
+  assert(area.bleed_box_.has_value() && area.bleed_box_->to_string() == "5 5 200 287");
+
+  assert(page.content_.has_value());
+  const auto &content = *page.content_;
+  assert(content.layer_.size() == 2);
+
+  const auto &layer1 = content.layer_[0];
+  assert(layer1.id_ == 10);
+  assert(layer1.type_.has_value() && layer1.type_ == layer_type_t::Body);
+  assert(layer1.draw_param_.has_value() && layer1.draw_param_ == 3);
+
+  assert(std::holds_alternative<_text_t>(layer1.ops_[0]));
+  const auto &text_obj = std::get<_text_t>(layer1.ops_[0]);
+  assert(text_obj.id_ == 20);
+  assert(text_obj.boundary_.to_string() == "20 20 100 40");
+  assert(text_obj.name_.has_value() && text_obj.name_ == "TitleText");
+  assert(text_obj.visible_.has_value() && text_obj.visible_);
+  assert(text_obj.ctm_.has_value() && text_obj.ctm_->to_string() == "1 0 0 1 20 20");
+  assert(text_obj.draw_param_.has_value() && text_obj.draw_param_ == 4);
+  assert(text_obj.line_width_.has_value() && text_obj.line_width_ == 0.5);
+  assert(text_obj.cap_.has_value() && text_obj.cap_ == cap_type_t::Square);
+  assert(text_obj.join_.has_value() && text_obj.join_ == join_type_t::Round);
+  assert(text_obj.miter_limit_.has_value() && text_obj.miter_limit_ == 3.0);
+  assert(text_obj.dash_offset_.has_value() && text_obj.dash_offset_ == 1.0);
+  assert(text_obj.dash_pattern_.has_value() && text_obj.dash_pattern_->to_string() == "2 1");
+  assert(text_obj.alpha_.has_value() && text_obj.alpha_ == 200);
+  assert(text_obj.font_ == 5);
+  assert(text_obj.size_ == 12.0);
+  assert(text_obj.stroke_.has_value() && text_obj.stroke_);
+  assert(text_obj.fill_.has_value() && !*text_obj.fill_);
+  assert(text_obj.h_scale_.has_value() && text_obj.h_scale_ == 1.2);
+  assert(text_obj.read_direction_.has_value() && text_obj.read_direction_ == 90);
+  assert(text_obj.char_direction_.has_value() && text_obj.char_direction_ == 90);
+  assert(text_obj.weight_.has_value() && text_obj.weight_ == weight_t::_500);
+  assert(text_obj.italic_.has_value() && text_obj.italic_);
+  assert(text_obj.actions_.has_value() && text_obj.actions_->action_.size() == 2);
+  assert(text_obj.clips_.has_value() && text_obj.clips_->clip_.size() == 2);
+  assert(text_obj.fill_color_ != nullptr);
+  assert(text_obj.stroke_color_ != nullptr);
+  assert(text_obj.cg_transform_.size() == 2);
+  assert(text_obj.text_code_.size() == 2);
+  assert(text_obj.text_code_[0].leaf_value == "文本1");
+  assert(text_obj.text_code_[1].leaf_value == "文本2");
+
+  /// TODO: finish assert for values of page_t
 
   serialize(page, "page/baseline.xml");
 }
