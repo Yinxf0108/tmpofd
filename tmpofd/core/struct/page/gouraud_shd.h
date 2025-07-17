@@ -67,7 +67,7 @@ REFLECT_STRUCT(
 )
 
 struct gouraud_shd_t {
-  std::optional<extend_t> extend_;
+  std::optional<enum_string_t<extend_t> > extend_;
   std::vector<gouraud_point_t> point_;
   std::unique_ptr<color_t> back_color_;
 };

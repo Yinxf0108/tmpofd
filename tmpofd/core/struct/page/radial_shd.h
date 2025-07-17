@@ -36,7 +36,7 @@ struct radial_shd_t {
   std::optional<st_double> start_radius_;
   st_pos<st_double> end_point_;
   st_double end_radius_;
-  std::optional<extend_t> extend_;
+  std::optional<enum_string_t<extend_t> > extend_;
   std::vector<segment_t> segments_;
 };
 

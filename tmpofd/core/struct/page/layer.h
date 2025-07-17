@@ -25,6 +25,7 @@
 #pragma once
 
 #include "tmpofd/core/struct/page/page_block.h"
+#include "tmpofd/core/struct/page/color.h"
 
 namespace tmpofd {
 enum class layer_type_t { Body, Background, Foreground, Custom };
@@ -49,7 +50,7 @@ struct enum_converter<layer_type_t> {
 };
 
 struct layer_t : page_block_t {
-  st_id id_;
+  st_id id_{};
   std::optional<enum_string_t<layer_type_t> > type_;
   std::optional<st_ref_id> draw_param_;
 };

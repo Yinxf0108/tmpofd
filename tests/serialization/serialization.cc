@@ -25,6 +25,7 @@
 #include "tmpofd/core/serialization/serialization.h"
 #include "tmpofd/core/struct/ofd/ofd.h"
 #include "tmpofd/core/struct/document/document.h"
+#include "tmpofd/core/struct/page/page.h"
 
 #include <filesystem>
 #include <fstream>
@@ -405,10 +406,18 @@ void test_document() {
   serialize(document, "document/baseline.xml");
 }
 
+void test_page() {
+  auto page = deserialize<page_t>("page/baseline.xml");
+
+  /// TODO: assert for values of page_t
+
+  serialize(page, "page/baseline.xml");
+}
+
 int main() {
   test_ofd();
   test_document();
-  /// TODO: test_page();
+  test_page();
 
   return 0;
 }

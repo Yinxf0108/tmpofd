@@ -31,27 +31,40 @@ struct text_t;
 struct path_t;
 
 DEFINE_VARIANT(
-  DEFINE_VARIANT_ALIAS(clip_op_t, path_t, text_t),
-  DEFINE_VARIANT_TYPE(path_t, ofd_namespace"Path")
-  DEFINE_VARIANT_TYPE(text_t, ofd_namespace"Text")
+  DEFINE_VARIANT_ALIAS(clip_area_op_t, std::unique_ptr<path_t>, std::unique_ptr<text_t>),
+  DEFINE_VARIANT_TYPE(std::unique_ptr<path_t>, ofd_namespace"Path")
+  DEFINE_VARIANT_TYPE(std::unique_ptr<text_t>, ofd_namespace"Text")
+)
+
+struct clip_area_t {
+  std::optional<st_ref_id> draw_param_;
+  std::optional<st_array<st_double> > ctm_;
+  clip_area_op_t ops_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Area",
+  clip_area_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("DrawParam", &clip_area_t::draw_param_),
+    REFLECT_MEMBER("CTM", &clip_area_t::ctm_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Path", &clip_area_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"Text", &clip_area_t::ops_)
+  )
 )
 
 struct clip_t {
-  std::optional<st_ref_id> draw_param_;
-  std::optional<st_array<st_double> > ctm_;
-  clip_op_t ops_;
+  clip_area_t area_;
 };
 
 REFLECT_STRUCT(
   ofd_namespace"Clip",
   clip_t,
-  REFLECT_ATTR(
-    REFLECT_MEMBER("ID", &clip_t::draw_param_),
-    REFLECT_MEMBER("Type", &clip_t::ctm_)
-  )
+  REFLECT_ATTR()
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"Path", &clip_t::ops_),
-    REFLECT_MEMBER(ofd_namespace"Text", &clip_t::ops_)
+    REFLECT_MEMBER(ofd_namespace"Area", &clip_t::area_)
   )
 )
 
@@ -122,4 +135,27 @@ struct graphic_unit_t {
   std::optional<actions_t> actions_;
   std::optional<clips_t> clips_;
 };
+
+REFLECT_STRUCT(
+  ofd_namespace"GraphicUnit",
+  graphic_unit_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Boundary", &graphic_unit_t::boundary_),
+    REFLECT_MEMBER("Name", &graphic_unit_t::name_),
+    REFLECT_MEMBER("Visible", &graphic_unit_t::visible_),
+    REFLECT_MEMBER("CTM", &graphic_unit_t::ctm_),
+    REFLECT_MEMBER("DrawParam", &graphic_unit_t::draw_param_),
+    REFLECT_MEMBER("LineWidth", &graphic_unit_t::line_width_),
+    REFLECT_MEMBER("Cap", &graphic_unit_t::cap_),
+    REFLECT_MEMBER("Join", &graphic_unit_t::join_),
+    REFLECT_MEMBER("MiterLimit", &graphic_unit_t::miter_limit_),
+    REFLECT_MEMBER("DashOffset", &graphic_unit_t::dash_offset_),
+    REFLECT_MEMBER("DashPattern", &graphic_unit_t::dash_pattern_),
+    REFLECT_MEMBER("Alpha", &graphic_unit_t::alpha_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"Actions", &graphic_unit_t::actions_),
+    REFLECT_MEMBER(ofd_namespace"Clips", &graphic_unit_t::clips_)
+  )
+)
 } // tmpofd

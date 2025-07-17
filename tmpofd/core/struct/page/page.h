@@ -28,7 +28,7 @@
 
 namespace tmpofd {
 struct _template_t {
-  st_ref_id template_id_;
+  st_ref_id template_id_{};
   std::optional<enum_string_t<z_order_t> > z_order_;
 };
 
@@ -36,7 +36,7 @@ REFLECT_STRUCT(
   ofd_namespace"Template",
   _template_t,
   REFLECT_ATTR(
-    REFLECT_MEMBER("TemplateId", &_template_t::template_id_),
+    REFLECT_MEMBER("TemplateID", &_template_t::template_id_),
     REFLECT_MEMBER("ZOrder", &_template_t::z_order_)
   )
   REFLECT_NODE()
@@ -56,9 +56,10 @@ REFLECT_STRUCT(
 )
 
 struct page_t {
-  std::optional<page_area_t> area_;
+  std::optional<st_string> namespace_;
   st_vector<_template_t> templates_;
   st_vector<st_loc> page_res_;
+  std::optional<page_area_t> area_;
   std::optional<content_t> content_;
   std::optional<actions_t> actions_;
 };
@@ -66,11 +67,13 @@ struct page_t {
 REFLECT_STRUCT(
   ofd_namespace"Page",
   page_t,
-  REFLECT_ATTR()
+  REFLECT_ATTR(
+    REFLECT_MEMBER("xmlns:ofd", &page_t::namespace_)
+  )
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"Area", &page_t::area_),
     REFLECT_MEMBER(ofd_namespace"Template", &page_t::templates_),
     REFLECT_MEMBER(ofd_namespace"PageRes", &page_t::page_res_),
+    REFLECT_MEMBER(ofd_namespace"Area", &page_t::area_),
     REFLECT_MEMBER(ofd_namespace"Content", &page_t::content_),
     REFLECT_MEMBER(ofd_namespace"Actions", &page_t::actions_)
   )

@@ -139,7 +139,7 @@ REFLECT_STRUCT(
 )
 
 DEFINE_VARIANT(
-  DEFINE_VARIANT_ALIAS(area_op_t, move_t, line_t, quadratic_bezier_t, cubic_bezier_t, arc_t, close_t),
+  DEFINE_VARIANT_ALIAS(region_area_op_t, move_t, line_t, quadratic_bezier_t, cubic_bezier_t, arc_t, close_t),
   DEFINE_VARIANT_TYPE(move_t, ofd_namespace"Move")
   DEFINE_VARIANT_TYPE(line_t, ofd_namespace"Line")
   DEFINE_VARIANT_TYPE(quadratic_bezier_t, ofd_namespace"QuadraticBezier")
@@ -148,29 +148,29 @@ DEFINE_VARIANT(
   DEFINE_VARIANT_TYPE(close_t, ofd_namespace"Close")
 )
 
-struct area_t {
+struct region_area_t {
   st_pos<st_double> start_;
-  st_vector<area_op_t> ops_;
+  st_vector<region_area_op_t> ops_;
 };
 
 REFLECT_STRUCT(
   ofd_namespace"Area",
-  area_t,
+  region_area_t,
   REFLECT_ATTR(
-    REFLECT_MEMBER("Start", &area_t::start_)
+    REFLECT_MEMBER("Start", &region_area_t::start_)
   )
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"Move", &area_t::ops_),
-    REFLECT_MEMBER(ofd_namespace"Line", &area_t::ops_),
-    REFLECT_MEMBER(ofd_namespace"QuadraticBezier", &area_t::ops_),
-    REFLECT_MEMBER(ofd_namespace"CubicBezier", &area_t::ops_),
-    REFLECT_MEMBER(ofd_namespace"Arc", &area_t::ops_),
-    REFLECT_MEMBER(ofd_namespace"Close", &area_t::ops_)
+    REFLECT_MEMBER(ofd_namespace"Move", &region_area_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"Line", &region_area_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"QuadraticBezier", &region_area_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"CubicBezier", &region_area_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"Arc", &region_area_t::ops_),
+    REFLECT_MEMBER(ofd_namespace"Close", &region_area_t::ops_)
   )
 )
 
 struct region_t {
-  st_vector<area_t> area_;
+  st_vector<region_area_t> area_;
 };
 
 REFLECT_STRUCT(

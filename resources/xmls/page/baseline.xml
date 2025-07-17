@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Page xmlns:ofd="http://www.ofdspec.org/2016">
+    <ofd:Template TemplateID="1" ZOrder="Background"/>
+    <ofd:Template TemplateID="2" ZOrder="Foreground"/>
+    <ofd:PageRes>/Res/Font.xml</ofd:PageRes>
+    <ofd:PageRes>/Res/Image.xml</ofd:PageRes>
+    <ofd:Area>
+        <ofd:PhysicalBox>0 0 210 297</ofd:PhysicalBox>
+        <ofd:ApplicationBox>10 10 190 277</ofd:ApplicationBox>
+        <ofd:ContentBox>15 15 180 267</ofd:ContentBox>
+        <ofd:BleedBox>5 5 200 287</ofd:BleedBox>
+    </ofd:Area>
+    <ofd:Content>
+        <ofd:Layer ID="10" Type="Body" DrawParam="3">
+            <ofd:TextObject ID="20" Boundary="20 20 100 40" Name="TitleText" Visible="true" CTM="1 0 0 1 20 20" DrawParam="4" LineWidth="0.5" Cap="Square" Join="Round" MiterLimit="3.0" DashOffset="1" DashPattern="2 1" Alpha="200" Font="5" Size="12.0" Stroke="true" Fill="false" HScale="1.2" ReadDirection="90" CharDirection="90" Weight="500" Italic="true">
+                <ofd:Actions>
+                    <ofd:Action Event="CLICK">
+                        <ofd:Region>
+                            <ofd:Area Start="0 0">
+                                <ofd:Line Point1="80 0"/>
+                                <ofd:Line Point1="80 20"/>
+                                <ofd:Line Point1="0 20"/>
+                                <ofd:Close>0 0</ofd:Close>
+                            </ofd:Area>
+                            <ofd:Area Start="10 10">
+                                <ofd:Line Point1="70 10"/>
+                                <ofd:Line Point1="70 30"/>
+                                <ofd:Line Point1="10 30"/>
+                                <ofd:Close>0 0</ofd:Close>
+                            </ofd:Area>
+                        </ofd:Region>
+                        <ofd:Goto>
+                            <ofd:Dest Type="FitR" PageID="3" Left="0" Top="0" Right="100" Bottom="100" Zoom="150.0"/>
+                        </ofd:Goto>
+                    </ofd:Action>
+                    <ofd:Action Event="DO">
+                        <ofd:Movie ResourceID="15" Operator="Play"/>
+                    </ofd:Action>
+                </ofd:Actions>
+                <ofd:Clips>
+                    <ofd:Clip>
+                        <ofd:Area DrawParam="12" CTM="1 0 0 1 10 0">
+                            <ofd:Path Boundary="57.5 97.8 5 5" Stroke="false" Fill="true" Rule="Even-Odd">
+                                <ofd:AbbreviatedData>M 10 10 L 80 10 L 80 30 L 10 30 C</ofd:AbbreviatedData>
+                            </ofd:Path>
+                        </ofd:Area>
+                    </ofd:Clip>
+                    <ofd:Clip>
+                        <ofd:Area DrawParam="13">
+                            <ofd:Text Boundary="0 0 50 20" Font="6" Size="10.0">
+                                <ofd:TextCode X="0" Y="15">Clip</ofd:TextCode>
+                            </ofd:Text>
+                        </ofd:Area>
+                    </ofd:Clip>
+                </ofd:Clips>
+                <ofd:FillColor Value="255 0 0" ColorSpace="11" Alpha="255"/>
+                <ofd:StrokeColor>
+                    <ofd:Pattern Width="10" Height="10" XStep="12" YStep="12" ReflectMethod="Normal" RelativeTo="Object" CTM="1 0 0 1 5 5">
+                        <ofd:CellContent>
+                            <ofd:PathObject ID="21" Boundary="0 0 10 10" Stroke="false" Fill="true">
+                                <ofd:AbbreviatedData>M 0 0 L 10 10</ofd:AbbreviatedData>
+                            </ofd:PathObject>
+                        </ofd:CellContent>
+                    </ofd:Pattern>
+                </ofd:StrokeColor>
+                <ofd:CGTransform CodePosition="0" CodeCount="2" GlyphCount="2">
+                    <ofd:Glyphs>1001 1002</ofd:Glyphs>
+                </ofd:CGTransform>
+                <ofd:CGTransform CodePosition="2" CodeCount="2" GlyphCount="2">
+                    <ofd:Glyphs>1003 1004</ofd:Glyphs>
+                </ofd:CGTransform>
+                <ofd:TextCode X="20" Y="35" DeltaX="10 10" DeltaY="0 0">文本1</ofd:TextCode>
+                <ofd:TextCode X="40" Y="35" DeltaX="10 10" DeltaY="0 0">文本2</ofd:TextCode>
+            </ofd:TextObject>
+            <ofd:PathObject ID="22" Boundary="30 50 150 100" Name="Path" Visible="true" CTM="1 0 0 1 0 0" DrawParam="5" LineWidth="0.8" Cap="Butt" Join="Miter" MiterLimit="4.0" DashOffset="0" Alpha="255" Stroke="true" Fill="true" Rule="NonZero">
+                <ofd:Actions>
+                    <ofd:Action Event="DO">
+                        <ofd:Movie ResourceID="15" Operator="Play"/>
+                    </ofd:Action>
+                </ofd:Actions>
+                <ofd:Clips>
+                    <ofd:Clip>
+                        <ofd:Area DrawParam="13">
+                            <ofd:Text Boundary="0 0 50 20" Font="6" Size="10.0">
+                                <ofd:TextCode X="0" Y="15">Clip</ofd:TextCode>
+                            </ofd:Text>
+                        </ofd:Area>
+                    </ofd:Clip>
+                </ofd:Clips>
+                <ofd:StrokeColor>
+                    <ofd:AxialShd MapType="Direct" MapUnit="1.0" Extend="1" StartPoint="30 50" EndPoint="150 50">
+                        <ofd:Segment Position="0.4">
+                            <ofd:Color Value="0 255 0"/>
+                        </ofd:Segment>
+                        <ofd:Segment Position="0.9">
+                            <ofd:Color Value="0 0 255"/>
+                        </ofd:Segment>
+                    </ofd:AxialShd>
+                </ofd:StrokeColor>
+                <ofd:FillColor Value="128 128 128" Alpha="100"/>
+                <ofd:AbbreviatedData>M 30 50 L 150 50 Q 150 100 90 100 B 30 100 30 50 30 50 C</ofd:AbbreviatedData>
+            </ofd:PathObject>
+        </ofd:Layer>
+        <ofd:Layer ID="11" Type="Foreground">
+            <ofd:ImageObject ID="23" Boundary="50 120 100 200" Name="Image" Visible="true" CTM="1 0 0 1 0 0" DrawParam="6" LineWidth="0.353" Alpha="255" ResourceID="7" Substitution="8" ImageMask="9">
+                <ofd:Actions>
+                    <ofd:Action Event="DO">
+                        <ofd:Movie ResourceID="15" Operator="Play"/>
+                    </ofd:Action>
+                </ofd:Actions>
+                <ofd:Clips>
+                    <ofd:Clip>
+                        <ofd:Area DrawParam="13">
+                            <ofd:Text Boundary="0 0 50 20" Font="6" Size="10.0">
+                                <ofd:TextCode X="0" Y="15">Clip</ofd:TextCode>
+                            </ofd:Text>
+                        </ofd:Area>
+                    </ofd:Clip>
+                </ofd:Clips>
+                <ofd:Border LineWidth="1.0" HorizonalCornerRadius="5" VerticalCornerRadius="5" DashOffset="0" DashPattern="1 1">
+                    <ofd:BorderColor Value="128 128 128"/>
+                </ofd:Border>
+            </ofd:ImageObject>
+            <ofd:CompositeObject ID="24" Boundary="60 130 80 180" Name="Composite" Visible="true" CTM="1 0 0 1 0 0" DrawParam="7" Alpha="255" ResourceID="10">
+                <ofd:Actions>
+                    <ofd:Action Event="DO">
+                        <ofd:Movie ResourceID="15" Operator="Play"/>
+                    </ofd:Action>
+                </ofd:Actions>
+                <ofd:Clips>
+                    <ofd:Clip>
+                        <ofd:Area DrawParam="13">
+                            <ofd:Text Boundary="0 0 50 20" Font="6" Size="10.0">
+                                <ofd:TextCode X="0" Y="15">Clip</ofd:TextCode>
+                            </ofd:Text>
+                        </ofd:Area>
+                    </ofd:Clip>
+                </ofd:Clips>
+            </ofd:CompositeObject>
+            <ofd:PageBlock ID="30">
+                <ofd:TextObject ID="31" Boundary="10 10 50 30" Font="5" Size="8.0">
+                    <ofd:TextCode X="10" Y="20">嵌套文本</ofd:TextCode>
+                </ofd:TextObject>
+            </ofd:PageBlock>
+        </ofd:Layer>
+    </ofd:Content>
+    <ofd:Actions>
+        <ofd:Action Event="PO">
+            <ofd:Sound ResourceID="12" Volume="100" Repeat="false" Synchronous="true"/>
+        </ofd:Action>
+        <ofd:Action Event="DO">
+            <ofd:GotoA AttachID="9" NewWindow="true"/>
+        </ofd:Action>
+    </ofd:Actions>
+</ofd:Page>

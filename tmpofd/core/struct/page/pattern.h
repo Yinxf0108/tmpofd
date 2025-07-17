@@ -72,18 +72,18 @@ struct cell_content_t {
 };
 
 REFLECT_STRUCT(
-    ofd_namespace"CellContent",
-    cell_content_t,
-    REFLECT_ATTR(
-        REFLECT_MEMBER("Thumbnail", &cell_content_t::thumbnail_)
-    )
-    REFLECT_NODE(
-        REFLECT_MEMBER(ofd_namespace"TextObject", &cell_content_t::page_block_ops_),
-        REFLECT_MEMBER(ofd_namespace"PathObject", &cell_content_t::page_block_ops_),
-        REFLECT_MEMBER(ofd_namespace"ImageObject", &cell_content_t::page_block_ops_),
-        REFLECT_MEMBER(ofd_namespace"CompositeObject", &cell_content_t::page_block_ops_),
-        REFLECT_MEMBER(ofd_namespace"PageBlock", &cell_content_t::page_block_ops_)
-    )
+  ofd_namespace"CellContent",
+  cell_content_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("Thumbnail", &cell_content_t::thumbnail_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"TextObject", &cell_content_t::page_block_ops_),
+    REFLECT_MEMBER(ofd_namespace"PathObject", &cell_content_t::page_block_ops_),
+    REFLECT_MEMBER(ofd_namespace"ImageObject", &cell_content_t::page_block_ops_),
+    REFLECT_MEMBER(ofd_namespace"CompositeObject", &cell_content_t::page_block_ops_),
+    REFLECT_MEMBER(ofd_namespace"PageBlock", &cell_content_t::page_block_ops_)
+  )
 )
 
 struct pattern_t {
@@ -109,7 +109,7 @@ REFLECT_STRUCT(
     REFLECT_MEMBER("CTM", &pattern_t::ctm_)
   )
   REFLECT_NODE(
-    REFLECT_MEMBER("CellContent", &pattern_t::cell_content_)
+    REFLECT_MEMBER(ofd_namespace"CellContent", &pattern_t::cell_content_)
   )
 )
 } // tmpofd
