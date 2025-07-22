@@ -414,7 +414,7 @@ void test_page() {
   assert(page.templates_.size() == 2);
   const auto &tpl1 = page.templates_[0];
   assert(tpl1.template_id_ == 1);
-  assert(tpl1.z_order_.has_value() && tpl1.z_order_ == z_order_t::Background);
+  assert(tpl1.z_order_.has_value() && tpl1.z_order_ == "Background" && tpl1.z_order_ == z_order_t::Background);
 
   const auto &tpl2 = page.templates_[1];
   assert(tpl2.template_id_ == 2);
@@ -427,6 +427,10 @@ void test_page() {
   assert(page.area_.has_value());
   const auto &area = *page.area_;
   assert(area.physical_box_.to_string() == "0 0 210 297");
+  assert(area.physical_box_.x_ == 0.0);
+  assert(area.physical_box_.y_ == 0.0);
+  assert(area.physical_box_.width_ == 210.0);
+  assert(area.physical_box_.height_ == 297.0);
   assert(area.application_box_.has_value() && area.application_box_->to_string() == "10 10 190 277");
   assert(area.content_box_.has_value() && area.content_box_->to_string() == "15 15 180 267");
   assert(area.bleed_box_.has_value() && area.bleed_box_->to_string() == "5 5 200 287");
@@ -439,6 +443,8 @@ void test_page() {
   assert(layer1.id_ == 10);
   assert(layer1.type_.has_value() && layer1.type_ == layer_type_t::Body);
   assert(layer1.draw_param_.has_value() && layer1.draw_param_ == 3);
+
+  assert(layer1.ops_.size() == 2);
 
   assert(std::holds_alternative<_text_t>(layer1.ops_[0]));
   const auto &text_obj = std::get<_text_t>(layer1.ops_[0]);
@@ -465,15 +471,152 @@ void test_page() {
   assert(text_obj.weight_.has_value() && text_obj.weight_ == weight_t::_500);
   assert(text_obj.italic_.has_value() && text_obj.italic_);
   assert(text_obj.actions_.has_value() && text_obj.actions_->action_.size() == 2);
-  assert(text_obj.clips_.has_value() && text_obj.clips_->clip_.size() == 2);
+  const auto &actions_0 = text_obj.actions_->action_[0];
+  assert(actions_0.event_ == action_event_t::CLICK);
+  assert(actions_0.region_.has_value());
+  const auto &region_0 = actions_0.region_;
+  assert(region_0->area_.size() == 2);
+  const auto &area_0 = region_0->area_[0];
+  assert(area_0.start_.to_string() == "0 0");
+  assert(area_0.ops_.size() == 4);
+  const auto area_0_line0 = std::get_if<line_t>(&area_0.ops_[0]);
+  assert(area_0_line0 != nullptr);
+  assert(area_0_line0->point1_.to_string() == "80 0");
+  const auto area_0_line1 = std::get_if<line_t>(&area_0.ops_[1]);
+  assert(area_0_line1 != nullptr);
+  assert(area_0_line1->point1_.to_string() == "80 20");
+  const auto area_0_line2 = std::get_if<line_t>(&area_0.ops_[2]);
+  assert(area_0_line2 != nullptr);
+  assert(area_0_line2->point1_.to_string() == "0 20");
+  const auto area_0_close = std::get_if<close_t>(&area_0.ops_[3]);
+  assert(area_0_close != nullptr);
+  assert(area_0_close->leaf_value_.to_string() == "0 0");
+  const auto &area_1 = region_0->area_[1];
+  assert(area_1.start_.to_string() == "10 10");
+  const auto actions_0_goto = std::get_if<goto_t>(&actions_0.ops_);
+  assert(actions_0_goto != nullptr);
+  const auto dest_0 = std::get_if<dest_t>(&actions_0_goto->ops_);
+  assert(dest_0 != nullptr);
+  assert(dest_0->type_ == dest_type_t::FitR);
+  assert(dest_0->page_id_ == 3);
+  assert(dest_0->left_.has_value() && dest_0->left_ == 0);
+  assert(dest_0->top_.has_value() && dest_0->top_ == 0);
+  assert(dest_0->right_.has_value() && dest_0->right_ == 100);
+  assert(dest_0->bottom_.has_value() && dest_0->bottom_ == 100);
+  assert(dest_0->zoom_.has_value() && dest_0->zoom_ == 150.0);
+  assert(text_obj.clips_.has_value());
+  const clips_t &clips = *text_obj.clips_;
+  assert(clips.clip_.size() == 2);
+  const clip_t &clip1 = clips.clip_[0];
+  const auto &area1 = clip1.area_;
+  assert(area1.draw_param_.has_value());
+  assert(*area1.draw_param_ == 12);
+  assert(area1.ctm_.has_value());
+  assert(area1.ctm_->to_string() == "1 0 0 1 10 0");
+  assert(std::holds_alternative<std::unique_ptr<path_t>>(area1.ops_));
+  const auto &path1 = std::get<std::unique_ptr<path_t> >(area1.ops_);
+  assert(path1->boundary_.to_string() == "57.5 97.8 5 5");
+  assert(path1->stroke_.has_value() && *path1->stroke_ == false);
+  assert(path1->fill_.has_value() && *path1->fill_ == true);
+  assert(path1->rule_.has_value() && *path1->rule_ == "Even-Odd");
+  assert(path1->abbreviated_data_ == "M 10 10 L 80 10 L 80 30 L 10 30 C");
+  const clip_t &clip2 = clips.clip_[1];
+  const auto &area2 = clip2.area_;
+  assert(area2.draw_param_.has_value());
+  assert(*area2.draw_param_ == 13);
+  assert(!area2.ctm_.has_value());
+  assert(std::holds_alternative<std::unique_ptr<text_t>>(area2.ops_));
+  const auto &text2 = std::get<std::unique_ptr<text_t> >(area2.ops_);
+  assert(text2->boundary_.to_string() == "0 0 50 20");
+  assert(text2->font_ == 6);
+  assert(text2->size_ == 10.0);
+  assert(text2->text_code_.size() == 1);
+  const auto &text_code2 = text2->text_code_[0];
+  assert(text_code2.x_->to_string() == "0" && text_code2.y_->to_string() == "15");
+  assert(text_code2.leaf_value_ == "Clip");
   assert(text_obj.fill_color_ != nullptr);
+  const color_t &fill_color = *text_obj.fill_color_;
+  assert(fill_color.value_.has_value());
+  assert(fill_color.value_->to_string() == "255 0 0");
+  assert(fill_color.color_space_.has_value());
+  assert(*fill_color.color_space_ == 11);
+  assert(fill_color.alpha_.has_value());
+  assert(*fill_color.alpha_ == 255);
   assert(text_obj.stroke_color_ != nullptr);
-  assert(text_obj.cg_transform_.size() == 2);
-  assert(text_obj.text_code_.size() == 2);
-  assert(text_obj.text_code_[0].leaf_value == "文本1");
-  assert(text_obj.text_code_[1].leaf_value == "文本2");
+  const color_t &stroke_color = *text_obj.stroke_color_;
+  assert(stroke_color.complex_color_ops_.has_value());
+  assert(std::holds_alternative<pattern_t>(*stroke_color.complex_color_ops_));
+  const pattern_t &pattern = std::get<pattern_t>(*stroke_color.complex_color_ops_);
+  assert(pattern.width_ == 10.0);
+  assert(pattern.height_ == 10.0);
+  assert(pattern.x_step_.has_value() && *pattern.x_step_ == 12.0);
+  assert(pattern.y_step_.has_value() && *pattern.y_step_ == 12.0);
+  assert(pattern.reflect_method_.has_value() && *pattern.reflect_method_ == "Normal");
+  assert(pattern.relative_to_.has_value() && *pattern.relative_to_ == "Object");
+  assert(pattern.ctm_.has_value());
+  assert(pattern.ctm_->to_string() == "1 0 0 1 5 5");
+  const cell_content_t& cell_content = pattern.cell_content_;
+  assert(cell_content.page_block_ops_.size() == 1);
+  assert(std::holds_alternative<_path_t>(cell_content.page_block_ops_[0]));
+  const _path_t& pattern_path = std::get<_path_t>(cell_content.page_block_ops_[0]);
+  assert(pattern_path.id_ == 21);
+  assert(pattern_path.boundary_.to_string() == "0 0 10 10");
+  assert(pattern_path.stroke_.has_value() && *pattern_path.stroke_ == false);
+  assert(pattern_path.fill_.has_value() && *pattern_path.fill_ == true);
+  assert(pattern_path.abbreviated_data_ == "M 0 0 L 10 10");
+  assert(!cell_content.thumbnail_.has_value());
 
-  /// TODO: finish assert for values of page_t
+  assert(text_obj.cg_transform_.size() == 2);
+  const cg_transform_t &cg1 = text_obj.cg_transform_[0];
+  assert(cg1.code_position_ == 0);
+  assert(cg1.code_count_ == 2);
+  assert(cg1.glyph_count_ == 2);
+  assert(cg1.glyphs_.has_value());
+  assert(cg1.glyphs_->to_string() == "1001 1002");
+  assert(text_obj.text_code_.size() == 2);
+
+  const text_code_t &tc1 = text_obj.text_code_[0];
+  assert(tc1.x_.has_value());
+  assert(tc1.x_->size() == 1);
+  assert((*tc1.x_)[0] == 20.0);
+
+  assert(tc1.y_.has_value());
+  assert(tc1.y_->size() == 1);
+  assert((*tc1.y_)[0] == 35.0);
+
+  assert(tc1.delta_x_.has_value());
+  assert(tc1.delta_x_->size() == 2);
+  assert((*tc1.delta_x_)[0] == 10.0);
+  assert((*tc1.delta_x_)[1] == 10.0);
+
+  assert(tc1.delta_y_.has_value());
+  assert(tc1.delta_y_->size() == 2);
+  assert((*tc1.delta_y_)[0] == 0.0);
+  assert((*tc1.delta_y_)[1] == 0.0);
+
+  assert(tc1.leaf_value == "文本1");
+
+  // 第二个 TextCode: X="40" Y="35" DeltaX="10 10" DeltaY="0 0">文本2
+  const text_code_t &tc2 = text_obj.text_code_[1];
+  assert(tc2.x_.has_value());
+  assert(tc2.x_->size() == 1);
+  assert((*tc2.x_)[0] == 40.0);
+
+  assert(tc2.y_.has_value());
+  assert(tc2.y_->size() == 1);
+  assert((*tc2.y_)[0] == 35.0);
+
+  assert(tc2.delta_x_.has_value());
+  assert(tc2.delta_x_->size() == 2);
+  assert((*tc2.delta_x_)[0] == 10.0);
+  assert((*tc2.delta_x_)[1] == 10.0);
+
+  assert(tc2.delta_y_.has_value());
+  assert(tc2.delta_y_->size() == 2);
+  assert((*tc2.delta_y_)[0] == 0.0);
+  assert((*tc2.delta_y_)[1] == 0.0);
+
+  assert(tc2.leaf_value == "文本2");
 
   serialize(page, "page/baseline.xml");
 }
