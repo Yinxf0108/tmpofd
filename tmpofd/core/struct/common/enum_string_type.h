@@ -87,29 +87,6 @@ struct enum_converter<extend_t> {
 
 // TODO: Move the full specialization converter to the corresponding file
 
-enum class annotation_type_t { Link, Path, Highlight, Stamp, Watermark };
-template<>
-struct enum_converter<annotation_type_t> {
-  static std::string to_string(const annotation_type_t e) {
-    switch (e) {
-      case annotation_type_t::Link: return "Link";
-      case annotation_type_t::Path: return "Path";
-      case annotation_type_t::Highlight: return "Highlight";
-      case annotation_type_t::Stamp: return "Stamp";
-      case annotation_type_t::Watermark: return "Watermark";
-    }
-    return "";
-  }
-  static std::optional<annotation_type_t> from_string(const std::string_view s) {
-    if (s == "Link") return annotation_type_t::Link;
-    if (s == "Path") return annotation_type_t::Path;
-    if (s == "Highlight") return annotation_type_t::Highlight;
-    if (s == "Stamp") return annotation_type_t::Stamp;
-    if (s == "Watermark") return annotation_type_t::Watermark;
-    return std::nullopt;
-  }
-};
-
 enum class color_space_type_t { GRAY, RGB, CMYK };
 template<>
 struct enum_converter<color_space_type_t> {

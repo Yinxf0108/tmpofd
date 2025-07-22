@@ -26,6 +26,7 @@
 #include "tmpofd/core/struct/ofd/ofd.h"
 #include "tmpofd/core/struct/document/document.h"
 #include "tmpofd/core/struct/page/page.h"
+#include "tmpofd/core/struct/annotation/annotation.h"
 
 #include <filesystem>
 #include <fstream>
@@ -621,10 +622,18 @@ void test_page() {
   serialize(page, "page/baseline.xml");
 }
 
+void test_annotation() {
+  auto annotation = deserialize<page_annot_t>("annotation/baseline.xml");
+
+  /// TODO: fix error of serialize
+  // serialize(annotation, "annotation/baseline.xml");
+}
+
 int main() {
   test_ofd();
   test_document();
   test_page();
+  test_annotation();
 
   return 0;
 }
