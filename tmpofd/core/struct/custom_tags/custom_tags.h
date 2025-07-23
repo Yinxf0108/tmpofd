@@ -27,49 +27,37 @@
 #include "tmpofd/core/reflection/reflection.h"
 
 namespace tmpofd {
-struct attachment_t {
-  st_string id_;
-  st_string name_;
-  std::optional<st_string> format_;
-  std::optional<st_date_time> creation_date_;
-  std::optional<st_date_time> mod_date_;
-  std::optional<st_double> size_;
-  std::optional<bool> visible_;
-  std::optional<st_string> usage_;
-  std::optional<st_loc> file_loc_;
+struct custom_tag_t {
+  st_string namespace_;
+  std::optional<st_loc> schema_loc_;
+  st_loc file_loc_;
 };
 
 REFLECT_STRUCT(
-  ofd_namespace"Attachment",
-  attachment_t,
+  ofd_namespace"CustomTag",
+  custom_tag_t,
   REFLECT_ATTR(
-    REFLECT_MEMBER("ID", &attachment_t::id_),
-    REFLECT_MEMBER("Name", &attachment_t::name_),
-    REFLECT_MEMBER("Format", &attachment_t::format_),
-    REFLECT_MEMBER("CreationDate", &attachment_t::creation_date_),
-    REFLECT_MEMBER("ModDate", &attachment_t::mod_date_),
-    REFLECT_MEMBER("Size", &attachment_t::size_),
-    REFLECT_MEMBER("Visible", &attachment_t::visible_),
-    REFLECT_MEMBER("Usage", &attachment_t::usage_)
+    REFLECT_MEMBER("NameSpace", &custom_tag_t::namespace_)
   )
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"FileLoc", &attachment_t::file_loc_)
+    REFLECT_MEMBER(ofd_namespace"SchemaLoc", &custom_tag_t::schema_loc_),
+    REFLECT_MEMBER(ofd_namespace"FileLoc", &custom_tag_t::file_loc_)
   )
 )
 
-struct attachments_t {
+struct custom_tags_t {
   std::optional<st_string> namespace_;
-  st_vector<attachment_t> attachment_;
+  st_vector<custom_tag_t> custom_tag_;
 };
 
 REFLECT_STRUCT(
-  ofd_namespace"Attachments",
-  attachments_t,
+  ofd_namespace"CustomTags",
+  custom_tags_t,
   REFLECT_ATTR(
-    REFLECT_MEMBER("xmlns:ofd", &attachments_t::namespace_)
+    REFLECT_MEMBER("xmlns:ofd", &custom_tags_t::namespace_)
   )
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"Attachment", &attachments_t::attachment_)
+    REFLECT_MEMBER(ofd_namespace"CustomTag", &custom_tags_t::custom_tag_)
   )
 )
 } // tmpofd

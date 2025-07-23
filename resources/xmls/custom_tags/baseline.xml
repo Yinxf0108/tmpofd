@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:CustomTags xmlns:ofd="http://www.ofdspec.org/2016">
+    <ofd:CustomTag NameSpace="http://example.com/custom">
+        <ofd:SchemaLoc>Schemas/custom.xsd</ofd:SchemaLoc>
+        <ofd:FileLoc>CustomTags/custom_content.xml</ofd:FileLoc>
+    </ofd:CustomTag>
+    <ofd:CustomTag NameSpace="http://another.com/tags">
+        <ofd:FileLoc>CustomTags/another_tags.xml</ofd:FileLoc>
+    </ofd:CustomTag>
+</ofd:CustomTags>
