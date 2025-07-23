@@ -1,36 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ofd:PageAnnot xmlns:ofd="http://www.ofdspec.org/2016">
-    <ofd:Annot ID="1" Type="Link" Creator="TestCreator" LastModDate="2025-07-22"
-               Visible="true" Subtype="TestSubtype" Print="true" NoZoom="false"
-               NoRotate="false" ReadOnly="true">
+    <ofd:Annot ID="1" Type="Link" Creator="TestCreator" LastModDate="2025-07-22" Visible="true" Subtype="TestSubtype" Print="true" NoZoom="false" NoRotate="false" ReadOnly="true">
         <ofd:Remark>这是一个测试注释的备注信息</ofd:Remark>
         <ofd:Parameters>
             <ofd:Parameter Name="param1">参数值1</ofd:Parameter>
             <ofd:Parameter Name="param2">参数值2</ofd:Parameter>
         </ofd:Parameters>
         <ofd:Appearance Boundary="10.0 20.0 100.0 50.0">
-            <ofd:TextObject ID="101"
-                            Boundary="10.0 20.0 100.0 50.0"
-                            Name="示例文本对象"
-                            Visible="true"
-                            CTM="1.0 0.0 0.0 1.0 0.0 0.0"
-                            DrawParam="1"
-                            LineWidth="0.353"
-                            Cap="Butt"
-                            Join="Miter"
-                            MiterLimit="4.234"
-                            DashOffset="0"
-                            DashPattern="3.0 1.0"
-                            Alpha="255"
-                            Font="1"
-                            Size="12.0"
-                            Stroke="false"
-                            Fill="true"
-                            HScale="1.0"
-                            ReadDirection="0"
-                            CharDirection="0"
-                            Weight="400"
-                            Italic="false">
+            <ofd:TextObject ID="101" Boundary="10.0 20.0 100.0 50.0" Name="示例文本对象" Visible="true" CTM="1.0 0.0 0.0 1.0 0.0 0.0" DrawParam="1" LineWidth="0.353" Cap="Butt" Join="Miter" MiterLimit="4.234" DashOffset="0" DashPattern="3.0 1.0" Alpha="255" Font="1" Size="12.0" Stroke="false" Fill="true" HScale="1.0" ReadDirection="0" CharDirection="0" Weight="400" Italic="false">
                 <ofd:Actions>
                     <ofd:Action Event="CLICK">
                         <ofd:Goto>
@@ -50,40 +27,30 @@
                 <ofd:FillColor Value="0 0 0" ColorSpace="1" Alpha="255"/>
                 <ofd:StrokeColor Value="255 0 0" ColorSpace="1" Alpha="255"/>
                 <ofd:CGTransform CodePosition="0" CodeCount="5" GlyphCount="5">
-                    <Glyphs>1 2 3 4 5</Glyphs>
+                    <ofd:Glyphs>1 2 3 4 5</ofd:Glyphs>
                 </ofd:CGTransform>
-                <ofd:TextCode X="15.0" Y="35.0" DeltaX="2.0 2.0 2.0 2.0" DeltaY="0.0 0.0 0.0 0.0">测试文本
-                </ofd:TextCode>
                 <ofd:CGTransform CodePosition="5" CodeCount="3" GlyphCount="3">
                     <ofd:Glyphs>6 7 8</ofd:Glyphs>
                 </ofd:CGTransform>
-                <TextCode X="45.0" Y="35.0">内容</TextCode>
+                <ofd:TextCode X="15.0" Y="35.0" DeltaX="2.0 2.0 2.0 2.0" DeltaY="0.0 0.0 0.0 0.0">测试文本</ofd:TextCode>
+                <ofd:TextCode X="45.0" Y="35.0">内容</ofd:TextCode>
             </ofd:TextObject>
         </ofd:Appearance>
     </ofd:Annot>
-    <ofd:Annot ID="2" Type="Highlight" Creator="AnotherCreator" LastModDate="2025-07-22"
-               Visible="false" Print="false" NoZoom="true" NoRotate="true" ReadOnly="false">
+    <ofd:Annot ID="2" Type="Highlight" Creator="AnotherCreator" LastModDate="2025-07-22" Visible="false" Print="false" NoZoom="true" NoRotate="true" ReadOnly="false">
         <ofd:Parameters>
             <ofd:Parameter Name="color">yellow</ofd:Parameter>
             <ofd:Parameter Name="opacity">0.5</ofd:Parameter>
         </ofd:Parameters>
         <ofd:Appearance Boundary="50.0 60.0 150.0 90.0">
-            <ofd:TextObject ID="102"
-                            Boundary="50.0 60.0 150.0 90.0"
-                            Font="2"
-                            Size="10.0">
+            <ofd:TextObject ID="102" Boundary="50.0 60.0 150.0 90.0" Font="2" Size="10.0">
                 <ofd:TextCode>高亮文本</ofd:TextCode>
             </ofd:TextObject>
         </ofd:Appearance>
     </ofd:Annot>
     <ofd:Annot ID="3" Type="Stamp" Creator="StampCreator" LastModDate="2025-07-22">
         <ofd:Appearance Boundary="200.0 100.0 250.0 130.0">
-            <ofd:TextObject ID="103"
-                            Boundary="200.0 100.0 250.0 130.0"
-                            Font="1"
-                            Size="8.0"
-                            Fill="true"
-                            Stroke="true">
+            <ofd:TextObject ID="103" Boundary="200.0 100.0 250.0 130.0" Font="1" Size="8.0" Stroke="true" Fill="true">
                 <ofd:FillColor Value="255 255 0"/>
                 <ofd:StrokeColor Value="255 0 0"/>
                 <ofd:TextCode X="215.0" Y="115.0">印章</ofd:TextCode>

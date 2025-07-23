@@ -624,9 +624,7 @@ void test_page() {
 
 void test_annotation() {
   auto annotation = deserialize<page_annot_t>("annotation/baseline.xml");
-
-  /// TODO: fix error of serialize
-  // serialize(annotation, "annotation/baseline.xml");
+  serialize(annotation, "annotation/baseline.xml");
 }
 
 int main() {

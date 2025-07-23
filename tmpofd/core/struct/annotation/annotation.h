@@ -137,13 +137,16 @@ REFLECT_STRUCT(
 )
 
 struct page_annot_t {
+  std::optional<st_string> namespace_;
   st_vector<annot_t> annot_;
 };
 
 REFLECT_STRUCT(
   ofd_namespace"PageAnnot",
   page_annot_t,
-  REFLECT_ATTR()
+  REFLECT_ATTR(
+    REFLECT_MEMBER("xmlns:ofd", &page_annot_t::namespace_)
+  )
   REFLECT_NODE(
     REFLECT_MEMBER(ofd_namespace"Annot", &page_annot_t::annot_)
   )

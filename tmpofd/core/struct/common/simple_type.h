@@ -56,11 +56,18 @@ struct st_array {
           }
         }
       }
-
       std::stringstream ss(s);
-      value_type value;
-      while (ss >> value) {
-        data_.push_back(std::move(value));
+
+      if constexpr (is_floating_t<T>) {
+        std::string value;
+        while (ss >> value) {
+          data_.push_back(std::move(T(value)));
+        }
+      } else {
+        value_type value;
+        while (ss >> value) {
+          data_.push_back(std::move(value));
+        }
       }
     }
 
@@ -70,11 +77,16 @@ struct st_array {
 
       std::stringstream ss;
       for (size_t i = 0; i < data_.size(); ++i) {
-        ss << data_[i];
+        if constexpr (is_floating_t<T>) {
+          ss << data_[i].to_string();
+        } else {
+          ss << data_[i];
+        }
         if (i < data_.size() - 1) {
           ss << sep;
         }
       }
+
       return ss.str();
     }
 
@@ -126,14 +138,27 @@ struct st_pos {
         }
       }
     }
-
     std::stringstream ss(s);
-    ss >> x_ >> y_;
+
+    if constexpr (is_floating_t<T>) {
+      std::string x, y;
+      ss >> x >> y;
+      x_ = x;
+      y_ = y;
+    } else {
+      ss >> x_ >> y_;
+    }
   }
 
   [[nodiscard]] std::string to_string(char sep = ' ') const {
     std::stringstream ss;
-    ss << x_ << sep << y_;
+
+    if constexpr (is_floating_t<T>) {
+      ss << x_.to_string() << sep << y_.to_string();
+    } else {
+      ss << x_ << sep << y_;
+    }
+
     return ss.str();
   }
 
@@ -166,15 +191,31 @@ struct st_box {
         }
       }
     }
-
     std::stringstream ss(s);
-    ss >> x_ >> y_ >> width_ >> height_;
+
+    if constexpr (is_floating_t<T>) {
+      std::string x, y, width, height;
+      ss >> x >> y >> width >> height;
+      x_ = x;
+      y_ = y;
+      width_ = width;
+      height_ = height;
+    } else {
+      ss >> x_ >> y_ >> width_ >> height_;
+    }
+
     assert(width_ > 0 && height_ > 0 && "st_box: width and height must be positive.");
   }
 
   [[nodiscard]] std::string to_string(char sep = ' ') const {
     std::stringstream ss;
-    ss << x_ << sep << y_ << sep << width_ << sep << height_;
+
+    if constexpr (is_floating_t<T>) {
+      ss << x_.to_string() << sep << y_.to_string() << sep << width_.to_string() << sep << height_.to_string();
+    } else {
+      ss << x_ << sep << y_ << sep << width_ << sep << height_;
+    }
+
     return ss.str();
   }
 
