@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Extensions xmlns:ofd="http://www.ofdspec.org/2016">
+    <ofd:Extension AppName="CustomApp" Company="Example Corp" AppVersion="1.0.0" Date="2025-07-22T15:30:00" RefId="123">
+        <ofd:Property Name="CustomProp1" Type="string">Property Value 1</ofd:Property>
+        <ofd:Property Name="CustomProp2">Property Value 2</ofd:Property>
+        <ofd:Data>Some custom data content</ofd:Data>
+        <ofd:ExtendData>Extensions/custom_data.xml</ofd:ExtendData>
+    </ofd:Extension>
+    <ofd:Extension AppName="AnotherApp" RefId="456">
+        <ofd:Property Name="Setting1" Type="boolean">true</ofd:Property>
+        <ofd:ExtendData>Extensions/another_data.xml</ofd:ExtendData>
+    </ofd:Extension>
+</ofd:Extensions>

@@ -30,6 +30,7 @@
 #include "tmpofd/core/struct/annotations/annotations.h"
 #include "tmpofd/core/struct/attachments/attachments.h"
 #include "tmpofd/core/struct/custom_tags/custom_tags.h"
+#include "tmpofd/core/struct/extensions/extensions.h"
 
 #include <filesystem>
 #include <fstream>
@@ -645,7 +646,14 @@ void test_attachments() {
 
 void test_custom_tags() {
   auto custom_tags = deserialize<custom_tags_t>("custom_tags/baseline.xml");
+
   serialize(custom_tags, "custom_tags/baseline.xml");
+}
+
+void test_extensions() {
+  auto extensions = deserialize<extensions_t>("extensions/baseline.xml");
+
+  serialize(extensions, "extensions/baseline.xml");
 }
 
 int main() {
@@ -656,6 +664,7 @@ int main() {
   test_annotations();
   test_attachments();
   test_custom_tags();
+  test_extensions();
 
   return 0;
 }
