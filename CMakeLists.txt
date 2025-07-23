@@ -25,7 +25,7 @@ set(TMPOFD_VERSION ${TMPOFD_VERSION_MAJOR}.${TMPOFD_VERSION_MINOR}.${TMPOFD_VERS
 set(TMPOFD_VERSION_STRING "${TMPOFD_VERSION}")
 
 project(tmpofd VERSION ${TMPOFD_VERSION} LANGUAGES CXX)
-message(STATUS "build ${PROJECT_NAME} ${TMPOFD_VERSION_STRING} on ${CMAKE_SYSTEM_NAME} ${CMAKE_CXX_COMPILER}")
+message(STATUS "Build ${PROJECT_NAME} ${TMPOFD_VERSION_STRING} on ${CMAKE_SYSTEM_NAME} ${CMAKE_CXX_COMPILER}")
 
 # replace version & time in version.h
 configure_file(
@@ -52,6 +52,22 @@ include_directories(${PROJECT_SOURCE_DIR})
 if (PRETTY_SERIALIZE)
     add_definitions(-DPRETTY_SERIALIZE)
 endif ()
+
+if (DEFINED ENV{VCPKG_ROOT})
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
+    message(STATUS "Using vcpkg toolchain: ${CMAKE_TOOLCHAIN_FILE}")
+else ()
+    message(WARNING "VCPKG_ROOT environment variable not set!")
+endif ()
+
+if (WIN32)
+    list(APPEND CMAKE_PREFIX_PATH "$ENV{VCPKG_ROOT}/installed/x64-windows/share")
+else ()
+    list(APPEND CMAKE_PREFIX_PATH "$ENV{VCPKG_ROOT}/installed/x64-linux/share")
+endif ()
+message(STATUS "Updated CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+
+find_package(unofficial-skia CONFIG REQUIRED)
 
 if (PROJECT_IS_TOP_LEVEL)
     set(TEST_TMPOFD ON CACHE BOOL "build ${PROJECT_NAME} test" FORCE)

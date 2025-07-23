@@ -10,9 +10,10 @@ macro(TEST_CASE DIR NAME)
             WORKING_DIRECTORY "${EXECUTABLE_OUTPUT_PATH}"
     )
 
-    message(STATUS "added test [${NAME}] to ${EXECUTABLE_OUTPUT_PATH}")
+    message(STATUS "Added test [${NAME}] to ${EXECUTABLE_OUTPUT_PATH}")
 endmacro(TEST_CASE)
 
 add_subdirectory(simple_type)
 add_subdirectory(complex_type)
 add_subdirectory(serialization)
+add_subdirectory(rendering)

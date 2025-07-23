@@ -25,11 +25,7 @@
 #pragma once
 
 #include "tmpofd/core/serialization/character_utils.h"
-#include "tmpofd/core/struct/ofd/ofd.h"
-
-#include <array>
-
-#include "tmpofd/core/struct/common/complex_type.h"
+#include "tmpofd/core/struct/common/variant_type.h"
 
 namespace tmpofd {
 template<is_st_bool T, is_st_string V>
