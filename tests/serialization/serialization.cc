@@ -33,6 +33,7 @@
 #include "tmpofd/core/struct/extensions/extensions.h"
 #include "tmpofd/core/struct/res/res.h"
 #include "tmpofd/core/struct/signature/signature.h"
+#include "tmpofd/core/struct/signatures/signatures.h"
 
 #include <filesystem>
 #include <fstream>
@@ -660,6 +661,7 @@ void test_extensions() {
 
 void test_res() {
   auto res = deserialize<res_t>("res/baseline.xml");
+
   serialize(res, "res/baseline.xml");
 }
 
@@ -667,6 +669,11 @@ void test_signature() {
   auto signature = deserialize<signature_t>("signature/baseline.xml");
 
   serialize(signature, "signature/baseline.xml");
+}
+
+void test_signatures() {
+  auto signatures = deserialize<signatures_t>("signatures/baseline.xml");
+  serialize(signatures, "signatures/baseline.xml");
 }
 
 int main() {
@@ -680,6 +687,7 @@ int main() {
   test_extensions();
   test_res();
   test_signature();
+  test_signatures();
 
   return 0;
 }

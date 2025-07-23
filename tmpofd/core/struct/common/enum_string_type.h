@@ -85,25 +85,6 @@ struct enum_converter<extend_t> {
   }
 };
 
-// TODO: Move the full specialization converter to the corresponding file
-
-enum class signature_type_t { Seal, Sign };
-template<>
-struct enum_converter<signature_type_t> {
-  static std::string to_string(const signature_type_t e) {
-    switch (e) {
-      case signature_type_t::Seal: return "Seal";
-      case signature_type_t::Sign: return "Sign";
-    }
-    return "";
-  }
-  static std::optional<signature_type_t> from_string(const std::string_view s) {
-    if (s == "Seal") return signature_type_t::Seal;
-    if (s == "Sign") return signature_type_t::Sign;
-    return std::nullopt;
-  }
-};
-
 template<typename E>
 struct enum_string_t {
   private:

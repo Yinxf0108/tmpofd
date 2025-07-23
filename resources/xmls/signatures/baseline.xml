@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Signatures xmlns:ofd="http://www.ofdspec.org/2016">
+    <ofd:MaxSignId>5</ofd:MaxSignId>
+    <ofd:Signature ID="0" Type="Seal" BaseLoc="Signs/Sign_0/Signature.xml"/>
+    <ofd:Signature ID="1" Type="Sign" BaseLoc="Signs/Sign_1/Signature.xml"/>
+    <ofd:Signature ID="2" Type="Seal" BaseLoc="Signs/Sign_2/Signature.xml"/>
+    <ofd:Signature ID="3" Type="Sign" BaseLoc="Signs/Sign_3/Signature.xml"/>
+    <ofd:Signature ID="4" BaseLoc="Signs/Sign_4/Signature.xml"/>
+    <ofd:Signature ID="5" Type="Seal" BaseLoc="Signs/Sign_5/Signature.xml"/>
+</ofd:Signatures>
