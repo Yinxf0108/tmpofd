@@ -1,0 +1,8 @@
+{
+  "name": "tmpofd",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "unofficial-skia"
+  ],
+  "builtin-baseline": "6ce2dde73242a03332973a69628cfd8583e74233"
+}
