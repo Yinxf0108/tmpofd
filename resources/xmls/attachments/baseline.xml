@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Attachments xmlns:ofd="http://www.ofdspec.org/2016">
+    <ofd:Attachment ID="attach1" Name="document.pdf" Format="application/pdf" CreationDate="2025-07-22T10:30:00" ModDate="2025-07-22T15:45:00" Size="1048576.0" Visible="true" Usage="Reference">
+        <ofd:FileLoc>Attachments/document.pdf</ofd:FileLoc>
+    </ofd:Attachment>
+    <ofd:Attachment ID="attach2" Name="image.png" Format="image/png">
+        <ofd:FileLoc>Attachments/image.png</ofd:FileLoc>
+    </ofd:Attachment>
+</ofd:Attachments>

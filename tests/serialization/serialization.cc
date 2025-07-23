@@ -28,6 +28,7 @@
 #include "tmpofd/core/struct/page/page.h"
 #include "tmpofd/core/struct/annotation/annotation.h"
 #include "tmpofd/core/struct/annotations/annotations.h"
+#include "tmpofd/core/struct/attachments/attachments.h"
 
 #include <filesystem>
 #include <fstream>
@@ -635,12 +636,19 @@ void test_annotations() {
   serialize(annotations, "annotations/baseline.xml");
 }
 
+void test_attachments() {
+  auto attachments = deserialize<attachments_t>("attachments/baseline.xml");
+
+  serialize(attachments, "attachments/baseline.xml");
+}
+
 int main() {
   test_ofd();
   test_document();
   test_page();
   test_annotation();
   test_annotations();
+  test_attachments();
 
   return 0;
 }
