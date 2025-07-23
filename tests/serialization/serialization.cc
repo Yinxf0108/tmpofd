@@ -31,13 +31,13 @@
 #include "tmpofd/core/struct/attachments/attachments.h"
 #include "tmpofd/core/struct/custom_tags/custom_tags.h"
 #include "tmpofd/core/struct/extensions/extensions.h"
+#include "tmpofd/core/struct/res/res.h"
+#include "tmpofd/core/struct/signature/signature.h"
 
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <cassert>
-
-#include "tmpofd/core/struct/res/res.h"
 
 using namespace tmpofd;
 
@@ -663,6 +663,12 @@ void test_res() {
   serialize(res, "res/baseline.xml");
 }
 
+void test_signature() {
+  auto signature = deserialize<signature_t>("signature/baseline.xml");
+
+  serialize(signature, "signature/baseline.xml");
+}
+
 int main() {
   test_ofd();
   test_document();
@@ -673,6 +679,7 @@ int main() {
   test_custom_tags();
   test_extensions();
   test_res();
+  test_signature();
 
   return 0;
 }

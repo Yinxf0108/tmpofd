@@ -104,23 +104,6 @@ struct enum_converter<signature_type_t> {
   }
 };
 
-enum class references_check_method_t { MD5, SHA1 };
-template<>
-struct enum_converter<references_check_method_t> {
-  static std::string to_string(const references_check_method_t e) {
-    switch (e) {
-      case references_check_method_t::MD5: return "MD5";
-      case references_check_method_t::SHA1: return "SHA1";
-    }
-    return "";
-  }
-  static std::optional<references_check_method_t> from_string(const std::string_view s) {
-    if (s == "MD5") return references_check_method_t::MD5;
-    if (s == "SHA1") return references_check_method_t::SHA1;
-    return std::nullopt;
-  }
-};
-
 template<typename E>
 struct enum_string_t {
   private:

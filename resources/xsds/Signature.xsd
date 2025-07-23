@@ -21,8 +21,7 @@
                             <xs:element name="References">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="Reference"
-                                                    maxOccurs="unbounded">
+                                        <xs:element name="Reference" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
                                                     <xs:element name="CheckValue" type="xs:base64Binary"/>

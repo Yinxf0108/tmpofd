@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Signature xmlns:ofd="http://www.ofdspec.org/2016">
+    <ofd:SignedInfo>
+        <ofd:Provider ProviderName="tmpofd" Version="0.1.1" Company="tmpofd"/>
+        <ofd:SignatureMethod>SM2</ofd:SignatureMethod>
+        <ofd:SignatureDateTime>2023-12-08T14:30:25</ofd:SignatureDateTime>
+        <ofd:References CheckMethod="SHA1">
+            <ofd:Reference FileRef="Doc_0/Document.xml">
+                <ofd:CheckValue>YWJjZGVmZ2hpamtsbW5vcA==</ofd:CheckValue>
+            </ofd:Reference>
+            <ofd:Reference FileRef="Doc_0/Pages/Page_0/Content.xml">
+                <ofd:CheckValue>cXJzdHV2d3h5ejEyMzQ1Ng==</ofd:CheckValue>
+            </ofd:Reference>
+            <ofd:Reference FileRef="Doc_0/Res/PublicRes.xml">
+                <ofd:CheckValue>Nzg5MGFiY2RlZmdoaWprbA==</ofd:CheckValue>
+            </ofd:Reference>
+        </ofd:References>
+        <ofd:StampAnnot ID="1" PageRef="3" Boundary="100 200 200 300" Clip="105 205 195 295"/>
+        <ofd:StampAnnot ID="2" PageRef="4" Boundary="150 150 250 250"/>
+        <ofd:Seal>
+            <ofd:BaseLoc>Signs/Sign_0/SignedValue.dat</ofd:BaseLoc>
+        </ofd:Seal>
+    </ofd:SignedInfo>
+    <ofd:SignedValue>Signs/Sign_0/SignedValue.dat</ofd:SignedValue>
+</ofd:Signature>
