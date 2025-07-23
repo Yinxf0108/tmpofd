@@ -34,6 +34,7 @@
 #include "tmpofd/core/struct/res/res.h"
 #include "tmpofd/core/struct/signature/signature.h"
 #include "tmpofd/core/struct/signatures/signatures.h"
+#include "tmpofd/core/struct/version/version.h"
 
 #include <filesystem>
 #include <fstream>
@@ -563,10 +564,10 @@ void test_page() {
   assert(pattern.relative_to_.has_value() && *pattern.relative_to_ == "Object");
   assert(pattern.ctm_.has_value());
   assert(pattern.ctm_->to_string() == "1 0 0 1 5 5");
-  const cell_content_t& cell_content = pattern.cell_content_;
+  const cell_content_t &cell_content = pattern.cell_content_;
   assert(cell_content.page_block_ops_.size() == 1);
   assert(std::holds_alternative<_path_t>(cell_content.page_block_ops_[0]));
-  const _path_t& pattern_path = std::get<_path_t>(cell_content.page_block_ops_[0]);
+  const _path_t &pattern_path = std::get<_path_t>(cell_content.page_block_ops_[0]);
   assert(pattern_path.id_ == 21);
   assert(pattern_path.boundary_.to_string() == "0 0 10 10");
   assert(pattern_path.stroke_.has_value() && *pattern_path.stroke_ == false);
@@ -673,7 +674,14 @@ void test_signature() {
 
 void test_signatures() {
   auto signatures = deserialize<signatures_t>("signatures/baseline.xml");
+
   serialize(signatures, "signatures/baseline.xml");
+}
+
+void test_version() {
+  auto version = deserialize<doc_version_t>("version/baseline.xml");
+
+  serialize(version, "version/baseline.xml");
 }
 
 int main() {
@@ -688,6 +696,7 @@ int main() {
   test_res();
   test_signature();
   test_signatures();
+  test_version();
 
   return 0;
 }

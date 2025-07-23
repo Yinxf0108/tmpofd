@@ -27,22 +27,58 @@
 #include "tmpofd/core/reflection/reflection.h"
 
 namespace tmpofd {
-struct version_t {
+struct file_t {
   st_id id_;
-  st_int index_;
-  std::optional<st_bool> current_;
-  st_loc base_loc_;
+  st_loc leaf_value;
 };
 
 REFLECT_STRUCT(
-  ofd_namespace"Version",
-  version_t,
+  ofd_namespace"File",
+  file_t,
   REFLECT_ATTR(
-    REFLECT_MEMBER("ID", &version_t::id_),
-    REFLECT_MEMBER("Index", &version_t::index_),
-    REFLECT_MEMBER("Current", &version_t::current_),
-    REFLECT_MEMBER("BaseLoc", &version_t::base_loc_)
+    REFLECT_MEMBER("ID", &file_t::id_)
   )
-  REFLECT_NODE()
+  REFLECT_NODE(
+    REFLECT_MEMBER("", &file_t::leaf_value)
+  )
+)
+
+struct file_list_t {
+  st_vector<file_t> file_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"FileList",
+  file_list_t,
+  REFLECT_ATTR()
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"File", &file_list_t::file_)
+  )
+)
+
+struct doc_version_t {
+  std::optional<st_string> namespace_;
+  st_id id_;
+  std::optional<st_string> version_;
+  std::optional<st_string> name_;
+  std::optional<st_date> creation_date_;
+  file_list_t file_list_;
+  st_loc doc_root_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"DocVersion",
+  doc_version_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("xmlns:ofd", &doc_version_t::namespace_),
+    REFLECT_MEMBER("ID", &doc_version_t::id_),
+    REFLECT_MEMBER("Version", &doc_version_t::version_),
+    REFLECT_MEMBER("Name", &doc_version_t::name_),
+    REFLECT_MEMBER("CreationDate", &doc_version_t::creation_date_)
+  )
+  REFLECT_NODE(
+    REFLECT_MEMBER(ofd_namespace"FileList", &doc_version_t::file_list_),
+    REFLECT_MEMBER(ofd_namespace"DocRoot", &doc_version_t::doc_root_)
+  )
 )
 } // tmpofd

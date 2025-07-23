@@ -25,11 +25,29 @@
 #pragma once
 
 #include "tmpofd/core/struct/ofd/doc_info.h"
-#include "tmpofd/core/struct/ofd/version.h"
 
 namespace tmpofd {
+struct _version_t {
+  st_id id_;
+  st_int index_;
+  std::optional<st_bool> current_;
+  st_loc base_loc_;
+};
+
+REFLECT_STRUCT(
+  ofd_namespace"Version",
+  _version_t,
+  REFLECT_ATTR(
+    REFLECT_MEMBER("ID", &_version_t::id_),
+    REFLECT_MEMBER("Index", &_version_t::index_),
+    REFLECT_MEMBER("Current", &_version_t::current_),
+    REFLECT_MEMBER("BaseLoc", &_version_t::base_loc_)
+  )
+  REFLECT_NODE()
+)
+
 struct versions_t {
-  st_vector<version_t> version_;
+  st_vector<_version_t> version_;
 };
 
 REFLECT_STRUCT(
