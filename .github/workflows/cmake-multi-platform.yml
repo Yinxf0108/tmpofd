@@ -45,7 +45,11 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build libfontconfig1-dev libfreetype6-dev libgl1-mesa-dev libharfbuzz-dev
+        sudo apt-get install -y ninja-build gperf \
+         libgl1-mesa-dev libegl1-mesa-dev \
+         libfontconfig1-dev libfreetype6-dev libharfbuzz-dev \
+         libicu-dev libexpat1-dev uuid-dev \
+         zlib1g-dev libpng-dev libjpeg-dev libwebp-dev libbrotli-dev libbz2-dev
 
     - name: Install vcpkg dependencies
       uses: lukka/run-vcpkg@v11

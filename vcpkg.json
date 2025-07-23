@@ -2,7 +2,7 @@
   "name": "tmpofd",
   "version-string": "0.1.0",
   "dependencies": [
-    "unofficial-skia"
+    "skia"
   ],
   "builtin-baseline": "7bc2cb97d8410e34f6733642ae954bf5a253a6b5"
 }
