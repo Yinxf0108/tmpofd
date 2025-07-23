@@ -37,6 +37,8 @@
 #include <iostream>
 #include <cassert>
 
+#include "tmpofd/core/struct/res/res.h"
+
 using namespace tmpofd;
 
 template<typename T>
@@ -656,6 +658,11 @@ void test_extensions() {
   serialize(extensions, "extensions/baseline.xml");
 }
 
+void test_res() {
+  auto res = deserialize<res_t>("res/baseline.xml");
+  serialize(res, "res/baseline.xml");
+}
+
 int main() {
   test_ofd();
   test_document();
@@ -665,6 +672,7 @@ int main() {
   test_attachments();
   test_custom_tags();
   test_extensions();
+  test_res();
 
   return 0;
 }

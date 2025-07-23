@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Res xmlns:ofd="http://www.ofdspec.org/2016" BaseLoc="/Doc_0/PublicRes.xml">
+    <ofd:ColorSpaces>
+        <ofd:ColorSpace ID="1" Type="RGB" BitsPerComponent="8">
+            <ofd:Palette>
+                <ofd:CV>255 0 0</ofd:CV>
+                <ofd:CV>0 255 0</ofd:CV>
+                <ofd:CV>0 0 255</ofd:CV>
+                <ofd:CV>255 255 0</ofd:CV>
+                <ofd:CV>255 0 255</ofd:CV>
+                <ofd:CV>0 255 255</ofd:CV>
+            </ofd:Palette>
+        </ofd:ColorSpace>
+        <ofd:ColorSpace ID="2" Type="GRAY" BitsPerComponent="16" Profile="ColorProfiles/gray.icc"/>
+        <ofd:ColorSpace ID="3" Type="CMYK" BitsPerComponent="8" Profile="ColorProfiles/cmyk.icc">
+            <ofd:Palette>
+                <ofd:CV>100 0 100 0</ofd:CV>
+                <ofd:CV>0 100 100 0</ofd:CV>
+                <ofd:CV>100 100 0 0</ofd:CV>
+            </ofd:Palette>
+        </ofd:ColorSpace>
+    </ofd:ColorSpaces>
+    <ofd:DrawParams>
+        <ofd:DrawParam ID="4" Relative="0" LineWidth="2.5" Join="Round" Cap="Round" DashOffset="1.5" DashPattern="10 5 3 5" MiterLimit="8.0">
+            <ofd:FillColor Value="255 128 64" ColorSpace="1" Alpha="255"/>
+            <ofd:StrokeColor Value="64 128 255" ColorSpace="1" Alpha="25"/>
+        </ofd:DrawParam>
+        <ofd:DrawParam ID="5" Relative="4" LineWidth="1.0" Join="Bevel" Cap="Square" DashOffset="0.0" DashPattern="5 2" MiterLimit="4.234">
+            <ofd:FillColor Value="128" ColorSpace="2"/>
+            <ofd:StrokeColor Value="0" ColorSpace="2"/>
+        </ofd:DrawParam>
+        <ofd:DrawParam ID="6" LineWidth="3.0" Join="Miter" Cap="Butt" DashOffset="2.0" MiterLimit="10.0">
+            <ofd:FillColor Value="50 80 100 20" ColorSpace="3"/>
+        </ofd:DrawParam>
+    </ofd:DrawParams>
+    <ofd:Fonts>
+        <ofd:Font ID="7" FontName="SimSun" FamilyName="宋体" Charset="unicode" Italic="false" Bold="false" Serif="true" FixedWidth="false">
+            <ofd:FontFile>Fonts/simsun.ttf</ofd:FontFile>
+        </ofd:Font>
+        <ofd:Font ID="8" FontName="Arial-Bold-Italic" FamilyName="Arial" Charset="unicode" Italic="true" Bold="true" Serif="false" FixedWidth="false">
+            <ofd:FontFile>Fonts/arial-bold-italic.ttf</ofd:FontFile>
+        </ofd:Font>
+        <ofd:Font ID="9" FontName="Courier-New" FamilyName="Courier New" Charset="unicode" Italic="false" Bold="false" Serif="false" FixedWidth="true">
+            <ofd:FontFile>Fonts/courier-new.ttf</ofd:FontFile>
+        </ofd:Font>
+        <ofd:Font ID="10" FontName="Symbol-Font" FamilyName="Symbol" Charset="symbol" Italic="false" Bold="false" Serif="false" FixedWidth="false">
+            <ofd:FontFile>Fonts/symbol.ttf</ofd:FontFile>
+        </ofd:Font>
+        <ofd:Font ID="11" FontName="Chinese-PRC" FamilyName="中文字体" Charset="prc" Italic="false" Bold="true" Serif="true" FixedWidth="false">
+            <ofd:FontFile>Fonts/chinese-prc.ttf</ofd:FontFile>
+        </ofd:Font>
+        <ofd:Font ID="12" FontName="Big5-Font" FamilyName="繁体字体" Charset="big5" Italic="true" Bold="false" Serif="true" FixedWidth="false"/>
+        <ofd:Font ID="13" FontName="Japanese-Font" FamilyName="日本语字体" Charset="shift-jis" Italic="false" Bold="false" Serif="false" FixedWidth="true"/>
+        <ofd:Font ID="14" FontName="Korean-Wansung" FamilyName="한국어 폰트" Charset="wansung" Italic="false" Bold="true" Serif="false" FixedWidth="false"/>
+        <ofd:Font ID="15" FontName="Korean-Johab" FamilyName="조합형 폰트" Charset="johab" Italic="true" Bold="true" Serif="true" FixedWidth="false"/>
+    </ofd:Fonts>
+    <ofd:MultiMedias>
+        <ofd:MultiMedia ID="16" Type="Image" Format="PNG">
+            <ofd:MediaFile>Images/logo.png</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="17" Type="Image" Format="JPEG">
+            <ofd:MediaFile>Images/background.jpg</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="18" Type="Image" Format="GIF">
+            <ofd:MediaFile>Images/animation.gif</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="19" Type="Image" Format="BMP">
+            <ofd:MediaFile>Images/bitmap.bmp</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="20" Type="Audio" Format="MP3">
+            <ofd:MediaFile>Audio/background-music.mp3</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="21" Type="Audio" Format="WAV">
+            <ofd:MediaFile>Audio/sound-effect.wav</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="22" Type="Video" Format="MP4">
+            <ofd:MediaFile>Video/presentation.mp4</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="23" Type="Video" Format="AVI">
+            <ofd:MediaFile>Video/demo.avi</ofd:MediaFile>
+        </ofd:MultiMedia>
+        <ofd:MultiMedia ID="24" Type="Audio">
+            <ofd:MediaFile>Audio/narration.ogg</ofd:MediaFile>
+        </ofd:MultiMedia>
+    </ofd:MultiMedias>
+    <ofd:CompositeGraphicUnits>
+        <ofd:CompositeGraphicUnit ID="36" Width="150.0" Height="100.0">
+            <ofd:Substitution>37</ofd:Substitution>
+            <ofd:Content>
+                <ofd:PathObject ID="21" Boundary="0 0 10 10" Stroke="false" Fill="true">
+                    <ofd:AbbreviatedData>M 0 0 L 150 0 L 150 100 L 0 100 Z</ofd:AbbreviatedData>
+                </ofd:PathObject>
+            </ofd:Content>
+        </ofd:CompositeGraphicUnit>
+        <ofd:CompositeGraphicUnit ID="40" Width="100.0" Height="50.0">
+            <ofd:Content>
+                <ofd:TextObject ID="42" Boundary="5 5 95 45" Font="8" Size="10">
+                    <ofd:TextCode>简单文本</ofd:TextCode>
+                </ofd:TextObject>
+            </ofd:Content>
+        </ofd:CompositeGraphicUnit>
+    </ofd:CompositeGraphicUnits>
+</ofd:Res>
