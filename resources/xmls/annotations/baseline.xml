@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Annotations xmlns:ofd="http://www.ofdspec.org/2016">
+    <ofd:Page PageID="1">
+        <ofd:FileLoc>Annotations/Page_1.xml</ofd:FileLoc>
+    </ofd:Page>
+    <ofd:Page PageID="2">
+        <ofd:FileLoc>Annotations/Page_2.xml</ofd:FileLoc>
+    </ofd:Page>
+</ofd:Annotations>

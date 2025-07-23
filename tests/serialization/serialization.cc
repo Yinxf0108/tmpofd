@@ -27,6 +27,7 @@
 #include "tmpofd/core/struct/document/document.h"
 #include "tmpofd/core/struct/page/page.h"
 #include "tmpofd/core/struct/annotation/annotation.h"
+#include "tmpofd/core/struct/annotations/annotations.h"
 
 #include <filesystem>
 #include <fstream>
@@ -624,7 +625,14 @@ void test_page() {
 
 void test_annotation() {
   auto annotation = deserialize<page_annot_t>("annotation/baseline.xml");
+
   serialize(annotation, "annotation/baseline.xml");
+}
+
+void test_annotations() {
+  auto annotations = deserialize<annotations_t>("annotations/baseline.xml");
+
+  serialize(annotations, "annotations/baseline.xml");
 }
 
 int main() {
@@ -632,6 +640,7 @@ int main() {
   test_document();
   test_page();
   test_annotation();
+  test_annotations();
 
   return 0;
 }
