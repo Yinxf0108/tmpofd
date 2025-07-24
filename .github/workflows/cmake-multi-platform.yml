@@ -52,8 +52,6 @@ jobs:
     - name: Install vcpkg dependencies
       if: steps.check_vcpkg.outputs.vcpkg_exists == 'true'
       uses: lukka/run-vcpkg@v11
-      with:
-        runVcpkgInstall: true
 
     - name: Set reusable strings
       id: strings
