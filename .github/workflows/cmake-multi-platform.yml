@@ -41,6 +41,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install system dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf-archive
+
     - name: Install vcpkg dependencies
       uses: lukka/run-vcpkg@v11
       with:
