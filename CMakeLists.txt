@@ -1,8 +1,8 @@
 # PROJECT_IS_TOP_LEVEL need 3.21 or later
 cmake_minimum_required(VERSION 3.21)
 
-option(PRETTY_SERIALIZE "pretty xml output" ON)
-option(TEST_TMPOFD "enable test" OFF)
+option(PRETTY_SERIALIZE "Pretty xml output" ON)
+option(TEST_TMPOFD "Enable test" OFF)
 
 # project version
 set(TMPOFD_VERSION_MAJOR 0)
@@ -53,24 +53,16 @@ if (PRETTY_SERIALIZE)
     add_definitions(-DPRETTY_SERIALIZE)
 endif ()
 
-if (DEFINED ENV{VCPKG_ROOT})
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
+if (DEFINED CMAKE_TOOLCHAIN_FILE)
     message(STATUS "Using vcpkg toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 else ()
-    message(WARNING "VCPKG_ROOT environment variable not set!")
+    message(FATAL_ERROR "Vcpkg toolchain not set!")
 endif ()
-
-if (WIN32)
-    list(APPEND CMAKE_PREFIX_PATH "$ENV{VCPKG_ROOT}/installed/x64-windows/share")
-else ()
-    list(APPEND CMAKE_PREFIX_PATH "$ENV{VCPKG_ROOT}/installed/x64-linux/share")
-endif ()
-message(STATUS "Updated CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 
 find_package(unofficial-skia CONFIG REQUIRED)
 
 if (PROJECT_IS_TOP_LEVEL)
-    set(TEST_TMPOFD ON CACHE BOOL "build ${PROJECT_NAME} test" FORCE)
+    set(TEST_TMPOFD ON CACHE BOOL "Build ${PROJECT_NAME} test" FORCE)
 endif ()
 
 if (TEST_TMPOFD)
