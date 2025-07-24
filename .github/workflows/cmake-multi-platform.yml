@@ -45,7 +45,15 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y autoconf-archive
+        sudo apt-get install -y autoconf-archive libgl1-mesa-dev
+
+    - name: Cache vcpkg dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg
+        key: ${{ runner.os }}-${{ hashFiles('vcpkg.json') }}-${{ steps.run-vcpkg.outputs.vcpkgGitCommitId }}
+        restore-keys: |
+          ${{ runner.os }}-
 
     - name: Install vcpkg dependencies
       uses: lukka/run-vcpkg@v11
