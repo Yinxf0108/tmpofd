@@ -54,7 +54,6 @@ jobs:
       uses: lukka/run-vcpkg@v11
       with:
         runVcpkgInstall: true
-        vcpkg-cache: true
 
     - name: Set reusable strings
       id: strings
