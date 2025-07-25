@@ -27,6 +27,8 @@
 #include "tmpofd/core/serialization/character_utils.h"
 #include "tmpofd/core/struct/common/variant_type.h"
 
+#include <array>
+
 namespace tmpofd {
 template<is_st_bool T, is_st_string V>
 constexpr void parse_xml_value(T &ins, const V value) {
