@@ -44,6 +44,20 @@ REFLECT_STRUCT(
 
 struct pages_t {
   st_vector<_page_t> page_;
+
+  using const_iterator = st_vector<_page_t>::const_iterator;
+  using iterator = st_vector<_page_t>::iterator;
+
+  [[nodiscard]] const_iterator begin() const { return page_.begin(); }
+  [[nodiscard]] const_iterator end() const { return page_.end(); }
+  iterator begin() { return page_.begin(); }
+  iterator end() { return page_.end(); }
+
+  [[nodiscard]] bool empty() const { return page_.empty(); }
+  [[nodiscard]] size_t size() const { return page_.size(); }
+
+  _page_t &operator[](const size_t index) { return page_[index]; }
+  const _page_t &operator[](const size_t index) const { return page_[index]; }
 };
 
 REFLECT_STRUCT(
@@ -54,5 +68,4 @@ REFLECT_STRUCT(
     REFLECT_MEMBER(ofd_namespace"Page", &pages_t::page_)
   )
 )
-
 } // tmpofd

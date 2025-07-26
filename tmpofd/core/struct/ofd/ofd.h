@@ -42,7 +42,7 @@ struct ofd_t {
   st_string version_;
   enum_string_t<doc_type_t> doc_type_;
 
-  st_vector<doc_body_t> doc_body_;
+  st_vector<doc_body_t> doc_bodies_;
 };
 
 REFLECT_STRUCT(
@@ -54,7 +54,7 @@ REFLECT_STRUCT(
     REFLECT_MEMBER("DocType", &ofd_t::doc_type_)
   )
   REFLECT_NODE(
-    REFLECT_MEMBER(ofd_namespace"DocBody", &ofd_t::doc_body_)
+    REFLECT_MEMBER(ofd_namespace"DocBody", &ofd_t::doc_bodies_)
   )
 )
 } // tmpofd

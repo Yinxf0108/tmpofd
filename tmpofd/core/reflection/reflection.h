@@ -60,6 +60,32 @@ struct struct_t;
 
 template<typename T>
 struct reflected_t {
+  constexpr auto name() const { return struct_t<T>::name_; }
+
+  constexpr auto attr_size() const { return std::tuple_size_v<decltype(struct_t<T>::attrs_)>; }
+
+  template<typename C>
+  constexpr void attr(const std::string_view name, C &&cb) const {
+    get<struct_t<T>::attrs_>(name, std::forward<C>(cb));
+  }
+
+  template<typename C>
+  constexpr void each_attr(C &&cb) const {
+    for_each<struct_t<T>::attrs_>(std::forward<C>(cb));
+  }
+
+  constexpr auto node_size() const { return std::tuple_size_v<decltype(struct_t<T>::nodes_)>; }
+
+  template<typename C>
+  constexpr void node(const std::string_view name, C &&cb) const {
+    get<struct_t<T>::nodes_>(name, std::forward<C>(cb));
+  }
+
+  template<typename C>
+  constexpr void each_node(C &&cb) const {
+    for_each<struct_t<T>::nodes_>(std::forward<C>(cb));
+  }
+
   private:
     template<const auto &tuple, typename C>
     constexpr void get(const std::string_view name, C &&cb) const {
@@ -77,33 +103,6 @@ struct reflected_t {
           (cb(std::get<i>(tuple)), ...);
         }(std::make_index_sequence<std::tuple_size_v<std::decay_t<decltype(tuple)> > >());
       }
-    }
-
-  public:
-    constexpr auto name() const { return struct_t<T>::name_; }
-
-    constexpr auto attr_size() const { return std::tuple_size_v<decltype(struct_t<T>::attrs_)>; }
-
-    template<typename C>
-    constexpr void attr(const std::string_view name, C &&cb) const {
-      get<struct_t<T>::attrs_>(name, std::forward<C>(cb));
-    }
-
-    template<typename C>
-    constexpr void each_attr(C &&cb) const {
-      for_each<struct_t<T>::attrs_>(std::forward<C>(cb));
-    }
-
-    constexpr auto node_size() const { return std::tuple_size_v<decltype(struct_t<T>::nodes_)>; }
-
-    template<typename C>
-    constexpr void node(const std::string_view name, C &&cb) const {
-      get<struct_t<T>::nodes_>(name, std::forward<C>(cb));
-    }
-
-    template<typename C>
-    constexpr void each_node(C &&cb) const {
-      for_each<struct_t<T>::nodes_>(std::forward<C>(cb));
     }
 };
 

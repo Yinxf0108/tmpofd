@@ -87,41 +87,40 @@ struct enum_converter<extend_t> {
 
 template<typename E>
 struct enum_string_t {
+  enum_string_t() = default;
+  explicit enum_string_t(const st_string &s) : value_(s) {}
+  explicit enum_string_t(st_string &&s) : value_(std::move(s)) {}
+  explicit enum_string_t(const char *s) : value_(s) {}
+  explicit enum_string_t(E enum_val) : value_(enum_converter<E>::to_string(enum_val)) {}
+
+  enum_string_t &operator=(const st_string &s) {
+    value_ = s;
+    return *this;
+  }
+  enum_string_t &operator=(st_string &&s) {
+    value_ = std::move(s);
+    return *this;
+  }
+  enum_string_t &operator=(const char *s) {
+    value_ = s;
+    return *this;
+  }
+  enum_string_t &operator=(E enum_val) {
+    value_ = enum_converter<E>::to_string(enum_val);
+    return *this;
+  }
+
+  explicit operator const st_string &() const { return value_; }
+  explicit operator st_string &() { return value_; }
+
+  [[nodiscard]] const st_string &str() const { return value_; }
+
+  std::optional<E> to_enum() const {
+    return enum_converter<E>::from_string(value_);
+  }
+
   private:
     st_string value_;
-
-  public:
-    enum_string_t() = default;
-    explicit enum_string_t(const st_string &s) : value_(s) {}
-    explicit enum_string_t(st_string &&s) : value_(std::move(s)) {}
-    explicit enum_string_t(const char *s) : value_(s) {}
-    explicit enum_string_t(E enum_val) : value_(enum_converter<E>::to_string(enum_val)) {}
-
-    enum_string_t &operator=(const st_string &s) {
-      value_ = s;
-      return *this;
-    }
-    enum_string_t &operator=(st_string &&s) {
-      value_ = std::move(s);
-      return *this;
-    }
-    enum_string_t &operator=(const char *s) {
-      value_ = s;
-      return *this;
-    }
-    enum_string_t &operator=(E enum_val) {
-      value_ = enum_converter<E>::to_string(enum_val);
-      return *this;
-    }
-
-    explicit operator const st_string &() const { return value_; }
-    explicit operator st_string &() { return value_; }
-
-    [[nodiscard]] const st_string &str() const { return value_; }
-
-    std::optional<E> to_enum() const {
-      return enum_converter<E>::from_string(value_);
-    }
 };
 
 template<typename E>

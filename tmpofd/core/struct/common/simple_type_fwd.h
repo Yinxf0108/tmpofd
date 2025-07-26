@@ -155,6 +155,8 @@ struct floating_t {
     return value_ <=> static_cast<T>(other);
   }
 
+  bool operator==(const floating_t &) const = default;
+
   auto operator<=>(const floating_t &) const = default;
 };
 

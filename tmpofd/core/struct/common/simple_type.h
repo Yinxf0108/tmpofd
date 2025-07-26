@@ -34,79 +34,166 @@ namespace tmpofd {
 */
 template<typename T> requires (!std::same_as<st_loc, std::remove_cvref_t<T> > && !is_vector<T>)
 struct st_array {
+  using value_type = typename st_vector<T>::value_type;
+  using iterator = typename st_vector<T>::iterator;
+  using const_iterator = typename st_vector<T>::const_iterator;
+
+  st_array() = default;
+  st_array(std::initializer_list<T> init) : data_(init) {}
+
+  void from_string(const std::string_view str, const char sep = ' ') {
+    data_.clear();
+    reset_compression_state();
+
+    std::string s(str);
+    if (' ' != sep) {
+      for (char &ch : s) {
+        if (sep == ch) {
+          ch = ' ';
+        }
+      }
+    }
+    std::stringstream ss(s);
+
+    std::string token;
+    bool compressed = false;
+    while (ss >> token) {
+      if ("g" == token) {
+        compressed = true;
+
+        std::string count_str, value_str;
+        if (!(ss >> count_str) || !(ss >> value_str)) {
+          throw std::runtime_error("Malformed 'g' operator in st_array: requires count and value.");
+        }
+
+        try {
+          size_t count = std::stoull(count_str);
+          T value;
+          if constexpr (is_floating_t<T>) { value.from_string(value_str); } else {
+            std::stringstream(value_str) >> value;
+          }
+          data_.insert(data_.end(), count, value);
+        } catch (const std::exception &e) {
+          throw std::invalid_argument(std::string("Failed to parse 'g' operator arguments in st_array: ") + e.what());
+        }
+
+        continue;
+      }
+
+      T value;
+      if constexpr (is_floating_t<T>) { value.from_string(token); } else { std::stringstream(token) >> value; }
+      data_.push_back(std::move(value));
+    }
+
+    if (compressed) {
+      compression_state_ = CompressionState::Compressed;
+      original_compressed_string_ = str;
+    } else {
+      compression_state_ = CompressionState::Uncompressed;
+    }
+  }
+
+  [[nodiscard]] std::string to_string(const char sep = ' ') const {
+    if (data_.empty())
+      return "";
+
+    switch (compression_state_) {
+      case CompressionState::Compressed:
+        return *original_compressed_string_;
+      case CompressionState::Uncompressed:
+        break;
+      case CompressionState::Unknown: {
+        st_vector<std::string> tokens;
+
+        size_t i = 0;
+        while (i < data_.size()) {
+          size_t j = i;
+          while (j < data_.size() && data_[j] == data_[i]) {
+            j++;
+          }
+          const size_t count = j - i;
+          const auto &value = data_[i];
+
+          std::stringstream ss;
+          if (count >= 2) {
+            ss << "g " << count << " ";
+            if constexpr (is_floating_t<T>) ss << value.to_string();
+            else ss << value;
+          } else {
+            if constexpr (is_floating_t<T>) ss << value.to_string();
+            else ss << value;
+          }
+          tokens.push_back(ss.str());
+
+          i = j;
+        }
+
+        std::stringstream final_ss;
+        for (size_t k = 0; k < tokens.size(); ++k) {
+          final_ss << tokens[k] << (k < tokens.size() - 1 ? std::string(1, sep) : "");
+        }
+
+        return final_ss.str();
+      }
+    }
+
+    std::stringstream ss;
+    for (size_t i = 0; i < data_.size(); ++i) {
+      if constexpr (is_floating_t<T>) {
+        ss << data_[i].to_string();
+      } else {
+        ss << data_[i];
+      }
+      if (i < data_.size() - 1) {
+        ss << sep;
+      }
+    }
+
+    return ss.str();
+  }
+
+  auto begin() { return data_.begin(); }
+  auto end() { return data_.end(); }
+  auto begin() const { return data_.begin(); }
+  auto end() const { return data_.end(); }
+
+  auto size() const { return data_.size(); }
+  auto empty() const { return data_.empty(); }
+
+  auto &operator[](size_t index) { return data_[index]; }
+  const auto &operator[](size_t index) const { return data_[index]; }
+
+  void push_back(const T &value) {
+    data_.push_back(value);
+    reset_compression_state();
+  }
+  void push_back(T &&value) {
+    data_.push_back(std::move(value));
+    reset_compression_state();
+  }
+
+  template<typename... Args>
+  void emplace_back(Args &&... args) {
+    data_.emplace_back(std::forward<Args>(args)...);
+    reset_compression_state();
+  }
+
   private:
     st_vector<T> data_;
 
-  public:
-    using value_type = typename st_vector<T>::value_type;
-    using iterator = typename st_vector<T>::iterator;
-    using const_iterator = typename st_vector<T>::const_iterator;
+    enum class CompressionState {
+      Unknown,
+      Uncompressed,
+      Compressed
+    };
 
-    st_array() = default;
-    st_array(std::initializer_list<T> init) : data_(init) {}
+    CompressionState compression_state_ = CompressionState::Unknown;
 
-    void from_string(const std::string_view str, const char sep = ' ') {
-      data_.clear();
+    std::optional<std::string> original_compressed_string_;
 
-      std::string s(str);
-      if (' ' != sep) {
-        for (char &ch : s) {
-          if (sep == ch) {
-            ch = ' ';
-          }
-        }
-      }
-      std::stringstream ss(s);
-
-      if constexpr (is_floating_t<T>) {
-        std::string value;
-        while (ss >> value) {
-          data_.push_back(std::move(T(value)));
-        }
-      } else {
-        value_type value;
-        while (ss >> value) {
-          data_.push_back(std::move(value));
-        }
-      }
-    }
-
-    [[nodiscard]] std::string to_string(const char sep = ' ') const {
-      if (data_.empty())
-        return "";
-
-      std::stringstream ss;
-      for (size_t i = 0; i < data_.size(); ++i) {
-        if constexpr (is_floating_t<T>) {
-          ss << data_[i].to_string();
-        } else {
-          ss << data_[i];
-        }
-        if (i < data_.size() - 1) {
-          ss << sep;
-        }
-      }
-
-      return ss.str();
-    }
-
-    auto begin() { return data_.begin(); }
-    auto end() { return data_.end(); }
-    auto begin() const { return data_.begin(); }
-    auto end() const { return data_.end(); }
-
-    auto size() const { return data_.size(); }
-    auto empty() const { return data_.empty(); }
-
-    auto &operator[](size_t index) { return data_[index]; }
-    const auto &operator[](size_t index) const { return data_[index]; }
-
-    void push_back(const T &value) { data_.push_back(value); }
-    void push_back(T &&value) { data_.push_back(std::move(value)); }
-
-    template<typename... Args>
-    void emplace_back(Args &&... args) {
-      data_.emplace_back(std::forward<Args>(args)...);
+    void reset_compression_state() {
+      compression_state_ = CompressionState::Unknown;
+      original_compressed_string_.reset();
     }
 };
 

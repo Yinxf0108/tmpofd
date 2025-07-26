@@ -59,6 +59,10 @@ else ()
     message(FATAL_ERROR "Vcpkg toolchain not set!")
 endif ()
 
+#libzip::zip
+find_package(libzip CONFIG REQUIRED)
+
+#unofficial::skia::skia
 find_package(unofficial-skia CONFIG REQUIRED)
 
 if (PROJECT_IS_TOP_LEVEL)
