@@ -2,7 +2,7 @@ set(NAME rendering)
 
 add_executable(${NAME} ${NAME}.cc)
 
-target_link_libraries(${NAME} PRIVATE unofficial::skia::skia)
+target_link_libraries(${NAME} PRIVATE  libzip::zip unofficial::skia::skia)
 
 add_test(NAME ${NAME} COMMAND ${NAME})
 
@@ -20,6 +20,6 @@ add_custom_command(TARGET ${NAME}
 
         COMMAND ${CMAKE_COMMAND} -E
         copy_directory
-        ${PROJECT_SOURCE_DIR}/resources/xmls
+        ${PROJECT_SOURCE_DIR}/resources/ofds
         ${EXECUTABLE_OUTPUT_PATH}
 )

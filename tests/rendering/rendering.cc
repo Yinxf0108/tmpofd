@@ -22,69 +22,48 @@
  * SOFTWARE.
 */
 
-#include "include/core/SkCanvas.h"
-#include "include/core/SkPaint.h"
-#include "include/core/SkRect.h"
-#include "include/core/SkStream.h"
-#include "include/core/SkFont.h"
-#include "include/core/SkData.h"
-#include "include/svg/SkSVGCanvas.h"
+#include "tmpofd/zip_handler/zip_handler.h"
+#include "tmpofd/core/serialization/serialization.h"
+#include "tmpofd/core/struct/ofd/ofd.h"
+#include "tmpofd/core/struct/document/document.h"
+#include "tmpofd/core/struct/page/page.h"
+#include "tmpofd/renderer/renderer.h"
 
 #include <iostream>
-#include <fstream>
-#include <memory>
+
+using namespace tmpofd;
 
 int main() {
-  std::cout << "Creating an SVG file with Skia..." << std::endl;
-
   try {
-    // 1. 定义SVG的尺寸
-    SkRect bounds = SkRect::MakeIWH(300, 200);
+    ZipHandler::ins().load("测试文件.ofd");
 
-    // 2. 创建一个内存流，用于接收SVG数据
-    SkDynamicMemoryWStream stream;
+    const auto ofd_content = ZipHandler::ins().get("OFD.xml");
+    std::cout << ofd_content << std::endl;
 
-    // 3. 创建一个SkSVGCanvas，它会将所有绘图操作写入流中
-    std::unique_ptr<SkCanvas> canvas = SkSVGCanvas::Make(bounds, &stream);
+    ofd_t ofd{};
+    from_xml(ofd, std::string_view{ofd_content});
 
-    // 4. 像在普通画布上一样绘图
-    SkPaint paint;
-    paint.setAntiAlias(true);
+    for (const auto &doc_body : ofd.doc_bodies_) {
+      const auto document_content = ZipHandler::ins().get(doc_body.doc_root_);
+      std::cout << document_content << std::endl;
 
-    // 绘制一个蓝色的背景矩形
-    paint.setColor(SK_ColorBLUE);
-    canvas->drawRect(SkRect::MakeIWH(300, 200), paint);
+      document_t document{};
+      from_xml(document, std::string_view{document_content});
 
-    // 绘制一个黄色的圆
-    paint.setColor(SK_ColorYELLOW);
-    canvas->drawCircle(150, 100, 80, paint);
+      for (const auto &[id_, base_loc_] : document.pages_) {
+        auto page_content = ZipHandler::ins().get(doc_body.doc_root_.parent_path() / base_loc_);
+        std::cout << page_content << std::endl;
 
-    // 绘制文本
-    SkFont font;
-    font.setSize(24);
-    paint.setColor(SK_ColorBLACK);
-    canvas->drawString("Hello, SVG!", 85, 105, font, paint);
+        page_t page{};
+        from_xml(page, std::string_view{page_content});
 
-    // 5. 当canvas对象被销毁时，它会自动完成所有SVG的写入操作
-    //    我们手动重置它来确保写入完成
-    canvas.reset();
-
-    // 6. 从流中获取数据并写入文件
-    sk_sp<SkData> svgData = stream.detachAsData();
-
-    std::ofstream file("created_by_skia.svg");
-    if (file.is_open()) {
-      file.write(static_cast<const char *>(svgData->data()), svgData->size());
-      file.close();
-      std::cout << "✓ Successfully created 'created_by_skia.svg'" << std::endl;
-    } else {
-      std::cerr << "✗ Failed to open file for writing." << std::endl;
-      return 1;
+        const auto svg = to_svg(document, page);
+        std::cout << svg << std::endl;
+      }
     }
-
-    return 0;
   } catch (const std::exception &e) {
-    std::cerr << "Exception: " << e.what() << std::endl;
-    return 1;
+    std::cerr << "Renderer error: " << e.what() << std::endl;
   }
+
+  return 0;
 }

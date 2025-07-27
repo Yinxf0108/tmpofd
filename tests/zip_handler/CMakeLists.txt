@@ -15,7 +15,7 @@ set_tests_properties(${NAME}
 
 message(STATUS "Added test [${NAME}] to ${EXECUTABLE_OUTPUT_PATH}")
 
-add_custom_command(TARGET zip_handler
+add_custom_command(TARGET ${NAME}
         POST_BUILD
 
         COMMAND ${CMAKE_COMMAND} -E

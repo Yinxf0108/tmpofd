@@ -132,6 +132,30 @@ struct floating_t {
     return *this;
   }
 
+  template<typename U> requires std::is_arithmetic_v<std::remove_cvref_t<U> >
+  floating_t &operator+=(const U &other) {
+    value_ += static_cast<T>(other);
+    return *this;
+  }
+
+  floating_t &operator+=(const floating_t &other) {
+    value_ += other.value_;
+    precision_ = std::max(precision_, other.precision_);
+    return *this;
+  }
+
+  template<typename U> requires std::is_arithmetic_v<std::remove_cvref_t<U> >
+  floating_t &operator-=(const U &other) {
+    value_ -= static_cast<T>(other);
+    return *this;
+  }
+
+  floating_t &operator-=(const floating_t &other) {
+    value_ -= other.value_;
+    precision_ = std::max(precision_, other.precision_);
+    return *this;
+  }
+
   explicit operator T() const { return value_; }
   T value() const { return value_; }
 
@@ -160,6 +184,43 @@ struct floating_t {
   auto operator<=>(const floating_t &) const = default;
 };
 
+template<typename>
+struct is_floating_t_trait : std::false_type {};
+
+template<std::floating_point T>
+struct is_floating_t_trait<floating_t<T> > : std::true_type {};
+
+template<typename T>
+concept is_floating_t = is_floating_t_trait<std::remove_cvref_t<T> >::value;
+
+template<std::floating_point T, typename U>
+requires is_floating_t<U> || std::is_arithmetic_v<std::remove_cvref_t<U>>
+floating_t<T> operator+(floating_t<T> lhs, const U &rhs) {
+  lhs += rhs;
+  return lhs;
+}
+
+template<std::floating_point T, typename U>
+requires std::is_arithmetic_v<std::remove_cvref_t<U>>
+floating_t<T> operator+(const U &lhs, floating_t<T> rhs) {
+  rhs += lhs;
+  return rhs;
+}
+
+template<std::floating_point T, typename U>
+requires is_floating_t<U> || std::is_arithmetic_v<std::remove_cvref_t<U>>
+floating_t<T> operator-(floating_t<T> lhs, const U &rhs) {
+  lhs -= rhs;
+  return lhs;
+}
+
+template<std::floating_point T, typename U>
+requires std::is_arithmetic_v<std::remove_cvref_t<U>>
+floating_t<T> operator-(const U &lhs, floating_t<T> rhs) {
+  rhs.value_ = static_cast<T>(lhs) - rhs.value_;
+  return rhs;
+}
+
 template<std::floating_point T>
 bool operator==(const floating_t<T> &lhs, std::string_view rhs) {
   try {
@@ -186,15 +247,6 @@ std::ostream &operator<<(std::ostream &os, const floating_t<T> &f) {
 
 template<typename T>
 concept is_st_int = std::same_as<st_int, std::remove_cvref_t<T> > ;
-
-template<typename>
-struct is_floating_t_trait : std::false_type {};
-
-template<std::floating_point T>
-struct is_floating_t_trait<floating_t<T> > : std::true_type {};
-
-template<typename T>
-concept is_floating_t = is_floating_t_trait<std::remove_cvref_t<T> >::value;
 
 template<typename T>
 concept is_st_number = is_st_int<T> || is_floating_t<T>;

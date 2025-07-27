@@ -24,37 +24,13 @@
 
 #pragma once
 
-#include "tmpofd/renderer/render_tools.h"
-
-#include "include/core/SkRect.h"
-#include "include/core/SkStream.h"
-#include "include/core/SkCanvas.h"
-#include "include/svg/SkSVGCanvas.h"
-
-#include <stdexcept>
+#include "tmpofd/core/struct/document/document.h"
+#include "tmpofd/core/struct/page/page.h"
 
 namespace tmpofd {
-template<is_document_t D, is_page_t P>
-std::string to_svg(const D &document, const P &page) {
-  const auto document_area = calculate_render_area(document.common_data_.page_area_);
+template<typename T>
+concept is_document_t = std::is_same_v<std::decay_t<T>, document_t>;
 
-  const SkRect bounds = SkRect::MakeWH(
-    static_cast<SkScalar>(mm_to_px(document_area.width_.value())),
-    static_cast<SkScalar>(mm_to_px(document_area.height_.value()))
-  );
-  SkDynamicMemoryWStream stream;
-  std::unique_ptr<SkCanvas> canvas = SkSVGCanvas::Make(bounds, &stream);
-
-  if (!canvas) {
-    throw std::runtime_error("Failed to create canvas");
-  }
-
-  canvas.reset();
-  const sk_sp<SkData> data = stream.detachAsData();
-  if (!data) {
-    throw std::runtime_error("Failed to create svg data");
-  }
-
-  return std::string{static_cast<const char *>(data->data()), data->size()};
-}
+template<typename T>
+concept is_page_t = std::is_same_v<std::decay_t<T>, page_t>;
 } // tmpofd
